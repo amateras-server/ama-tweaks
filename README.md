@@ -2,9 +2,9 @@
 
 [日本語の説明はこちら](README_ja.md)
 
-[![Dev Builds](https://github.com/pugur523/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/pugur523/ama-tweaks/actions/workflows/gradle.yml)
-[![License](https://img.shields.io/github/license/pugur523/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
-[![Issues](https://img.shields.io/github/issues/pugur523/ama-tweaks.svg)](https://github.com/pugur523/ama-tweaks/issues)
+[![Dev Builds](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml)
+[![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
+[![Issues](https://img.shields.io/github/issues/amateras-server/ama-tweaks.svg)](https://github.com/amateras-server/ama-tweaks/issues)
 [![Modrinth](https://img.shields.io/modrinth/dt/amatweaks?label=Modrinth%20Downloads)](https://modrinth.com/mod/amatweaks)
 
 AmaTweaks is a client-side Minecraft Fabric mod which has some useful features made for Amateras SMP.

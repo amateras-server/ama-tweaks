@@ -9,8 +9,8 @@
     "pugur"
   ],
   "contact": {
-    "sources": "https://github.com/pugur523/ama-tweaks",
-    "issues": "https://github.com/pugur523/ama-tweaks/issues"
+    "sources": "https://github.com/amateras-server/ama-tweaks",
+    "issues": "https://github.com/amateras-server/ama-tweaks/issues"
   },
   "icon": "assets/ama-tweaks/icon.png",
   "environment": "client",
