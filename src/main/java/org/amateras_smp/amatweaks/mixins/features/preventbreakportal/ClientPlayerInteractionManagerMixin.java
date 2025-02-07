@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.features.preventbreakportal;
@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //#endif
 
 @Mixin(ClientPlayerInteractionManager.class)
-public class MixinClientPlayerInteractionManager {
+public class ClientPlayerInteractionManagerMixin {
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
     private void onAttackBlock(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir) {
         if (!FeatureToggle.TWEAK_PREVENT_BREAKING_ADJACENT_PORTAL.getBooleanValue()) return;

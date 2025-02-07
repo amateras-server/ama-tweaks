@@ -1,3 +1,7 @@
+<a align=center>
+  <img src=https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png width=256>
+</a>
+
 # AmaTweaks
 
 [日本語の説明はこちら](README_ja.md)
@@ -6,8 +10,9 @@
 [![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amateras-server/ama-tweaks.svg)](https://github.com/amateras-server/ama-tweaks/issues)
 [![Modrinth](https://img.shields.io/modrinth/dt/amatweaks?label=Modrinth%20Downloads)](https://modrinth.com/mod/amatweaks)
+[![Discord](https://img.shields.io/discord/1157213775791935539)](https://discord.gg/YFJff2Bkx8)
 
-AmaTweaks is a client-side Minecraft Fabric mod which has some useful features made for Amateras SMP.
+client-side utility mod for Amateras SMP.
 
 ## Features
 

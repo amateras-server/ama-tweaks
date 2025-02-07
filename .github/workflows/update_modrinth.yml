@@ -1,0 +1,42 @@
+name: Update Modrinth Description
+
+on:
+  push:
+    paths:
+      - 'README.md'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: pip install requests
+      
+      - name: Update modrinth description
+        env:
+          MODRINTH_ID: Nbm4n3Oh  # https://modrinth.com/mod/amatweaks
+          MODRINTH_API_TOKEN: ${{ secrets.MODRINTH_API_TOKEN }}
+        run: python .github/workflows/scripts/update_modrinth.py "$MODRINTH_ID" "$MODRINTH_API_TOKEN"
+
+      - name: Check if modrinth.md has changed
+        id: check_diff
+        run: echo "changed=$(if git diff --quiet -- modrinth.md; then echo false; else echo true; fi)" >> "$GITHUB_ENV"
+
+
+      - name: Commit and push changes
+        if: env.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add modrinth.md
+          git commit -m "auto update modrinth.md"
+          git push

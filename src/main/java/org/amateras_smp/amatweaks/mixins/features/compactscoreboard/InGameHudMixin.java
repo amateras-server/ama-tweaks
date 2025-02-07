@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.features.compactscoreboard;
@@ -25,7 +25,7 @@ import java.util.Locale;
 //#endif
 
 @Mixin(InGameHud.class)
-public class MixinInGameHud {
+public class InGameHudMixin {
     @Unique
     private static final NumberFormat FORMATTER = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT);
 

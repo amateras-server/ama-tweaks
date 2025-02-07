@@ -1,9 +1,10 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.impl.features;
 
+import fi.dy.masa.malilib.util.InventoryUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,14 +14,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
-
-import java.util.Objects;
 
 //#if MC >= 12006
 //$$ import net.minecraft.component.ComponentMap;
@@ -29,12 +27,12 @@ import java.util.Objects;
 
 
 public class AutoEat {
-    private static int beforeSlot = -1;
-    private static int foodTakenSlot = -1;
+    private static int beforeHeldHotbarSlot = -1;
+    private static int foodTakenInventorySlot = -1;
     private static boolean eating = false;
 
-    public static void autoEat(MinecraftClient mc, ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
-        if ((double) player.getHungerManager().getFoodLevel() / 20 <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue() && player.getHungerManager().isNotFull()) {
+    public static void autoEat(MinecraftClient mc, ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler, boolean onlyCheck) {
+        if (!onlyCheck && player.getHungerManager().isNotFull() && player.getHungerManager().getFoodLevel() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue() * 20) {
             if (shouldAutoEat(mc)) {
                 HitResult hit = mc.crosshairTarget;
                 if (hit == null) return;
@@ -47,58 +45,54 @@ public class AutoEat {
                         return;
                     }
                 } else if (hit.getType() == HitResult.Type.ENTITY) {
-                    // hit target is entity, so just end this function.
                     return;
                 }
 
-                // divide by 2 because of foodSaturationLevel
                 for (int i = 0; i < player.getInventory().size(); i++) {
                     ItemStack stack = player.getInventory().getStack(i);
                     //#if MC >= 12006
                     //$$ if (stack.getItem().getComponents().contains(DataComponentTypes.FOOD)) {
                     //#else
                     if (stack.getItem().isFood()) {
-                        //#endif
-                        tryToSwap(i);
-                        foodTakenSlot = i;
+                    //#endif
+                        holdOrSwap(i, Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue());
                         if (eating) {
                             KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), true);
                         }
                         eating = true;
-                        return;
+                        break;
                     }
                 }
             }
         } else {
             autoEatCheck(mc, player, networkHandler);
         }
-
     }
 
     private static boolean shouldAutoEat(MinecraftClient mc) {
-        if (mc.interactionManager == null) return false;
-        if (mc.interactionManager.getCurrentGameMode().isCreative()) return false;
+        if (mc.interactionManager == null || mc.interactionManager.getCurrentGameMode().isCreative()) return false;
         if (!Configs.Generic.CANCEL_AUTO_EAT_WHILE_DOING_ACTION.getBooleanValue()) return true;
         return !mc.options.useKey.isPressed() && !mc.options.attackKey.isPressed();
     }
 
-    public static void autoEatCheck(MinecraftClient mc, ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
-        if (eating) {
-            if (beforeSlot != -1) {
-                player.getInventory().selectedSlot = beforeSlot;
-                networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeSlot));
-                beforeSlot = -1;
+    private static void autoEatCheck(MinecraftClient mc, ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
+        if (eating && !player.isUsingItem()) {
+            if (Configs.Generic.AUTO_EAT_PUT_BACK_FOOD.getBooleanValue() && foodTakenInventorySlot != -1) {
+                InventoryUtils.swapSlots(player.currentScreenHandler, foodTakenInventorySlot, player.getInventory().selectedSlot);
+                foodTakenInventorySlot = -1;
+            }
+            if (beforeHeldHotbarSlot != -1) {
+                player.getInventory().selectedSlot = beforeHeldHotbarSlot;
+                networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeHeldHotbarSlot));
+                beforeHeldHotbarSlot = -1;
             }
             eating = false;
-            if (Configs.Generic.AUTO_EAT_PUT_BACK_FOOD.getBooleanValue() && foodTakenSlot != -1) {
-                tryToSwap(foodTakenSlot);
-                foodTakenSlot = -1;
-            }
+
             KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), false);
         }
     }
 
-    public static void tryToSwap(int slot) {
+    private static void holdOrSwap(int sourceInventorySlot, int targetHotbarSlot) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayerEntity player = mc.player;
         //#if MC >= 11802
@@ -108,17 +102,24 @@ public class AutoEat {
         //#endif
         PlayerInventory inventory = player.getInventory();
         ScreenHandler container = player.playerScreenHandler;
-        if (slot >= 0 && slot != inventory.selectedSlot && player.currentScreenHandler == player.playerScreenHandler) {
-            beforeSlot = inventory.selectedSlot;
-            if (PlayerInventory.isValidHotbarIndex(slot)) {
-                inventory.selectedSlot = slot;
+        if (sourceInventorySlot >= 0 && sourceInventorySlot != inventory.selectedSlot && player.currentScreenHandler == player.playerScreenHandler) {
+            beforeHeldHotbarSlot = inventory.selectedSlot;
+
+            // source is hotbar slot -> hold source slot
+            // or else -> swap source and target, then hold target slot
+
+            if (PlayerInventory.isValidHotbarIndex(sourceInventorySlot)) {
+                inventory.selectedSlot = sourceInventorySlot;
                 mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
             } else {
-                if (inventory.selectedSlot != Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue()) {
-                    inventory.selectedSlot = Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue();
-                    Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
+                if (inventory.selectedSlot != targetHotbarSlot) {
+                    inventory.selectedSlot = targetHotbarSlot;
+                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
                 }
-                mc.interactionManager.clickSlot(container.syncId, slot, Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue(), SlotActionType.SWAP, mc.player);
+
+                InventoryUtils.swapSlots(container, sourceInventorySlot, targetHotbarSlot);
+
+                foodTakenInventorySlot = sourceInventorySlot;
             }
         }
     }

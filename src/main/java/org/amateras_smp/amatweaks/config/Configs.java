@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.config;
@@ -30,10 +30,11 @@ public class Configs implements IConfigHandler {
     private static final String CONFIG_FILE_NAME = Reference.kModId + ".json";
 
     public static class Generic {
-        public static final ConfigBoolean AUTO_EAT_PUT_BACK_FOOD = new ConfigBoolean("autoEatPutBackFood", false, "\"tweakAutoEat\" puts back the foods to the slot where food was.");
+        public static final ConfigBoolean AUTO_EAT_PUT_BACK_FOOD = new ConfigBoolean("autoEatPutBackFood", false, "\"tweakAutoEat\" puts back the food to the slot where it was.");
         public static final ConfigDouble AUTO_EAT_THRESHOLD = new ConfigDouble("autoEatThreshold", 1.0, 0, 1.0, "The hunger level threshold for \"tweakAutoEat\".");
-        public static final ConfigInteger AUTO_FIREWORK_USE_INTERVAL = new ConfigInteger("autoFireworkUseInterval", 60, 1, 1000, "The interval game tick for automatically try to use firework rocket with \"tweakAutoFireworkGlide\".");
-        public static final ConfigDouble AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rocket.");
+        public static final ConfigInteger AUTO_FIREWORK_USE_INTERVAL = new ConfigInteger("autoFireworkUseInterval", 60, 1, 1000, "The interval game tick for automatically try to use firework rockets with \"tweakAutoFireworkGlide\".");
+        public static final ConfigBoolean AUTO_GLIDE_PUT_BACK_ROCKET = new ConfigBoolean("autoGlidePutBackRocket", true, "\"tweakAutoFireworkGlide\" puts back the firework rocket to the slot where it was.");
+        public static final ConfigDouble AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rockets.");
         public static final ConfigBoolean CANCEL_AUTO_EAT_WHILE_DOING_ACTION = new ConfigBoolean("cancelAutoEatWhileDoingAction", false, "\"tweakAutoEat\" will not be triggered while using or attacking.");
         public static final ConfigBoolean ENABLE_DEBUG_PRINTS = new ConfigBoolean("enableDebugPrints", false, "Enables debug prints for ama-tweaks developer.");
         public static final ConfigInteger FIREWORK_SWITCHABLE_SLOT = new ConfigInteger ("fireworkSwitchableSlot", 0, 0, 8, "The slot to switch firework rocket by \"tweakAutoFireworkGlide\". starts from 0.");
@@ -51,6 +52,7 @@ public class Configs implements IConfigHandler {
                 AUTO_EAT_PUT_BACK_FOOD,
                 AUTO_EAT_THRESHOLD,
                 AUTO_FIREWORK_USE_INTERVAL,
+                AUTO_GLIDE_PUT_BACK_ROCKET,
                 AUTO_GLIDE_SPEED_THRESHOLD,
                 CANCEL_AUTO_EAT_WHILE_DOING_ACTION,
                 ENABLE_DEBUG_PRINTS,

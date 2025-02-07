@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 // This file includes code from taichi-tweaks, distributed under the MIT license.
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
-import org.amateras_smp.amatweaks.mixins.features.preventbreakportal.IMixinBellBlock;
+import org.amateras_smp.amatweaks.mixins.features.preventbreakportal.BellBlockIMixin;
 
 import static net.minecraft.block.NetherPortalBlock.AXIS;
 
@@ -138,6 +138,6 @@ public class PreventPlacementOnPortalSides {
     }
 
     public static boolean canRing(BellBlock bell, BlockState blockState, BlockHitResult hitResult, BlockPos blockPos) {
-        return ((IMixinBellBlock) bell).ModIsPointOnBell(blockState, hitResult.getSide(), hitResult.getPos().y - (double)blockPos.getY());
+        return ((BellBlockIMixin) bell).ModIsPointOnBell(blockState, hitResult.getSide(), hitResult.getPos().y - (double)blockPos.getY());
     }
 }

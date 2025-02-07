@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.features.autoeat;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
-public class MixinMinecraftClient {
+public class MinecraftClientMixin {
     @Shadow
     static MinecraftClient instance;
 
@@ -23,13 +23,7 @@ public class MixinMinecraftClient {
     private void onTick(CallbackInfo ci) {
         if (FeatureToggle.TWEAK_AUTO_EAT.getBooleanValue()) {
             if (instance.player != null && instance.player.networkHandler != null && instance.interactionManager != null) {
-                if (instance.player.isFallFlying()) {
-                    if (Configs.Generic.GLIDING_AUTO_EAT_DISABLED.getBooleanValue()) {
-                        AutoEat.autoEatCheck(instance, instance.player, instance.player.networkHandler);
-                        return;
-                    }
-                }
-                AutoEat.autoEat(instance, instance.player, instance.player.networkHandler);
+                AutoEat.autoEat(instance, instance.player, instance.player.networkHandler, instance.player.isFallFlying() && Configs.Generic.GLIDING_AUTO_EAT_DISABLED.getBooleanValue());
             }
         }
     }

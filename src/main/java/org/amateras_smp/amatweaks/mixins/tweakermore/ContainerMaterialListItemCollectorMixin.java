@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.tweakermore;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @Restriction(require = @Condition(Reference.ModIds.tweakermore))
 @Mixin(ContainerMaterialListItemCollector.class)
-public class MixinContainerMaterialListItemCollector {
+public class ContainerMaterialListItemCollectorMixin {
     @Inject(method = "process", at = @At("RETURN"))
     private void onPostProcess(ClientPlayerEntity player, HandledScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots, CallbackInfoReturnable<ProcessResult> cir, @Local MaterialListBase materialList) {
         if (materialList != null && Configs.Generic.REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL.getBooleanValue()) {

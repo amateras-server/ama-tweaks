@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.features.monogui;
@@ -24,7 +24,7 @@ import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
 //#endif
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class MixinClientPlayNetworkHandler {
+public class ClientPlayNetworkHandlerMixin {
     //#if MC >= 11900 && MC < 12005
     @Inject(method = "onChatMessage", at = @At("HEAD"))
     private void onChatMessagePacket(ChatMessageS2CPacket packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<ChatMessageS2CPacket> packetRef) {

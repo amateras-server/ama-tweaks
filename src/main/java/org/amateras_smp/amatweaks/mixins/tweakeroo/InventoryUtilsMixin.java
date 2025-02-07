@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.mixins.tweakeroo;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Restriction(require = @Condition(Reference.ModIds.tweakeroo))
 @Mixin(InventoryUtils.class)
-public class MixinInventoryUtils {
+public class InventoryUtilsMixin {
     @Inject(method = "trySwitchToEffectiveTool", at = @At("HEAD"), cancellable = true)
     private static void onSwitchTool(BlockPos pos, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();

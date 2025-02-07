@@ -1,5 +1,5 @@
-// Copyright (c) 2025 The Ama-Tweaks Authors
-// This file is part of the Ama-Tweaks project and is licensed under the terms of
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
 package org.amateras_smp.amatweaks.impl.features;
@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -27,8 +28,11 @@ import net.minecraft.nbt.NbtCompound;
 //$$ import net.minecraft.component.DataComponentTypes;
 //#endif
 
-public class AutoFireworkGlide {
-    public static void autoUseFirework(MinecraftClient mc, ClientPlayNetworkHandler networkHandler) {
+public class AutoGlide {
+    private static int beforeHeldHotbarSlot = -1;
+    private static int rocketTakenInventorySlot = -1;
+
+    public static void autoUseRocket(MinecraftClient mc) {
         ClientPlayerEntity player = mc.player;
         if (player == null) return;
 
@@ -53,7 +57,7 @@ public class AutoFireworkGlide {
         }
 
         int maxFlightLevelInInventory = 0;
-        int targetSlot = -1;
+        int rocketSlot = -1;
         for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
             ItemStack stack = player.getInventory().getStack(i);
             if (stack.isOf(Items.FIREWORK_ROCKET)) {
@@ -69,19 +73,14 @@ public class AutoFireworkGlide {
                 //#endif
                     if (flightLevel > maxFlightLevelInInventory) {
                         maxFlightLevelInInventory = flightLevel;
-                        targetSlot = i;
+                        rocketSlot = i;
                     }
                 }
             }
         }
-        if (targetSlot == -1) return;
-        int originSlot = player.getInventory().selectedSlot;
-        if (originSlot != targetSlot) {
-            if (targetSlot != Configs.Generic.FIREWORK_SWITCHABLE_SLOT.getIntegerValue()) {
-                InventoryUtils.swapSlots(player.playerScreenHandler, targetSlot, Configs.Generic.FIREWORK_SWITCHABLE_SLOT.getIntegerValue());
-            }
-            player.getInventory().selectedSlot = Configs.Generic.FIREWORK_SWITCHABLE_SLOT.getIntegerValue();
-            networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
+        if (rocketSlot == -1) return;
+        if (player.getInventory().selectedSlot != rocketSlot) {
+            holdOrSwap(rocketSlot, Configs.Generic.FIREWORK_SWITCHABLE_SLOT.getIntegerValue());
         }
         use(mc, player);
     }
@@ -93,5 +92,50 @@ public class AutoFireworkGlide {
         //#else
         //$$ mc.interactionManager.interactItem(player, player.clientWorld, Hand.MAIN_HAND);
         //#endif
+        afterUse(player, player.networkHandler);
+    }
+
+    private static void afterUse(ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
+        if (Configs.Generic.AUTO_GLIDE_PUT_BACK_ROCKET.getBooleanValue() && rocketTakenInventorySlot != -1) {
+            InventoryUtils.swapSlots(player.currentScreenHandler, rocketTakenInventorySlot, player.getInventory().selectedSlot);
+            rocketTakenInventorySlot = -1;
+        }
+        if (beforeHeldHotbarSlot != -1) {
+            player.getInventory().selectedSlot = beforeHeldHotbarSlot;
+            networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeHeldHotbarSlot));
+            beforeHeldHotbarSlot = -1;
+        }
+    }
+
+    private static void holdOrSwap(int sourceInventorySlot, int targetHotbarSlot) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ClientPlayerEntity player = mc.player;
+        //#if MC >= 11802
+        if (player == null || player.getWorld() == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
+        //#else
+        //$$ if (player == null || player.world == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
+        //#endif
+        PlayerInventory inventory = player.getInventory();
+        ScreenHandler container = player.playerScreenHandler;
+        if (sourceInventorySlot >= 0 && sourceInventorySlot != inventory.selectedSlot && player.currentScreenHandler == player.playerScreenHandler) {
+            beforeHeldHotbarSlot = inventory.selectedSlot;
+
+            // source is hotbar slot -> hold source slot
+            // or else -> swap source and target, then hold target slot
+
+            if (PlayerInventory.isValidHotbarIndex(sourceInventorySlot)) {
+                inventory.selectedSlot = sourceInventorySlot;
+                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+            } else {
+                if (inventory.selectedSlot != targetHotbarSlot) {
+                    inventory.selectedSlot = targetHotbarSlot;
+                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
+                }
+
+                InventoryUtils.swapSlots(container, sourceInventorySlot, targetHotbarSlot);
+
+                rocketTakenInventorySlot = sourceInventorySlot;
+            }
+        }
     }
 }
