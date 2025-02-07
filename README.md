@@ -3,7 +3,7 @@
 
 # AmaTweaks
 
-[日本語の説明はこちら](README_ja.md)
+[日本語の説明はこちら](https://github.com/amateras-server/ama-tweaks/blob/main/README_ja.md)
 
 [![Dev Builds](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
