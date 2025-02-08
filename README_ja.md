@@ -2,7 +2,7 @@
 
 # AmaTweaks
 
-[English Readme here](README.md)
+[English README](README.md)
 
 [![Dev Builds](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
