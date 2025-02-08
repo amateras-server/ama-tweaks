@@ -12,8 +12,11 @@ def format_modrinth():
   with open("README.md", "r", encoding="utf-8") as f:
     content = f.read()
 
-  content = re.sub(r"\[!NOTE\]", "**💡 NOTE:**", content)
-  content = re.sub(r"\[!CAUTION\]", "**⚠️ CAUTION:**", content)
+  content = re.sub(r"> \[!NOTE\]", "<strong><font color=60ddeb>**📝 NOTE:**</font></strong>", content)
+  content = re.sub(r"> \[!TIP\]", "<strong><font color=7bf268>💡 TIP:</font></strong>", content)
+  content = re.sub(r"> \[!IMPORTANT\]", "<strong><font color=bb68f2>**📢 IMPORTANT:**</font></strong>", content)
+  content = re.sub(r"> \[!WARNING\]", "<strong><font color=eaf03c>**⚠️ WARNING:**</font></strong>", content)
+  content = re.sub(r"> \[!CAUTION\]", "<strong><font color=ff5454>**⛔ CAUTION:**</font></strong>", content)
 
   with open("modrinth.md", "w", encoding="utf-8") as f:
     f.write(content)
