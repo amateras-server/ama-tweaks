@@ -19,6 +19,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
+import org.amateras_smp.amatweaks.impl.util.InventoryUtil;
 
 //#if MC < 12006
 import net.minecraft.nbt.NbtCompound;
@@ -51,7 +52,7 @@ public class AutoGlide {
             return;
         }
 
-        if (player.getInventory().getStack(player.getInventory().selectedSlot).isOf(Items.FIREWORK_ROCKET)) {
+        if (player.getInventory().getStack(InventoryUtil.getSelectedSlot(player.getInventory())).isOf(Items.FIREWORK_ROCKET)) {
             use(mc, player);
             return;
         }
@@ -79,7 +80,7 @@ public class AutoGlide {
             }
         }
         if (rocketSlot == -1) return;
-        if (player.getInventory().selectedSlot != rocketSlot) {
+        if (InventoryUtil.getSelectedSlot(player.getInventory()) != rocketSlot) {
             holdOrSwap(rocketSlot, Configs.Generic.FIREWORK_SWITCHABLE_SLOT.getIntegerValue());
         }
         use(mc, player);
@@ -97,11 +98,11 @@ public class AutoGlide {
 
     private static void afterUse(ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
         if (Configs.Generic.AUTO_GLIDE_PUT_BACK_ROCKET.getBooleanValue() && rocketTakenInventorySlot != -1) {
-            InventoryUtils.swapSlots(player.currentScreenHandler, rocketTakenInventorySlot, player.getInventory().selectedSlot);
+            InventoryUtils.swapSlots(player.currentScreenHandler, rocketTakenInventorySlot, InventoryUtil.getSelectedSlot(player.getInventory()));
             rocketTakenInventorySlot = -1;
         }
         if (beforeHeldHotbarSlot != -1) {
-            player.getInventory().selectedSlot = beforeHeldHotbarSlot;
+            InventoryUtil.setSelectedSlot(player.getInventory(), beforeHeldHotbarSlot);
             networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeHeldHotbarSlot));
             beforeHeldHotbarSlot = -1;
         }
@@ -117,19 +118,19 @@ public class AutoGlide {
         //#endif
         PlayerInventory inventory = player.getInventory();
         ScreenHandler container = player.playerScreenHandler;
-        if (sourceInventorySlot >= 0 && sourceInventorySlot != inventory.selectedSlot && player.currentScreenHandler == player.playerScreenHandler) {
-            beforeHeldHotbarSlot = inventory.selectedSlot;
+        if (sourceInventorySlot >= 0 && sourceInventorySlot != InventoryUtil.getSelectedSlot(inventory) && player.currentScreenHandler == player.playerScreenHandler) {
+            beforeHeldHotbarSlot = InventoryUtil.getSelectedSlot(inventory);
 
             // source is hotbar slot -> hold source slot
             // or else -> swap source and target, then hold target slot
 
             if (PlayerInventory.isValidHotbarIndex(sourceInventorySlot)) {
-                inventory.selectedSlot = sourceInventorySlot;
-                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+                InventoryUtil.setSelectedSlot(inventory, sourceInventorySlot);
+                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(sourceInventorySlot));
             } else {
-                if (inventory.selectedSlot != targetHotbarSlot) {
-                    inventory.selectedSlot = targetHotbarSlot;
-                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
+                if (InventoryUtil.getSelectedSlot(inventory) != targetHotbarSlot) {
+                    InventoryUtil.setSelectedSlot(inventory, targetHotbarSlot);
+                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(targetHotbarSlot));
                 }
 
                 InventoryUtils.swapSlots(container, sourceInventorySlot, targetHotbarSlot);

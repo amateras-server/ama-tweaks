@@ -4,9 +4,6 @@ apply plugin: 'com.replaymod.preprocess'
 
 String mixinFile = "ama-tweaks.mixins.json"
 int mcVersion = project.mcVersion
-preprocess {
-    tabIndentation = true
-}
 
 repositories {
     maven {
@@ -29,7 +26,7 @@ configurations {
     modImplementation.exclude group: 'io.github.prospector', module: 'modmenu'
 }
 // String tweakeroo_dependency = mcVersion >= 12100 ? "maven.modrinth:tweakeroo:${project.tweakeroo_version}" : "com.github.Andrews54757:tweakfork:${project.tweakfork_version}"
-String syncmatica_dependency = mcVersion >= 12005 ? "com.github.sakura-ryoko:syncmatica:${project.syncmatica_version}" : "maven.modrinth:syncmatica:${project.syncmatica_version}"
+// String syncmatica_dependency = mcVersion >= 12005 ? "com.github.sakura-ryoko:syncmatica:${project.syncmatica_version}" : "maven.modrinth:syncmatica:${project.syncmatica_version}"
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -40,7 +37,8 @@ dependencies {
     include("org.apache.logging.log4j:log4j-core:${project.log4j_version}")
     include("org.apache.logging.log4j:log4j-api:${project.log4j_version}")
 
-    modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+    // modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+    include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
 
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
     modImplementation "maven.modrinth:malilib:${project.malilib_version}"
@@ -51,10 +49,11 @@ dependencies {
     modImplementation "maven.modrinth:item-scroller:${project.itemscroller_version}"
     modImplementation "maven.modrinth:litematica:${project.litematica_version}"
 
-    modImplementation(syncmatica_dependency) {
-        exclude group: 'com.github.sakura-ryoko', module: 'malilib'
-        if (mcVersion == 12004 || mcVersion == 12006) exclude group: 'fi.dy.masa.malilib', module: 'malilib-fabric-1.20.6'
-    }
+    modImplementation "maven.modrinth:syncmatica:${project.syncmatica_version}"
+    // modImplementation(syncmatica_dependency) {
+    //     exclude group: 'com.github.sakura-ryoko', module: 'malilib'
+    //     if (mcVersion == 12004 || mcVersion == 12006) exclude group: 'fi.dy.masa.malilib', module: 'malilib-fabric-1.20.6'
+    // }
 }
 
 JavaVersion JAVA_COMPATIBILITY
@@ -98,10 +97,6 @@ loom {
             ideConfigGenerated false
         }
     }
-}
-
-remapJar {
-    remapperIsolation = true
 }
 
 String modVersionSuffix = ''

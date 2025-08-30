@@ -17,8 +17,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
+import org.amateras_smp.amatweaks.impl.util.InventoryUtil;
 
 //#if MC >= 12006
 //$$ import net.minecraft.component.ComponentMap;
@@ -78,11 +81,11 @@ public class AutoEat {
     private static void autoEatCheck(MinecraftClient mc, ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
         if (eating && !player.isUsingItem()) {
             if (Configs.Generic.AUTO_EAT_PUT_BACK_FOOD.getBooleanValue() && foodTakenInventorySlot != -1) {
-                InventoryUtils.swapSlots(player.currentScreenHandler, foodTakenInventorySlot, player.getInventory().selectedSlot);
+                InventoryUtils.swapSlots(player.currentScreenHandler, foodTakenInventorySlot, InventoryUtil.getSelectedSlot(player.getInventory()));
                 foodTakenInventorySlot = -1;
             }
             if (beforeHeldHotbarSlot != -1) {
-                player.getInventory().selectedSlot = beforeHeldHotbarSlot;
+                InventoryUtil.setSelectedSlot(player.getInventory(), beforeHeldHotbarSlot);
                 networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeHeldHotbarSlot));
                 beforeHeldHotbarSlot = -1;
             }
@@ -95,26 +98,32 @@ public class AutoEat {
     private static void holdOrSwap(int sourceInventorySlot, int targetHotbarSlot) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayerEntity player = mc.player;
+
+        if (player == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
+
         //#if MC >= 11802
-        if (player == null || player.getWorld() == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
+        World world = player.getWorld();
         //#else
-        //$$ if (player == null || player.world == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
+        //$$ World world = player.world;
         //#endif
+
+        if (world == null) return;
+
         PlayerInventory inventory = player.getInventory();
         ScreenHandler container = player.playerScreenHandler;
-        if (sourceInventorySlot >= 0 && sourceInventorySlot != inventory.selectedSlot && player.currentScreenHandler == player.playerScreenHandler) {
-            beforeHeldHotbarSlot = inventory.selectedSlot;
+        if (sourceInventorySlot >= 0 && sourceInventorySlot != InventoryUtil.getSelectedSlot(inventory) && player.currentScreenHandler == player.playerScreenHandler) {
+            beforeHeldHotbarSlot = InventoryUtil.getSelectedSlot(inventory);
 
             // source is hotbar slot -> hold source slot
             // or else -> swap source and target, then hold target slot
 
             if (PlayerInventory.isValidHotbarIndex(sourceInventorySlot)) {
-                inventory.selectedSlot = sourceInventorySlot;
-                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+                InventoryUtil.setSelectedSlot(inventory, sourceInventorySlot);
+                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(sourceInventorySlot));
             } else {
-                if (inventory.selectedSlot != targetHotbarSlot) {
-                    inventory.selectedSlot = targetHotbarSlot;
-                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.getInventory().selectedSlot));
+                if (InventoryUtil.getSelectedSlot(inventory) != targetHotbarSlot) {
+                    InventoryUtil.setSelectedSlot(inventory, targetHotbarSlot);
+                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(targetHotbarSlot));
                 }
 
                 InventoryUtils.swapSlots(container, sourceInventorySlot, targetHotbarSlot);

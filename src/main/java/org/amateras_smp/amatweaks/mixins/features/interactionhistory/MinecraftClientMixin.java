@@ -23,8 +23,15 @@ public class MinecraftClientMixin {
         InteractionHistory.clear();
     }
 
+    //#if MC < 12108
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
     private void onDisconnect(Screen screen, CallbackInfo ci) {
         InteractionHistory.clear();
     }
+    //#else
+    //$$ @Inject(method = "disconnect", at = @At("HEAD"))
+    //$$ private void onDisconnect(Screen screen, boolean transferring, CallbackInfo ci) {
+    //$$     InteractionHistory.clear();
+    //$$ }
+    //#endif
 }

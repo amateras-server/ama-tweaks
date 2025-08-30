@@ -16,7 +16,10 @@ public class ClientCommandUtil {
         AmaTweaks.LOGGER.debug("Executing client command : \"{}\"", input);
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.getNetworkHandler() == null) return false;
-        //#if MC >= 11900
+        //#if MC >= 12108
+        //$$ client.getNetworkHandler().sendChatCommand(input);
+        //$$ return true;
+        //#elseif MC >= 11900
         return client.getNetworkHandler().sendCommand(input);
         //#else
         //$$ try {

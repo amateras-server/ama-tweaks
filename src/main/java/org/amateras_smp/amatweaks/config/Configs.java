@@ -7,6 +7,7 @@ package org.amateras_smp.amatweaks.config;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -16,6 +17,8 @@ import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+import net.minecraft.client.MinecraftClient;
+
 import org.amateras_smp.amatweaks.InitHandler;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
@@ -25,6 +28,7 @@ import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
 import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class Configs implements IConfigHandler {
     private static final String CONFIG_FILE_NAME = Reference.kModId + ".json";
@@ -139,7 +143,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static void loadFromFile() {
-        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        File configFile = new File(getConfigDirectory(), CONFIG_FILE_NAME);
 
         if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
             JsonElement element = JsonUtils.parseJsonFile(configFile);
@@ -159,7 +163,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static void saveToFile() {
-        File dir = FileUtils.getConfigDirectory();
+        File dir = getConfigDirectory();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();
@@ -183,5 +187,9 @@ public class Configs implements IConfigHandler {
     @Override
     public void save() {
         saveToFile();
+    }
+
+    private static File getConfigDirectory() {
+        return new File(MinecraftClient.getInstance().runDirectory, "config");
     }
 }

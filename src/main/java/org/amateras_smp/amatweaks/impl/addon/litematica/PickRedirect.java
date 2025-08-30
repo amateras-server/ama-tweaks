@@ -29,10 +29,18 @@ public class PickRedirect {
             //#if MC < 12100
             if (Registries.BLOCK.get(new Identifier(splitted[0])) == schematicState.getBlock()) {
                 shouldPickBlock = Registries.BLOCK.get(new Identifier(splitted[1]));
-            //#else
+            }
+            //#elseif MC < 12104
             //$$ if (Registries.BLOCK.get(Identifier.of(splitted[0])) == schematicState.getBlock()) {
-            //$$     shouldPickBlock = Registries.BLOCK.get(Identifier.of(splitted[1]));
+            //$$ 	shouldPickBlock = Registries.BLOCK.get(Identifier.of(splitted[1]));
+            //$$ }
+            //#else
+            //$$ if (Registries.BLOCK.getEntry(Identifier.of(splitted[0])).get().value() == schematicState.getBlock()) {
+            //$$ 	shouldPickBlock = Registries.BLOCK.getEntry(Identifier.of(splitted[1])).get().value();
+            //$$ }
             //#endif
+
+            if (shouldPickBlock != null) {
                 break;
             }
         }

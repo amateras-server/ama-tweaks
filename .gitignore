@@ -2,6 +2,7 @@
 BEFORE_RELEASE_TODO.md
 .idea/
 .vscode/
+bin/
 
 *.iml
 *.ipr
@@ -9,6 +10,7 @@ BEFORE_RELEASE_TODO.md
 
 # IntelliJ
 out/
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
