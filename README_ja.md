@@ -11,7 +11,7 @@
 [![Discord](https://img.shields.io/discord/1157213775791935539)](https://discord.gg/px7wHEMUpd)
 
 Amateras SMPのためにつくられたクライアント機能系mod。<br>
-現在マインクラフト1.18から1.21.4をサポートしています。
+現在は1.18から1.21.8までサポートしています。
 
 ## Dependencies
 

@@ -14,7 +14,7 @@
 [![Discord](https://img.shields.io/discord/1157213775791935539)](https://discord.gg/px7wHEMUpd)
 
 A client-side utility mod made for Amateras SMP.<br>
-Currently supports 1.18~1.21.4.
+Currently supports 1.18~1.21.8.
 
 ## Dependencies
 
