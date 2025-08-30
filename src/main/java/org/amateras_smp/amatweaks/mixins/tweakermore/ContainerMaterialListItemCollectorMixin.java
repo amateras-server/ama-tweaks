@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Restriction(require = @Condition(Reference.ModIds.tweakermore))
+@Restriction(require = {@Condition(Reference.ModIds.litematica), @Condition(Reference.ModIds.tweakermore)})
 @Mixin(ContainerMaterialListItemCollector.class)
 public class ContainerMaterialListItemCollectorMixin {
     @Inject(method = "process", at = @At("RETURN"))
