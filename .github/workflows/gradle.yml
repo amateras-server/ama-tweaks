@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "versions/**"
       - ".github/**"
+      - "gradle/**"
   pull_request:
 
 
