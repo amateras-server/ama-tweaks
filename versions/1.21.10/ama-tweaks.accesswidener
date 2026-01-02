@@ -1,0 +1,4 @@
+accessWidener v1 named
+
+accessible class net/minecraft/client/font/TextRenderer$Drawer
+accessible method net/minecraft/client/util/ChatMessages getRenderedChatMessage (Ljava/lang/String;)Ljava/lang/String;
