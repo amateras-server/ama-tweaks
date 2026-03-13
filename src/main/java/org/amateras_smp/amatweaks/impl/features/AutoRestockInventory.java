@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.ChatFormatting;
@@ -46,27 +45,18 @@ public class AutoRestockInventory implements IContainerProcessor {
         BlockPos hitBlockPos = hitBlock.getBlockPos();
         ClientLevel clientWorld = mc.level;
 
-        if(mc.player == null || clientWorld == null) return new ProcessResult(false, false);
+        if (mc.player == null || clientWorld == null) return new ProcessResult(false, false);
         BlockEntity container = clientWorld.getBlockEntity(hitBlockPos);
         if (container == null) return new ProcessResult(false, false);
-        if (container instanceof EnderChestBlockEntity) {
-            return new ProcessResult(false, false);
-        }
+        if (container instanceof EnderChestBlockEntity) return new ProcessResult(false, false);
 
-        HashMap<Item, Integer> restockableMap = new HashMap<>();
         List<Slot> shouldRestockSlots = new ArrayList<>();
-
-        for (Slot containerSlot : containerInvSlots) {
-            int itemId = BuiltInRegistriesUtil.ITEM.getId(containerSlot.getItem().getItem());
-            if (isInventoryRestockListContains(itemId)) {
-                restockableMap.put(containerSlot.getItem().getItem(), restockableMap.getOrDefault(containerSlot.getItem().getItem(), 0) + containerSlot.getItem().getCount());
-            }
-        }
-        if (restockableMap.isEmpty()) return new ProcessResult(false, false);
-
         for (Slot playerSlot : playerInvSlots) {
-            if (restockableMap.getOrDefault(playerSlot.getItem().getItem(), 0) > 0) {
-                if (playerSlot.getItem().getCount() < playerSlot.getItem().getMaxStackSize()) {
+            ItemStack stack = playerSlot.getItem();
+            if (stack.isEmpty()) continue;
+            String itemId = BuiltInRegistriesUtil.ITEM.getKey(stack.getItem()).toString();
+            if (isInventoryRestockListContains(itemId)) {
+                if (stack.getCount() < stack.getMaxStackSize()) {
                     shouldRestockSlots.add(playerSlot);
                 }
             }
@@ -74,7 +64,23 @@ public class AutoRestockInventory implements IContainerProcessor {
 
         if (shouldRestockSlots.isEmpty()) return new ProcessResult(false, false);
 
+        boolean anyRestockable = false;
+        outer:
+        for (Slot playerSlot : shouldRestockSlots) {
+            for (Slot containerSlot : containerInvSlots) {
+                if (!containerSlot.getItem().isEmpty() &&
+                        InventoryUtils.areStacksEqual(containerSlot.getItem(), playerSlot.getItem())) {
+                    anyRestockable = true;
+                    break outer;
+                }
+            }
+        }
+        if (!anyRestockable) return new ProcessResult(false, false);
+
         HashMap<String, Integer> restockedMap = executeRestock(containerScreen, shouldRestockSlots, containerInvSlots);
+
+        if (restockedMap.isEmpty()) return new ProcessResult(false, false);
+
         List<String> restockedContents = new ArrayList<>();
 
         for (HashMap.Entry<String, Integer> entry : restockedMap.entrySet()) {
@@ -83,77 +89,66 @@ public class AutoRestockInventory implements IContainerProcessor {
         String message = FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + " : " + Joiner.on(", ").join(restockedContents);
         InfoUtils.printActionbarMessage(message);
 
-        // first restock
-        // HashMap<Item, Integer> remainingRestockableMap = executeRestock2(containerScreen, shouldRestockSlots, containerInvSlots, restockableMap);
-
-        //  if (remainingRestockableMap.isEmpty()) {
-        //      return new ProcessResult(true, true);
-        //  }
-        //
-        //  shouldRestockSlots.clear();
-        //  for (Slot slot : playerInvSlots) {
-        //      if (!slot.hasStack()) shouldRestockSlots.add(slot);
-        //  }
-        //
-        //  // second restock : restocks items which not in player inventory
-        //  executeRestock(containerScreen, shouldRestockSlots, containerInvSlots, remainingRestockableMap);
-
         return new ProcessResult(true, true);
     }
 
-    private boolean isInventoryRestockListContains(int itemId) {
-        String stringId = String.valueOf(itemId);
-        return Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings().stream().anyMatch(target -> target.equals(stringId));
+    private boolean isInventoryRestockListContains(String itemId) {
+        return Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings().stream().anyMatch(target -> target.equals(itemId));
     }
+
     private HashMap<String, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> shouldRestockSlots, List<Slot> containerSlots) {
         HashMap<String, Integer> restockedMap = new HashMap<>();
 
         int[] containerCounts = new int[containerSlots.size()];
         for (int i = 0; i < containerSlots.size(); i++) {
-            containerCounts[i] = containerSlots.get(i).getItem().getCount();
+            containerCounts[i] = containerSlots.get(i).getItem().isEmpty() ? 0 : containerSlots.get(i).getItem().getCount();
         }
 
         for (Slot playerSlot : shouldRestockSlots) {
             ItemStack playerStack = playerSlot.getItem().copy();
+            if (playerStack.isEmpty()) continue;
+
             int remainingRestockAmount = playerStack.getMaxStackSize() - playerStack.getCount();
             int restockedAmount = 0;
-            for (int idx = containerSlots.size() - 1; idx >= 0; idx--) {
+
+            for (int idx = 0; idx < containerSlots.size(); idx++) {
+                if (remainingRestockAmount <= 0) break;
+
                 Slot containerSlot = containerSlots.get(idx);
                 int availableInSlot = containerCounts[idx];
                 if (availableInSlot <= 0) continue;
 
-                if (InventoryUtils.areStacksEqual(containerSlot.getItem(), playerStack)) {
-                    int takeAmount = Math.min(remainingRestockAmount, availableInSlot);
+                if (!InventoryUtils.areStacksEqual(containerSlot.getItem(), playerStack)) continue;
 
-                    moveToPlayerInventory(containerScreen, containerSlot, playerSlot, takeAmount);
+                int takeAmount = Math.min(remainingRestockAmount, availableInSlot);
 
-                    containerCounts[idx] -= takeAmount;
+                moveToPlayerInventory(containerScreen, containerSlot, playerSlot, takeAmount);
 
-                    restockedAmount += takeAmount;
-                    remainingRestockAmount -= takeAmount;
-                }
-
-                if (remainingRestockAmount <= 0) break;
+                containerCounts[idx] -= takeAmount;
+                restockedAmount += takeAmount;
+                remainingRestockAmount -= takeAmount;
             }
-            ChatFormatting formatting = playerStack.getRarity().
-                    //#if MC >= 12006
-                    color();
-                    //#else
-                    //$$ color;
-                    //#endif
-            String stackName = formatting + playerStack.getHoverName().getString() + GuiBase.TXT_RST;
-            restockedMap.put(stackName, restockedMap.getOrDefault(stackName, 0) + restockedAmount);
+
+            if (restockedAmount > 0) {
+                ChatFormatting formatting = playerStack.getRarity().
+                        //#if MC >= 12006
+                        color();
+                        //#else
+                        //$$ color;
+                        //#endif
+                String stackName = formatting + playerStack.getHoverName().getString() + GuiBase.TXT_RST;
+                restockedMap.put(stackName, restockedMap.getOrDefault(stackName, 0) + restockedAmount);
+            }
         }
         return restockedMap;
     }
 
     private void moveToPlayerInventory(AbstractContainerScreen<?> containerScreen, Slot containerSlot, Slot playerSlot, int moveAmount) {
-        if (moveAmount == containerSlot.getItem().getCount())
-        {
+        InventoryUtils.leftClickSlot(containerScreen, containerSlot.index);
+        if (moveAmount == containerSlot.getItem().getCount()) {
             InventoryUtils.shiftClickSlot(containerScreen, containerSlot.index);
             return;
         }
-        InventoryUtils.leftClickSlot(containerScreen, containerSlot.index);
         for (int i = 0; i < moveAmount; i++) {
             InventoryUtils.rightClickSlot(containerScreen, playerSlot.index);
         }

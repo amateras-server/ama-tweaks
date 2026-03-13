@@ -9,7 +9,7 @@ import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors
 import me.fallenbreath.tweakermore.mixins.tweaks.features.autoContainerProcess.ItemScrollerInventoryUtilsAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -40,22 +40,15 @@ public class ContainerProcessManager {
         LocalPlayer player = mc.player;
         if (player != null && screen instanceof AbstractContainerScreen<?> containerScreen) {
             if (player.isSpectator()) return;
-
-            if (containerScreen.getMenu() != container || !((AutoProcessableScreen)screen).shouldProcess$AMT())
-            {
-                return;
-            }
+            if (containerScreen.getMenu() != container || !((AutoProcessableScreen)screen).shouldProcess$AMT()) return;
+            if (isInBlackList(containerScreen)) return;
 
             ((AutoProcessableScreen)screen).setShouldProcess$AMT(false);
             List<Slot> allSlots = container.slots;
             List<Slot> playerInvSlots = allSlots.stream().filter(slot -> slot.container instanceof Inventory).collect(Collectors.toList());
-            if (allSlots.isEmpty() || playerInvSlots.isEmpty()) {
-                return;
-            }
-            List<Slot> containerInvSlots = allSlots.stream().filter(slot -> ItemScrollerInventoryUtilsAccessor.areSlotsInSameInventory(slot, allSlots.get(0))).collect(Collectors.toList());
-            if (containerInvSlots.isEmpty()) {
-                return;
-            }
+            if (allSlots.isEmpty() || playerInvSlots.isEmpty()) return;
+            List<Slot> containerInvSlots = allSlots.stream().filter(slot -> ItemScrollerInventoryUtilsAccessor.areSlotsInSameInventory(slot, allSlots.getFirst())).collect(Collectors.toList());
+            if (containerInvSlots.isEmpty()) return;
 
             boolean closeGui = false;
             for (IContainerProcessor processor : CONTAINER_PROCESSORS) {
@@ -72,5 +65,14 @@ public class ContainerProcessManager {
             }
 
         }
+    }
+
+    private static <T extends AbstractContainerMenu> boolean isInBlackList(AbstractContainerScreen<T> containerScreen)
+    {
+        return
+            containerScreen instanceof InventoryScreen || // not screen with inventory only (1)
+                containerScreen instanceof CreativeModeInventoryScreen ||  // not screen with inventory only (2)
+                containerScreen instanceof CraftingScreen ||   // not crafting table
+                containerScreen instanceof MerchantScreen;  // not villager trading screen
     }
 }

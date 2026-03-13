@@ -12,7 +12,7 @@
     "sources": "https://github.com/amateras-server/ama-tweaks",
     "issues": "https://github.com/amateras-server/ama-tweaks/issues"
   },
-  "icon": "assets/ama-tweaks/icon.png",
+  "icon": "assets/ama-tweaks/ama_alpha_white_1280.png",
   "environment": "client",
   "accessWidener": "ama-tweaks.accesswidener",
   "entrypoints": {
