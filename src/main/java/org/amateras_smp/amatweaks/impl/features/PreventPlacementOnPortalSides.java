@@ -12,41 +12,42 @@ package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
 import org.amateras_smp.amatweaks.mixins.features.preventbreakportal.BellBlockIMixin;
 
-import static net.minecraft.block.NetherPortalBlock.AXIS;
+import static net.minecraft.world.level.block.NetherPortalBlock.AXIS;
 
 public class PreventPlacementOnPortalSides {
-    public static boolean restriction(World world, ItemPlacementContext ctx, BlockHitResult hitResult) {
+    public static boolean restriction(Level world, BlockPlaceContext ctx, BlockHitResult hitResult) {
         if (!FeatureToggle.TWEAK_PREVENT_PLACEMENT_ON_PORTAL_SIDES.getBooleanValue()) return false;
         if (ctx == null) {
             return false;
         }
 
-        ItemStack itemStack = ctx.getStack();
+        ItemStack itemStack = ctx.getItemInHand();
         if (itemStack.isEmpty()) {
             return false;
         }
 
         BlockState blockState = world.getBlockState(hitResult.getBlockPos());
-        if (blockState.isOf(Blocks.SCAFFOLDING) && itemStack.getItem() instanceof ScaffoldingItem scaffolding) {
-            ctx = scaffolding.getPlacementContext(ctx);
+        if (blockState.is(Blocks.SCAFFOLDING) && itemStack.getItem() instanceof ScaffoldingBlockItem scaffolding) {
+            ctx = scaffolding.updatePlacementContext(ctx);
             if (ctx == null) {
                 return false;
             }
         }
-        BlockPos blockPos = ctx.getBlockPos();
+        BlockPos blockPos = ctx.getClickedPos();
         boolean firstTime = true;
 
         while (true) {
@@ -54,8 +55,8 @@ public class PreventPlacementOnPortalSides {
                     checkNeighbors(world, blockPos.south(), Direction.Axis.Z, ctx, hitResult, hitResult.getBlockPos()) ||
                     checkNeighbors(world, blockPos.east(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
                     checkNeighbors(world, blockPos.west(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.up(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.down(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos())
+                    checkNeighbors(world, blockPos.above(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos()) ||
+                    checkNeighbors(world, blockPos.below(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos())
             ) {
                 String preRed = GuiBase.TXT_RED;
                 String rst = GuiBase.TXT_RST;
@@ -66,27 +67,23 @@ public class PreventPlacementOnPortalSides {
 
 
             //#if MC >= 12000
-            if (itemStack.getItem() instanceof TallBlockItem || itemStack.isOf(Items.PITCHER_PLANT)) {
+            if (itemStack.getItem() instanceof DoubleHighBlockItem || itemStack.is(Items.PITCHER_PLANT)) {
             //#else
-            //$$ if (itemStack.getItem() instanceof TallBlockItem) {
+            //$$ if (itemStack.getItem() instanceof DoubleHighBlockItem) {
             //#endif
-                if (blockPos.equals(hitResult.getBlockPos().offset(hitResult.getSide()))) {
-                    blockPos = blockPos.up();
+                if (blockPos.equals(hitResult.getBlockPos().relative(hitResult.getDirection()))) {
+                    blockPos = blockPos.above();
                 } else if (firstTime) {
-                    blockPos = blockPos.up();
+                    blockPos = blockPos.above();
                 } else {
                     break;
                 }
                 firstTime = false;
             } else
             if (itemStack.getItem() instanceof BedItem) {
-                if (blockPos.equals(hitResult.getBlockPos().offset(hitResult.getSide()))) {
-                    //#if MC > 11900
-                    Direction direction = ctx.getHorizontalPlayerFacing();
-                    //#else
-                    //$$ Direction direction = ctx.getPlayerFacing();
-                    //#endif
-                    blockPos = blockPos.offset(direction);
+                if (blockPos.equals(hitResult.getBlockPos().relative(hitResult.getDirection()))) {
+                    Direction direction = ctx.getHorizontalDirection();
+                    blockPos = blockPos.relative(direction);
                 } else {
                     break;
                 }
@@ -97,40 +94,31 @@ public class PreventPlacementOnPortalSides {
         return false;
     }
 
-    public static boolean checkNeighbors(World world, BlockPos blockPos, Direction.Axis axis, ItemPlacementContext ctx, BlockHitResult hitResult, BlockPos origin) {
+    public static boolean checkNeighbors(Level world, BlockPos blockPos, Direction.Axis axis, BlockPlaceContext ctx, BlockHitResult hitResult, BlockPos origin) {
         BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.isOf(Blocks.NETHER_PORTAL)) {
-            if (Direction.Axis.Y == axis || blockState.get(AXIS) == axis) {
+        if (blockState.is(Blocks.NETHER_PORTAL)) {
+            if (Direction.Axis.Y == axis || blockState.getValue(AXIS) == axis) {
                 if (!ctx.canPlace()) {
                     return false;
                 }
-                if (!canUse(ctx, origin, hitResult)) {
-                    return false;
-                }
-                return true;
+                return canUse(ctx, origin, hitResult);
             }
         }
         return false;
     }
 
-    public static boolean canUse(ItemPlacementContext context, BlockPos origin, BlockHitResult hitResult) {
-        World world = context.getWorld();
+    public static boolean canUse(BlockPlaceContext context, BlockPos origin, BlockHitResult hitResult) {
+        Level world = context.getLevel();
         BlockState blockState = world.getBlockState(origin);
         Block block = blockState.getBlock();
 
         if (BlockTypeEquals.isSneakingInteractionCancel(blockState)) {
-            if (context.shouldCancelInteraction()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (blockState.isOf(Blocks.BELL)) {
+            return context.isSecondaryUseActive();
+        } else if (blockState.is(Blocks.BELL)) {
             if ((!canRing((BellBlock) block, blockState, hitResult, origin))) {
                 return true;
-            } else if (context.shouldCancelInteraction()){
-                return true;
             } else {
-                return false;
+                return context.isSecondaryUseActive();
             }
         }
 
@@ -138,6 +126,6 @@ public class PreventPlacementOnPortalSides {
     }
 
     public static boolean canRing(BellBlock bell, BlockState blockState, BlockHitResult hitResult, BlockPos blockPos) {
-        return ((BellBlockIMixin) bell).ModIsPointOnBell(blockState, hitResult.getSide(), hitResult.getPos().y - (double)blockPos.getY());
+        return ((BellBlockIMixin) bell).ModIsPointOnBell(blockState, hitResult.getDirection(), hitResult.getLocation().y - (double)blockPos.getY());
     }
 }

@@ -4,17 +4,17 @@
 
 package org.amateras_smp.amatweaks.impl.features;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 
 public class SafeStepProtection {
     public static boolean isPositionAllowedByBreakingRestriction(BlockPos pos) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ClientPlayerEntity player = mc.player;
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
 
         if (player != null) {
-            boolean isMovingForward = mc.options.forwardKey.isPressed() || mc.options.rightKey.isPressed() || mc.options.leftKey.isPressed();
+            boolean isMovingForward = mc.options.keyUp.isDown() || mc.options.keyRight.isDown() || mc.options.keyLeft.isDown();
             // boolean isMoving = mc.player.getVelocity().x != 0 || mc.player.getVelocity().z != 0;
             // boolean isMovingBack = mc.options.backKey.isPressed();
 

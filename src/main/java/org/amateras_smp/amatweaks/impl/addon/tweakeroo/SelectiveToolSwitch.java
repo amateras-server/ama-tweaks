@@ -6,7 +6,7 @@ package org.amateras_smp.amatweaks.impl.addon.tweakeroo;
 
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import org.amateras_smp.amatweaks.config.Configs;
 
 public class SelectiveToolSwitch {

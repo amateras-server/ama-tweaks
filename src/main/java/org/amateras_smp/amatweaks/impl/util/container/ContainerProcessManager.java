@@ -7,13 +7,13 @@ package org.amateras_smp.amatweaks.impl.util.container;
 import com.google.common.collect.ImmutableList;
 import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ProcessResult;
 import me.fallenbreath.tweakermore.mixins.tweaks.features.autoContainerProcess.ItemScrollerInventoryUtilsAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
 
@@ -33,47 +33,42 @@ public class ContainerProcessManager {
         return CONTAINER_PROCESSORS;
     }
 
-    public static void process(ScreenHandler container) {
+    public static void process(AbstractContainerMenu container) {
         if (!hasTweakEnabled()) return;
-        Screen screen = MinecraftClient.getInstance().currentScreen;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player != null && screen instanceof HandledScreen<?> containerScreen) {
+        Minecraft mc = Minecraft.getInstance();
+        Screen screen = mc.screen;
+        LocalPlayer player = mc.player;
+        if (player != null && screen instanceof AbstractContainerScreen<?> containerScreen) {
             if (player.isSpectator()) return;
 
-            if (containerScreen.getScreenHandler() != container || !((AutoProcessableScreen)screen).shouldProcess$AMT())
+            if (containerScreen.getMenu() != container || !((AutoProcessableScreen)screen).shouldProcess$AMT())
             {
                 return;
             }
 
             ((AutoProcessableScreen)screen).setShouldProcess$AMT(false);
             List<Slot> allSlots = container.slots;
-            List<Slot> playerInvSlots = allSlots.stream().filter(slot -> slot.inventory instanceof PlayerInventory).collect(Collectors.toList());
-            if (allSlots.isEmpty() || playerInvSlots.isEmpty())
-            {
+            List<Slot> playerInvSlots = allSlots.stream().filter(slot -> slot.container instanceof Inventory).collect(Collectors.toList());
+            if (allSlots.isEmpty() || playerInvSlots.isEmpty()) {
                 return;
             }
             List<Slot> containerInvSlots = allSlots.stream().filter(slot -> ItemScrollerInventoryUtilsAccessor.areSlotsInSameInventory(slot, allSlots.get(0))).collect(Collectors.toList());
-            if (containerInvSlots.isEmpty())
-            {
+            if (containerInvSlots.isEmpty()) {
                 return;
             }
 
             boolean closeGui = false;
-            for (IContainerProcessor processor : CONTAINER_PROCESSORS)
-            {
-                if (processor.isEnabled())
-                {
+            for (IContainerProcessor processor : CONTAINER_PROCESSORS) {
+                if (processor.isEnabled()) {
                     ProcessResult result = processor.process(player, containerScreen, allSlots, playerInvSlots, containerInvSlots);
                     closeGui |= result.closeGui;
-                    if (result.cancelProcessing)
-                    {
+                    if (result.cancelProcessing) {
                         break;
                     }
                 }
             }
-            if (closeGui && Configs.Generic.ON_AUTO_RESTOCK_CLOSE_GUI.getBooleanValue())
-            {
-                player.closeHandledScreen();
+            if (closeGui && Configs.Generic.ON_AUTO_RESTOCK_CLOSE_GUI.getBooleanValue()) {
+                player.closeContainer();
             }
 
         }

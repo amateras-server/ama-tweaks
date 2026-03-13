@@ -215,33 +215,61 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     //#endif
     public String getTranslatedName() {
         String name = StringUtils.getTranslatedOrFallback(this.translatedName, this.name);
-    
+
         if (this.singlePlayer) {
             name = GuiBase.TXT_GOLD + name + GuiBase.TXT_RST;
         }
-    
+
         return name;
     }
-    
+
     //#if MC >= 12104
     //$$ @Override
     //#endif
     public void setPrettyName(String s) {
        this.prettyName = s;
     }
-    
+
     //#if MC >= 12104
     //$$ @Override
     //#endif
     public void setTranslatedName(String s) {
        this.translatedName = s;
     }
-    
+
     //#if MC >= 12104
     //$$ @Override
     //#endif
     public void setComment(String s) {
        this.comment = s;
+    }
+
+    //#if MC >= 12110
+    //$$ @Override
+    //#endif
+    public boolean isDirty() {
+        return false;
+    }
+
+    //#if MC >= 12110
+    //$$ @Override
+    //#endif
+    public void markDirty() {
+
+    }
+
+    //#if MC >= 12110
+    //$$ @Override
+    //#endif
+    public void markClean() {
+
+    }
+
+    //#if MC >= 12110
+    //$$ @Override
+    //#endif
+    public void checkIfClean() {
+
     }
 
     @Override

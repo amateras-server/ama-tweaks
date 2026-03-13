@@ -6,7 +6,7 @@ package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 
@@ -45,7 +45,7 @@ public class SelectiveRendering {
 
             // reloads all the world rendering so that the settings change will be applied.
             if (Configs.Generic.REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED.getBooleanValue()) {
-                MinecraftClient.getInstance().worldRenderer.reload();
+                Minecraft.getInstance().levelRenderer.allChanged();
             }
             applyConfig();
         }

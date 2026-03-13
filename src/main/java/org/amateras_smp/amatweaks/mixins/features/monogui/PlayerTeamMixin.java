@@ -4,20 +4,20 @@
 
 package org.amateras_smp.amatweaks.mixins.features.monogui;
 
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.ChatFormatting;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Team.class)
-public class TeamMixin {
-    @Inject(method = "getColor", at = @At("RETURN"), cancellable = true)
-    private void onGetColor(CallbackInfoReturnable<Formatting> cir) {
+@Mixin(PlayerTeam.class)
+public class PlayerTeamMixin {
+    @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
+    private void onGetColor(CallbackInfoReturnable<ChatFormatting> cir) {
         if (FeatureToggle.TWEAK_MONO_TEAM_COLOR.getBooleanValue()) {
-            cir.setReturnValue(Formatting.RESET);
+            cir.setReturnValue(ChatFormatting.RESET);
         }
     }
 }

@@ -1,3 +1,0 @@
-ch.endte.syncmatica.ServerPlacement ch.endte.syncmatica.data.ServerPlacement
-ch.endte.syncmatica.SyncmaticManager ch.endte.syncmatica.data.SyncmaticManager
-ch.endte.syncmatica.communication.PacketType ch.endte.syncmatica.network.PacketType

@@ -4,39 +4,42 @@
 
 package org.amateras_smp.amatweaks.impl.addon.litematica;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.amateras_smp.amatweaks.config.Configs;
+import org.amateras_smp.amatweaks.impl.util.BuiltInRegistriesUtil;
+import org.amateras_smp.amatweaks.impl.util.IdentifierUtil;
+
+//#if MC >= 12104
+import java.util.Optional;
+import net.minecraft.core.Holder.Reference;
+//#endif
 
 
 public class PickRedirect {
     public static ItemStack getShouldPickItem (BlockState schematicState, ItemStack shouldPickItemStack) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc == null || mc.player == null) return shouldPickItemStack;
-        PlayerInventory inventory = mc.player.getInventory();
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return shouldPickItemStack;
+        Inventory inventory = mc.player.getInventory();
 
         // if shouldPickStack is in the player inventory why should I override the pick behavior?
-        if (inventory.getSlotWithStack(shouldPickItemStack) != -1) return shouldPickItemStack;
+        if (inventory.findSlotMatchingItem(shouldPickItemStack) != -1) return shouldPickItemStack;
 
         Block shouldPickBlock = null;
         for (String entry : Configs.Lists.PICK_REDIRECT_MAP.getStrings()) {
-            String[] splitted = entry.split("\s*,\s*");
-            //#if MC < 12100
-            if (Registries.BLOCK.get(new Identifier(splitted[0])) == schematicState.getBlock()) {
-                shouldPickBlock = Registries.BLOCK.get(new Identifier(splitted[1]));
+            String[] split = entry.split("\s*,\s*");
+            //#if MC >= 12104
+            Optional<Reference<Block>> b0 = BuiltInRegistriesUtil.BLOCK.get(IdentifierUtil.ofVanilla(split[0]));
+            Optional<Reference<Block>> b1 = BuiltInRegistriesUtil.BLOCK.get(IdentifierUtil.ofVanilla(split[1]));
+            if (b0.isPresent() && b0.get().value() == schematicState.getBlock() && b1.isPresent()) {
+                shouldPickBlock = b1.get().value();
             }
-            //#elseif MC < 12104
-            //$$ if (Registries.BLOCK.get(Identifier.of(splitted[0])) == schematicState.getBlock()) {
-            //$$ 	shouldPickBlock = Registries.BLOCK.get(Identifier.of(splitted[1]));
-            //$$ }
             //#else
-            //$$ if (Registries.BLOCK.getEntry(Identifier.of(splitted[0])).get().value() == schematicState.getBlock()) {
-            //$$ 	shouldPickBlock = Registries.BLOCK.getEntry(Identifier.of(splitted[1])).get().value();
+            //$$ if (BuiltInRegistriesUtil.BLOCK.get(IdentifierUtil.ofVanilla(split[0])) == schematicState.getBlock()) {
+            //$$     shouldPickBlock = BuiltInRegistriesUtil.BLOCK.get(IdentifierUtil.ofVanilla(split[1]));
             //$$ }
             //#endif
 
@@ -46,8 +49,8 @@ public class PickRedirect {
         }
         if (shouldPickBlock == null) return shouldPickItemStack;
 
-        int slot = inventory.getSlotWithStack(shouldPickBlock.asItem().getDefaultStack());
+        int slot = inventory.findSlotMatchingItem(shouldPickBlock.asItem().getDefaultInstance());
         if (slot == -1) return shouldPickItemStack;
-        return inventory.getStack(slot);
+        return inventory.getItem(slot);
     }
 }

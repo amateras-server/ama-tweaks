@@ -5,10 +5,10 @@
 package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.util.StringUtils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.LimitedQueue;
 import org.jetbrains.annotations.Nullable;
@@ -31,14 +31,14 @@ public class InteractionHistory {
     }
 
     public static void onBlockInteraction(Block block, BlockPos pos, String interactionType) {
-        String name = block.getTranslationKey();
+        String name = block.getDescriptionId();
         BlockInteraction interaction = new BlockInteraction(interactionType, name, pos);
         blockInteractionHistory.add(interaction);
     }
 
     public static void onEntityInteraction(Entity entity) {
-        String name = entity.getType().getTranslationKey();
-        EntityInteraction interaction = new EntityInteraction(name, entity.getPos());
+        String name = entity.getType().getDescriptionId();
+        EntityInteraction interaction = new EntityInteraction(name, entity.position());
         entityInteractionHistory.add(interaction);
     }
 
@@ -71,15 +71,15 @@ public class InteractionHistory {
     public static class EntityInteraction {
         // for attack only
         public String entityName;
-        public Vec3d pos;
+        public Vec3 pos;
 
-        EntityInteraction(String entityName, Vec3d pos) {
+        EntityInteraction(String entityName, Vec3 pos) {
             this.entityName = entityName;
             this.pos = pos;
         }
 
         public String toString() {
-            return StringUtils.translate(this.entityName) + " (" + roundDouble(pos.getX()) + ", " + roundDouble(pos.getY()) + ", " + roundDouble(pos.getZ()) + ")";
+            return StringUtils.translate(this.entityName) + " (" + roundDouble(pos.x()) + ", " + roundDouble(pos.y()) + ", " + roundDouble(pos.z()) + ")";
         }
 
         private double roundDouble(double d) {

@@ -7,20 +7,22 @@ package org.amateras_smp.amatweaks.mixins.features.preventbreakportal;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.*;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.features.PreventPlacementOnPortalSides;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +45,7 @@ public class PlacementTweaksMixin {
     @Unique
     private static boolean isReplaceable(BlockState state) {
         //#if MC >= 12000
-        return state.isReplaceable();
+        return state.canBeReplaced();
         //#else
         //$$ return state.getMaterial().isReplaceable();
         //#endif
@@ -54,16 +56,16 @@ public class PlacementTweaksMixin {
         Item item = stack.getItem();
         if (!stack.isEmpty() && item instanceof BlockItem) {
             Block block = ((BlockItem)item).getBlock();
-            BlockState state = block.getDefaultState();
-            if (state.contains(Properties.FACING)) {
+            BlockState state = block.defaultBlockState();
+            if (state.hasProperty(BlockStateProperties.FACING)) {
                 return true;
             }
 
-            if (state.contains(Properties.HOPPER_FACING) && !facing.equals(Direction.UP)) {
+            if (state.hasProperty(BlockStateProperties.FACING_HOPPER) && !facing.equals(Direction.UP)) {
                 return true;
             }
 
-            if (state.contains(Properties.HORIZONTAL_FACING) && !facing.equals(Direction.UP) && !facing.equals(Direction.DOWN)) {
+            if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING) && !facing.equals(Direction.UP) && !facing.equals(Direction.DOWN)) {
                 return true;
             }
         }
@@ -72,22 +74,22 @@ public class PlacementTweaksMixin {
     }
 
     @Unique
-    private static BlockHitResult getFinalHitResult(ClientPlayerEntity player, ClientWorld world, BlockPos posIn, Direction sideIn, Vec3d hitVecIn, Hand hand) {
+    private static BlockHitResult getFinalHitResult(LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand) {
         BlockHitResult hitResult = new BlockHitResult(hitVecIn, sideIn, posIn, false);
-        ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));
+        BlockPlaceContext ctx = new BlockPlaceContext(new UseOnContext(player, hand, hitResult));
         BlockState state = world.getBlockState(posIn);
         ItemStack stackOriginal;
         if (!stackBeforeUse[hand.ordinal()].isEmpty() && !fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() && !fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue()) {
             stackOriginal = stackBeforeUse[hand.ordinal()];
         } else {
-            stackOriginal = player.getStackInHand(hand).copy();
+            stackOriginal = player.getItemInHand(hand).copy();
         }
 
-        if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() && !state.canReplace(ctx) && isReplaceable(state)) {
-            posIn = posIn.offset(sideIn.getOpposite());
+        if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() && !state.canBeReplaced(ctx) && isReplaceable(state)) {
+            posIn = posIn.relative(sideIn.getOpposite());
         }
 
-        int afterClickerClickCount = MathHelper.clamp(fi.dy.masa.tweakeroo.config.Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
+        int afterClickerClickCount = Mth.clamp(fi.dy.masa.tweakeroo.config.Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
         boolean flexible = fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
         boolean rotationHeld = fi.dy.masa.tweakeroo.config.Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
         boolean rememberFlexible = fi.dy.masa.tweakeroo.config.Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
@@ -98,25 +100,25 @@ public class PlacementTweaksMixin {
 
         double x;
         //#if MC >= 12100
-        //$$ if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
+        if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
         //#else
-        if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
+        //$$ if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
         //#endif
             Direction facing = sideIn.getOpposite();
-            x = posIn.getX() + 2 + facing.getId() * 2;
+            x = posIn.getX() + 2 + facing.get3DDataValue() * 2;
             if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue()) {
                 x += afterClickerClickCount * 16;
             }
 
-            hitVecIn = new Vec3d(x, hitVecIn.y, hitVecIn.z);
+            hitVecIn = new Vec3(x, hitVecIn.y, hitVecIn.z);
         }
 
         double y;
         if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && fi.dy.masa.tweakeroo.config.Hotkeys.PLACEMENT_Y_MIRROR.getKeybind().isKeybindHeld()) {
             y = 1.0 - hitVecIn.y + (double)(2 * posIn.getY());
-            hitVecIn = new Vec3d(hitVecIn.x, y, hitVecIn.z);
+            hitVecIn = new Vec3(hitVecIn.x, y, hitVecIn.z);
             if (sideIn.getAxis() == Direction.Axis.Y) {
-                posIn = posIn.offset(sideIn);
+                posIn = posIn.relative(sideIn);
                 sideIn = sideIn.getOpposite();
             }
         }
@@ -129,12 +131,12 @@ public class PlacementTweaksMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void onProcessRightClickBlockWrapper(ClientPlayerInteractionManager controller, ClientPlayerEntity player, ClientWorld world, BlockPos posIn, Direction sideIn, Vec3d hitVecIn, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand);
-        ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));
+        BlockPlaceContext ctx = new BlockPlaceContext(new UseOnContext(player, hand, hitResult));
 
         if (PreventPlacementOnPortalSides.restriction(world, ctx, hitResult)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(InteractionResult.PASS);
         }
     }
 }

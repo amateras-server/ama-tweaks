@@ -6,7 +6,7 @@ package org.amateras_smp.amatweaks.mixins.features.autorestockinventory;
 
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.util.container.AutoProcessableScreen;
 import org.spongepowered.asm.mixin.Mixin;

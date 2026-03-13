@@ -10,9 +10,9 @@ import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ContainerMaterialListItemCollector;
 import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ProcessResult;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.inventory.Slot;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ import java.util.List;
 @Mixin(ContainerMaterialListItemCollector.class)
 public class ContainerMaterialListItemCollectorMixin {
     @Inject(method = "process", at = @At("RETURN"))
-    private void onPostProcess(ClientPlayerEntity player, HandledScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots, CallbackInfoReturnable<ProcessResult> cir, @Local MaterialListBase materialList) {
+    private void onPostProcess(LocalPlayer player, AbstractContainerScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots, CallbackInfoReturnable<ProcessResult> cir, @Local MaterialListBase materialList) {
         if (materialList != null && Configs.Generic.REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL.getBooleanValue()) {
             materialList.refreshPreFilteredList();
         }

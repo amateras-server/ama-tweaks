@@ -6,8 +6,8 @@ package org.amateras_smp.amatweaks.mixins.features.interactionhistory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,23 +15,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
+@Mixin(Minecraft.class)
+public class MinecraftMixin {
 
-    @Inject(method = "joinWorld", at = @At("HEAD"))
+    @Inject(method = "setLevel", at = @At("HEAD"))
     private void onJoinWorld(CallbackInfo ci) {
         InteractionHistory.clear();
     }
 
-    //#if MC < 12108
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
+    //#if MC >= 12002
+    @Inject(method = "clearClientLevel", at = @At("HEAD"))
+    //#else
+    //$$ @Inject(method = "clearLevel(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"))
+    //#endif
     private void onDisconnect(Screen screen, CallbackInfo ci) {
         InteractionHistory.clear();
     }
-    //#else
-    //$$ @Inject(method = "disconnect", at = @At("HEAD"))
-    //$$ private void onDisconnect(Screen screen, boolean transferring, CallbackInfo ci) {
-    //$$     InteractionHistory.clear();
-    //$$ }
-    //#endif
 }

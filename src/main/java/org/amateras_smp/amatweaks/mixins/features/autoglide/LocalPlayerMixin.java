@@ -4,8 +4,8 @@
 
 package org.amateras_smp.amatweaks.mixins.features.autoglide;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.features.AutoGlide;
@@ -17,11 +17,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin {
-    @Shadow private boolean falling;
+@Mixin(LocalPlayer.class)
+public class LocalPlayerMixin {
+    @Shadow private boolean wasFallFlying;
 
-    @Shadow @Final protected MinecraftClient client;
+    @Shadow @Final protected Minecraft minecraft;
 
     @Unique
     private int tickCount = 0;
@@ -29,12 +29,12 @@ public class ClientPlayerEntityMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     private void onTick(CallbackInfo ci) {
         if (!FeatureToggle.TWEAK_AUTO_FIREWORK_GLIDE.getBooleanValue()) return;
-        if (falling) {
+        if (wasFallFlying) {
             tickCount++;
-            if (tickCount % Configs.Generic.AUTO_FIREWORK_USE_INTERVAL.getIntegerValue() == 0 && tickCount != 0) {
-                if (client.player == null) return;
-                if (client.player.getVelocity().length() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue()) {
-                    AutoGlide.autoUseRocket(client);
+            if (tickCount != 0 && tickCount % Configs.Generic.AUTO_FIREWORK_USE_INTERVAL.getIntegerValue() == 0) {
+                if (minecraft.player == null) return;
+                if (minecraft.player.getDeltaMovement().length() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue()) {
+                    AutoGlide.autoUseRocket(minecraft);
                 }
             }
         } else {

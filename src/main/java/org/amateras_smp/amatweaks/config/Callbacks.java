@@ -4,10 +4,13 @@
 
 package org.amateras_smp.amatweaks.config;
 
-import fi.dy.masa.litematica.data.DataManager;
-import fi.dy.masa.litematica.materials.MaterialListBase;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
 import org.amateras_smp.amatweaks.InitHandler;
 import org.amateras_smp.amatweaks.gui.GuiConfigs;
+import fi.dy.masa.litematica.data.DataManager;
+import fi.dy.masa.litematica.materials.MaterialListBase;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.config.IConfigBoolean;
@@ -16,9 +19,6 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
@@ -29,17 +29,17 @@ import org.amateras_smp.amatweaks.impl.util.ClientCommandUtil;
 public class Callbacks {
 
     public static void init() {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        Minecraft mc = Minecraft.getInstance();
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric();
 
         Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
         Hotkeys.REFRESH_MATERIAL_LIST.getKeybind().setCallback(callbackGeneric);
         Hotkeys.SEE_INTERACTION_HISTORY.getKeybind().setCallback(callbackGeneric);
 
-        FeatureToggle.TWEAK_HOLD_BACK.setValueChangeCallback(new FeatureCallbackHold(mc.options.backKey));
-        FeatureToggle.TWEAK_HOLD_FORWARD.setValueChangeCallback(new FeatureCallbackHold(mc.options.forwardKey));
-        FeatureToggle.TWEAK_HOLD_LEFT.setValueChangeCallback(new FeatureCallbackHold(mc.options.leftKey));
-        FeatureToggle.TWEAK_HOLD_RIGHT.setValueChangeCallback(new FeatureCallbackHold(mc.options.rightKey));
+        FeatureToggle.TWEAK_HOLD_BACK.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyDown));
+        FeatureToggle.TWEAK_HOLD_FORWARD.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyUp));
+        FeatureToggle.TWEAK_HOLD_LEFT.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyLeft));
+        FeatureToggle.TWEAK_HOLD_RIGHT.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyRight));
 
         FeatureToggle.TWEAK_AUTO_EAT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AUTO_EAT));
         FeatureToggle.TWEAK_AUTO_FIREWORK_GLIDE.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AUTO_FIREWORK_GLIDE));
@@ -117,9 +117,9 @@ public class Callbacks {
     }
 
     public static class FeatureCallbackHold implements IValueChangeCallback<IConfigBoolean> {
-        private final KeyBinding keyBind;
+        private final KeyMapping keyBind;
 
-        public FeatureCallbackHold(KeyBinding keyBind) {
+        public FeatureCallbackHold(KeyMapping keyBind) {
             this.keyBind = keyBind;
         }
 
@@ -127,11 +127,11 @@ public class Callbacks {
         public void onValueChanged(IConfigBoolean config)
         {
             if (config.getBooleanValue()) {
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()), true);
-                KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()));
+                KeyMapping.set(InputConstants.getKey(this.keyBind.saveString()), true);
+                KeyMapping.click(InputConstants.getKey(this.keyBind.saveString()));
             }
             else {
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()), false);
+                KeyMapping.set(InputConstants.getKey(this.keyBind.saveString()), false);
             }
         }
     }

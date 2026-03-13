@@ -7,7 +7,7 @@ package org.amateras_smp.amatweaks.impl.addon.syncmatica;
 import ch.endte.syncmatica.Context;
 import ch.endte.syncmatica.communication.ClientCommunicationManager;
 import ch.endte.syncmatica.communication.ExchangeTarget;
-import ch.endte.syncmatica.communication.PacketType;
+import ch.endte.syncmatica.network.PacketType;
 import ch.endte.syncmatica.litematica.LitematicManager;
 import ch.endte.syncmatica.litematica.ScreenHelper;
 import ch.endte.syncmatica.litematica.gui.WidgetSyncmaticaServerPlacementEntry;
@@ -16,7 +16,7 @@ import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import org.amateras_smp.amatweaks.config.Configs;
 
 import java.util.UUID;
@@ -44,12 +44,12 @@ public class EnhancedRemoveButton {
             }
             Context con = LitematicManager.getInstance().getActiveContext();
             ExchangeTarget server = ((ClientCommunicationManager)con.getCommunicationManager()).getServer();
-            PacketByteBuf packetBuf = new PacketByteBuf(Unpooled.buffer());
-            packetBuf.writeUuid(placementId);
-            //#if MC > 12004
-            //$$ server.sendPacket(PacketType.REMOVE_SYNCMATIC, packetBuf, LitematicManager.getInstance().getActiveContext());
+            FriendlyByteBuf packetBuf = new FriendlyByteBuf(Unpooled.buffer());
+            packetBuf.writeUUID(placementId);
+            //#if MC >= 12006
+            server.sendPacket(PacketType.REMOVE_SYNCMATIC, packetBuf, LitematicManager.getInstance().getActiveContext());
             //#else
-            server.sendPacket(PacketType.REMOVE_SYNCMATIC.identifier, packetBuf, LitematicManager.getInstance().getActiveContext());
+            //$$ server.sendPacket(PacketType.REMOVE_SYNCMATIC.identifier, packetBuf, LitematicManager.getInstance().getActiveContext());
             //#endif
         }
     }

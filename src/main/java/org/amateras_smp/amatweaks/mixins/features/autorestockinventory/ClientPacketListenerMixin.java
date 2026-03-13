@@ -6,11 +6,11 @@ package org.amateras_smp.amatweaks.mixins.features.autorestockinventory;
 
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.world.inventory.MenuType;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.container.AutoProcessableScreen;
@@ -20,20 +20,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Restriction(require = @Condition(Reference.ModIds.itemscroller))
-@Mixin(ClientPlayNetworkHandler.class)
-public abstract class ClientPlayNetworkHandlerMixin {
+@Mixin(ClientPacketListener.class)
+public abstract class ClientPacketListenerMixin {
     @Inject(
-            //#if MC >= 11600
-            method = "onOpenScreen",
-            //#else
-            //$$ method = "onOpenContainer",
-            //#endif
+            method = "handleOpenScreen",
             at = @At("TAIL")
     )
-    private void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo ci) {
-        Screen screen = MinecraftClient.getInstance().currentScreen;
+    private void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
+        Screen screen = Minecraft.getInstance().screen;
         if (screen != null) {
-            ((AutoProcessableScreen) screen).setShouldProcess$AMT(!Configs.Generic.INVENTORY_RESTOCK_ONLY_ALLOW_SHULKER_BOX.getBooleanValue() || packet.getScreenHandlerType() == ScreenHandlerType.SHULKER_BOX);
+            ((AutoProcessableScreen) screen).setShouldProcess$AMT(!Configs.Generic.INVENTORY_RESTOCK_ONLY_ALLOW_SHULKER_BOX.getBooleanValue() || packet.getType() == MenuType.SHULKER_BOX);
         }
     }
 }

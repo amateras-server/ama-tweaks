@@ -5,46 +5,46 @@
 package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.util.InventoryUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
 import org.amateras_smp.amatweaks.impl.util.InventoryUtil;
 
-//#if MC < 12006
-import net.minecraft.nbt.NbtCompound;
+//#if MC >= 12006
+import java.util.Objects;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 //#else
-//$$ import java.util.Objects;
-//$$ import net.minecraft.component.ComponentMap;
-//$$ import net.minecraft.component.DataComponentTypes;
+//$$ import net.minecraft.nbt.CompoundTag;
 //#endif
 
 public class AutoGlide {
     private static int beforeHeldHotbarSlot = -1;
     private static int rocketTakenInventorySlot = -1;
 
-    public static void autoUseRocket(MinecraftClient mc) {
-        ClientPlayerEntity player = mc.player;
+    public static void autoUseRocket(Minecraft mc) {
+        LocalPlayer player = mc.player;
         if (player == null) return;
 
-        HitResult hit = mc.crosshairTarget;
+        HitResult hit = mc.hitResult;
         if (hit == null) return;
         if (hit.getType() == HitResult.Type.BLOCK) {
             BlockHitResult hitBlock = (BlockHitResult) hit;
             BlockPos hitBlockPos = hitBlock.getBlockPos();
 
             // make sure hitBlock can't be interacted.
-            if (BlockTypeEquals.isSneakingInteractionCancel(player.getWorld().getBlockState(hitBlockPos))) {
+            if (BlockTypeEquals.isSneakingInteractionCancel(player.level().getBlockState(hitBlockPos))) {
                 return;
             }
         } else if (hit.getType() == HitResult.Type.ENTITY) {
@@ -52,25 +52,25 @@ public class AutoGlide {
             return;
         }
 
-        if (player.getInventory().getStack(InventoryUtil.getSelectedSlot(player.getInventory())).isOf(Items.FIREWORK_ROCKET)) {
+        if (player.getInventory().getItem(InventoryUtil.getSelectedSlot(player.getInventory())).is(Items.FIREWORK_ROCKET)) {
             use(mc, player);
             return;
         }
 
         int maxFlightLevelInInventory = 0;
         int rocketSlot = -1;
-        for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
-            ItemStack stack = player.getInventory().getStack(i);
-            if (stack.isOf(Items.FIREWORK_ROCKET)) {
+        for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (stack.is(Items.FIREWORK_ROCKET)) {
                 //#if MC >= 12006
-                //$$ ComponentMap component = stack.getComponents();
-                //$$ if (component.contains(DataComponentTypes.FIREWORKS)) {
-                //$$ if (component.get(DataComponentTypes.FIREWORKS) == null) return;
-                //$$ int flightLevel = Objects.requireNonNull(component.get(DataComponentTypes.FIREWORKS)).flightDuration();
+                DataComponentMap component = stack.getComponents();
+                if (component.has(DataComponents.FIREWORKS)) {
+                if (component.get(DataComponents.FIREWORKS) == null) return;
+                int flightLevel = Objects.requireNonNull(component.get(DataComponents.FIREWORKS)).flightDuration();
                 //#else
-                NbtCompound nbt = stack.getNbt();
-                if (nbt != null && nbt.contains("Fireworks")) {
-                    int flightLevel = nbt.getCompound("Fireworks").getInt("Flight");
+                //$$ CompoundTag nbt = stack.getTag();
+                //$$ if (nbt != null && nbt.contains("Fireworks")) {
+                //$$     int flightLevel = nbt.getCompound("Fireworks").getInt("Flight");
                 //#endif
                     if (flightLevel > maxFlightLevelInInventory) {
                         maxFlightLevelInInventory = flightLevel;
@@ -86,51 +86,47 @@ public class AutoGlide {
         use(mc, player);
     }
 
-    private static void use(MinecraftClient mc, ClientPlayerEntity player) {
-        if (mc.interactionManager == null) return;
+    private static void use(Minecraft mc, LocalPlayer player) {
+        if (mc.gameMode == null) return;
         //#if MC >= 11900
-        mc.interactionManager.interactItem(player, Hand.MAIN_HAND);
+        mc.gameMode.useItem(player, InteractionHand.MAIN_HAND);
         //#else
-        //$$ mc.interactionManager.interactItem(player, player.clientWorld, Hand.MAIN_HAND);
+        //$$ mc.gameMode.useItem(player, player.clientLevel, InteractionHand.MAIN_HAND);
         //#endif
-        afterUse(player, player.networkHandler);
+        afterUse(player, player.connection);
     }
 
-    private static void afterUse(ClientPlayerEntity player, ClientPlayNetworkHandler networkHandler) {
+    private static void afterUse(LocalPlayer player, ClientPacketListener networkHandler) {
         if (Configs.Generic.AUTO_GLIDE_PUT_BACK_ROCKET.getBooleanValue() && rocketTakenInventorySlot != -1) {
-            InventoryUtils.swapSlots(player.currentScreenHandler, rocketTakenInventorySlot, InventoryUtil.getSelectedSlot(player.getInventory()));
+            InventoryUtils.swapSlots(player.containerMenu, rocketTakenInventorySlot, InventoryUtil.getSelectedSlot(player.getInventory()));
             rocketTakenInventorySlot = -1;
         }
         if (beforeHeldHotbarSlot != -1) {
             InventoryUtil.setSelectedSlot(player.getInventory(), beforeHeldHotbarSlot);
-            networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(beforeHeldHotbarSlot));
+            networkHandler.send(new ServerboundSetCarriedItemPacket(beforeHeldHotbarSlot));
             beforeHeldHotbarSlot = -1;
         }
     }
 
     private static void holdOrSwap(int sourceInventorySlot, int targetHotbarSlot) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ClientPlayerEntity player = mc.player;
-        //#if MC >= 11802
-        if (player == null || player.getWorld() == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
-        //#else
-        //$$ if (player == null || player.world == null || mc.getNetworkHandler() == null || mc.interactionManager == null) return;
-        //#endif
-        PlayerInventory inventory = player.getInventory();
-        ScreenHandler container = player.playerScreenHandler;
-        if (sourceInventorySlot >= 0 && sourceInventorySlot != InventoryUtil.getSelectedSlot(inventory) && player.currentScreenHandler == player.playerScreenHandler) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || mc.getConnection() == null || mc.gameMode == null) return;
+        Inventory inventory = player.getInventory();
+        AbstractContainerMenu container = player.inventoryMenu;
+        if (sourceInventorySlot >= 0 && sourceInventorySlot != InventoryUtil.getSelectedSlot(inventory) && container == player.containerMenu) {
             beforeHeldHotbarSlot = InventoryUtil.getSelectedSlot(inventory);
 
             // source is hotbar slot -> hold source slot
             // or else -> swap source and target, then hold target slot
 
-            if (PlayerInventory.isValidHotbarIndex(sourceInventorySlot)) {
+            if (Inventory.isHotbarSlot(sourceInventorySlot)) {
                 InventoryUtil.setSelectedSlot(inventory, sourceInventorySlot);
-                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(sourceInventorySlot));
+                mc.getConnection().send(new ServerboundSetCarriedItemPacket(sourceInventorySlot));
             } else {
                 if (InventoryUtil.getSelectedSlot(inventory) != targetHotbarSlot) {
                     InventoryUtil.setSelectedSlot(inventory, targetHotbarSlot);
-                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(targetHotbarSlot));
+                    mc.getConnection().send(new ServerboundSetCarriedItemPacket(targetHotbarSlot));
                 }
 
                 InventoryUtils.swapSlots(container, sourceInventorySlot, targetHotbarSlot);

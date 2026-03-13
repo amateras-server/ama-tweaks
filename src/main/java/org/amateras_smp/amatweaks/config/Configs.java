@@ -13,11 +13,10 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.config.options.*;
-import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import org.amateras_smp.amatweaks.InitHandler;
 import org.amateras_smp.amatweaks.Reference;
@@ -28,7 +27,6 @@ import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
 import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
 
 import java.io.File;
-import java.nio.file.Path;
 
 public class Configs implements IConfigHandler {
     private static final String CONFIG_FILE_NAME = Reference.kModId + ".json";
@@ -190,6 +188,6 @@ public class Configs implements IConfigHandler {
     }
 
     private static File getConfigDirectory() {
-        return new File(MinecraftClient.getInstance().runDirectory, "config");
+        return new File(Minecraft.getInstance().gameDirectory, "config");
     }
 }

@@ -4,7 +4,8 @@
 
 package org.amateras_smp.amatweaks.impl.util;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.amateras_smp.amatweaks.AmaTweaks;
 
 //#if MC < 11900
@@ -14,17 +15,17 @@ import org.amateras_smp.amatweaks.AmaTweaks;
 public class ClientCommandUtil {
     public static boolean executeCommand(String input) {
         AmaTweaks.LOGGER.debug("Executing client command : \"{}\"", input);
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.getNetworkHandler() == null) return false;
+        Minecraft client = Minecraft.getInstance();
+        ClientPacketListener connection = client.getConnection();
+        if (connection == null) return false;
         //#if MC >= 12108
-        //$$ client.getNetworkHandler().sendChatCommand(input);
-        //$$ return true;
+        connection.sendCommand(input);
+        return true;
         //#elseif MC >= 11900
-        return client.getNetworkHandler().sendCommand(input);
+        //$$ return connection.sendUnsignedCommand(input);
         //#else
         //$$ try {
-        //$$     client.getNetworkHandler().getCommandDispatcher()
-        //$$         .execute(input, client.getNetworkHandler().getCommandSource());
+        //$$     connection.getCommands().execute(input, connection.getSuggestionsProvider());
         //$$ } catch (CommandSyntaxException e) {
         //$$     throw new RuntimeException(e);
         //$$ }

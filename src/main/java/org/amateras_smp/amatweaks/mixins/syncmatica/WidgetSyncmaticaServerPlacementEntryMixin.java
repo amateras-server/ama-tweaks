@@ -4,7 +4,7 @@
 
 package org.amateras_smp.amatweaks.mixins.syncmatica;
 
-import ch.endte.syncmatica.ServerPlacement;
+import ch.endte.syncmatica.data.ServerPlacement;
 import ch.endte.syncmatica.litematica.gui.WidgetSyncmaticaServerPlacementEntry;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;

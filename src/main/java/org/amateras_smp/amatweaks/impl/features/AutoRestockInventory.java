@@ -9,23 +9,23 @@ import fi.dy.masa.itemscroller.util.InventoryUtils;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ProcessResult;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.EnderChestBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.util.container.IContainerProcessor;
+import org.amateras_smp.amatweaks.impl.util.BuiltInRegistriesUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +38,13 @@ public class AutoRestockInventory implements IContainerProcessor {
         return FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY;
     }
 
-    public ProcessResult process(ClientPlayerEntity player, HandledScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        HitResult hit = mc.crosshairTarget;
+    public ProcessResult process(LocalPlayer player, AbstractContainerScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots) {
+        Minecraft mc = Minecraft.getInstance();
+        HitResult hit = mc.hitResult;
         if (hit == null || hit.getType() != HitResult.Type.BLOCK) return new ProcessResult(false, false);
         BlockHitResult hitBlock = (BlockHitResult) hit;
         BlockPos hitBlockPos = hitBlock.getBlockPos();
-        World clientWorld = mc.world;
+        ClientLevel clientWorld = mc.level;
 
         if(mc.player == null || clientWorld == null) return new ProcessResult(false, false);
         BlockEntity container = clientWorld.getBlockEntity(hitBlockPos);
@@ -57,16 +57,16 @@ public class AutoRestockInventory implements IContainerProcessor {
         List<Slot> shouldRestockSlots = new ArrayList<>();
 
         for (Slot containerSlot : containerInvSlots) {
-            String itemId = Registries.ITEM.getId(containerSlot.getStack().getItem()).toString();
+            int itemId = BuiltInRegistriesUtil.ITEM.getId(containerSlot.getItem().getItem());
             if (isInventoryRestockListContains(itemId)) {
-                restockableMap.put(containerSlot.getStack().getItem(), restockableMap.getOrDefault(containerSlot.getStack().getItem(), 0) + containerSlot.getStack().getCount());
+                restockableMap.put(containerSlot.getItem().getItem(), restockableMap.getOrDefault(containerSlot.getItem().getItem(), 0) + containerSlot.getItem().getCount());
             }
         }
         if (restockableMap.isEmpty()) return new ProcessResult(false, false);
 
         for (Slot playerSlot : playerInvSlots) {
-            if (restockableMap.getOrDefault(playerSlot.getStack().getItem(), 0) > 0) {
-                if (playerSlot.getStack().getCount() < playerSlot.getStack().getMaxCount()) {
+            if (restockableMap.getOrDefault(playerSlot.getItem().getItem(), 0) > 0) {
+                if (playerSlot.getItem().getCount() < playerSlot.getItem().getMaxStackSize()) {
                     shouldRestockSlots.add(playerSlot);
                 }
             }
@@ -101,77 +101,62 @@ public class AutoRestockInventory implements IContainerProcessor {
         return new ProcessResult(true, true);
     }
 
-    private boolean isInventoryRestockListContains(String itemId) {
-        return Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings().stream().anyMatch(target -> target.equals(itemId));
+    private boolean isInventoryRestockListContains(int itemId) {
+        String stringId = String.valueOf(itemId);
+        return Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings().stream().anyMatch(target -> target.equals(stringId));
     }
-    private HashMap<String, Integer> executeRestock(HandledScreen<?> containerScreen, List<Slot> shouldRestockSlots, List<Slot> containerSlots) {
+    private HashMap<String, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> shouldRestockSlots, List<Slot> containerSlots) {
         HashMap<String, Integer> restockedMap = new HashMap<>();
+
+        int[] containerCounts = new int[containerSlots.size()];
+        for (int i = 0; i < containerSlots.size(); i++) {
+            containerCounts[i] = containerSlots.get(i).getItem().getCount();
+        }
+
         for (Slot playerSlot : shouldRestockSlots) {
-            ItemStack playerStack = playerSlot.getStack().copy();
-            int remainingRestockAmount = playerStack.getMaxCount() - playerStack.getCount();
+            ItemStack playerStack = playerSlot.getItem().copy();
+            int remainingRestockAmount = playerStack.getMaxStackSize() - playerStack.getCount();
             int restockedAmount = 0;
             for (int idx = containerSlots.size() - 1; idx >= 0; idx--) {
                 Slot containerSlot = containerSlots.get(idx);
-                // for (Slot containerSlot : containerSlots) {
-                ItemStack restockStack = containerSlot.getStack().copy();
-                if (restockStack.isEmpty()) continue;
-                if (InventoryUtils.areStacksEqual(restockStack, playerStack)) {
-                    int restockAmount = Math.min(remainingRestockAmount, restockStack.getCount());
-                    moveToPlayerInventory(containerScreen, containerSlot, playerSlot, restockAmount);
-                    restockedAmount += restockAmount;
-                    remainingRestockAmount -= restockAmount;
+                int availableInSlot = containerCounts[idx];
+                if (availableInSlot <= 0) continue;
+
+                if (InventoryUtils.areStacksEqual(containerSlot.getItem(), playerStack)) {
+                    int takeAmount = Math.min(remainingRestockAmount, availableInSlot);
+
+                    moveToPlayerInventory(containerScreen, containerSlot, playerSlot, takeAmount);
+
+                    containerCounts[idx] -= takeAmount;
+
+                    restockedAmount += takeAmount;
+                    remainingRestockAmount -= takeAmount;
                 }
-                if (remainingRestockAmount <= 0) {
-                    break;
-                }
+
+                if (remainingRestockAmount <= 0) break;
             }
-            Formatting formatting = playerStack.getRarity().
-                    //#if MC < 12006
-                    formatting;
+            ChatFormatting formatting = playerStack.getRarity().
+                    //#if MC >= 12006
+                    color();
                     //#else
-                    //$$ getFormatting();
+                    //$$ color;
                     //#endif
-            String stackName = formatting + playerStack.getName().getString() + GuiBase.TXT_RST;
+            String stackName = formatting + playerStack.getHoverName().getString() + GuiBase.TXT_RST;
             restockedMap.put(stackName, restockedMap.getOrDefault(stackName, 0) + restockedAmount);
         }
         return restockedMap;
     }
 
-    private HashMap<Item, Integer> executeRestock2(HandledScreen<?> containerScreen, List<Slot> shouldRestockSlots, List<Slot> containerSlots, HashMap<Item, Integer> restockableMap) {
-        for (Slot playerSlot : shouldRestockSlots) {
-            ItemStack playerStack = playerSlot.getStack().copy();
-            int requireRestockAmount = playerStack.getMaxCount() - playerStack.getCount();
-            int remainingRestockAmount = requireRestockAmount;
-            for (int idx = containerSlots.size() - 1; idx >= 0; idx--) {
-                Slot containerSlot = containerSlots.get(idx);
-            // for (Slot containerSlot : containerSlots) {
-                ItemStack restockStack = containerSlot.getStack().copy();
-                if (restockStack.isEmpty()) continue;
-                if (InventoryUtils.areStacksEqual(restockStack, playerStack)) {
-                    int restockAmount = Math.min(remainingRestockAmount, restockStack.getCount());
-                    moveToPlayerInventory(containerScreen, containerSlot, playerSlot, restockAmount);
-                    remainingRestockAmount -= restockAmount;
-                }
-                if (remainingRestockAmount <= 0) {
-                    break;
-                }
-            }
-            // remove as restocked item
-            restockableMap.remove(playerStack.getItem());
-        }
-        return restockableMap;
-    }
-
-    private void moveToPlayerInventory(HandledScreen<?> containerScreen, Slot containerSlot, Slot playerSlot, int moveAmount) {
-        if (moveAmount == containerSlot.getStack().getCount())
+    private void moveToPlayerInventory(AbstractContainerScreen<?> containerScreen, Slot containerSlot, Slot playerSlot, int moveAmount) {
+        if (moveAmount == containerSlot.getItem().getCount())
         {
-            InventoryUtils.shiftClickSlot(containerScreen, containerSlot.id);
+            InventoryUtils.shiftClickSlot(containerScreen, containerSlot.index);
             return;
         }
-        InventoryUtils.leftClickSlot(containerScreen, containerSlot.id);
+        InventoryUtils.leftClickSlot(containerScreen, containerSlot.index);
         for (int i = 0; i < moveAmount; i++) {
-            InventoryUtils.rightClickSlot(containerScreen, playerSlot.id);
+            InventoryUtils.rightClickSlot(containerScreen, playerSlot.index);
         }
-        InventoryUtils.leftClickSlot(containerScreen, containerSlot.id);
+        InventoryUtils.leftClickSlot(containerScreen, containerSlot.index);
     }
 }

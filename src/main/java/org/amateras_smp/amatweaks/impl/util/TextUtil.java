@@ -4,19 +4,19 @@
 
 package org.amateras_smp.amatweaks.impl.util;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 //#if MC < 11900
-//$$ import net.minecraft.text.LiteralText;
+//$$ import net.minecraft.network.chat.TextComponent;
 //#endif
 
 public class TextUtil {
-    public static Text withFormat(String message, Formatting formatting) {
-        //#if MC < 11900
-        //$$ return new LiteralText(message).formatted(formatting);
+    public static Component withFormat(String message, ChatFormatting formatting) {
+        //#if MC >= 11900
+        return Component.literal(message).withStyle(formatting);
         //#else
-        return Text.literal(message).formatted(formatting);
+        //$$ return new TextComponent(message).withStyle(formatting);
         //#endif
     }
 }

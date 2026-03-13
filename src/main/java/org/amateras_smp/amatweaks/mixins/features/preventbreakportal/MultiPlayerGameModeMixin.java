@@ -6,15 +6,15 @@ package org.amateras_smp.amatweaks.mixins.features.preventbreakportal;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
 import org.amateras_smp.amatweaks.impl.features.PreventPlacementOnPortalSides;
@@ -24,12 +24,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC <= 11802
-//$$ import net.minecraft.client.world.ClientWorld;
+//$$ import net.minecraft.client.multiplayer.ClientLevel;
 //#endif
 
-@Mixin(ClientPlayerInteractionManager.class)
-public class ClientPlayerInteractionManagerMixin {
-    @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
+@Mixin(MultiPlayerGameMode.class)
+public class MultiPlayerGameModeMixin {
+    @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void onAttackBlock(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir) {
         if (!FeatureToggle.TWEAK_PREVENT_BREAKING_ADJACENT_PORTAL.getBooleanValue()) return;
         if (!PreventBreakingAdjacentPortal.restriction(pos)) return;
@@ -42,20 +42,20 @@ public class ClientPlayerInteractionManagerMixin {
     }
 
     @Inject(
-            method = "interactBlock",
+            method = "useItemOn",
             at = @At("HEAD"),
             cancellable = true
     )
     //#if MC >= 11900
-    private void onInteractBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+    private void onInteractBlock(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         //#else
-        //$$ private void onInteractBlock(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+        //$$ private void onInteractBlock(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         //#endif
-        ItemUsageContext itemUsageContext = new ItemUsageContext(player, hand, hitResult);
-        ItemPlacementContext ctx = new ItemPlacementContext(itemUsageContext);
+        UseOnContext itemUsageContext = new UseOnContext(player, hand, hitResult);
+        BlockPlaceContext ctx = new BlockPlaceContext(itemUsageContext);
 
-        if (PreventPlacementOnPortalSides.restriction(ctx.getWorld(), ctx, hitResult)) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (PreventPlacementOnPortalSides.restriction(ctx.getLevel(), ctx, hitResult)) {
+            cir.setReturnValue(InteractionResult.PASS);
         }
     }
 }

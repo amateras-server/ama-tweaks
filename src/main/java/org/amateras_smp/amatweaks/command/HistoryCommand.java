@@ -10,9 +10,9 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
 
 //#if MC >= 11900
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 //#else
-//$$ import net.minecraft.text.LiteralText;
+//$$ import net.minecraft.network.chat.TextComponent;
 //#endif
 
 
@@ -41,9 +41,9 @@ public class HistoryCommand {
 
         if (!message.toString().isBlank()) {
             //#if MC >= 11900
-            context.getSource().sendFeedback(Text.literal(message.toString()));
+            context.getSource().sendFeedback(Component.literal(message.toString()));
             //#else
-            //$$ context.getSource().sendFeedback(new LiteralText(message.toString()));
+            //$$ context.getSource().sendFeedback(new TextComponent(message.toString()));
             //#endif
         }
 
@@ -55,9 +55,9 @@ public class HistoryCommand {
 
         String message = "Cleared interaction history cache";
         //#if MC >= 11900
-        context.getSource().sendFeedback(Text.literal(message));
+        context.getSource().sendFeedback(Component.literal(message));
         //#else
-        //$$ context.getSource().sendFeedback(new LiteralText(message));
+        //$$ context.getSource().sendFeedback(new TextComponent(message));
         //#endif
         return Command.SINGLE_SUCCESS;
     }

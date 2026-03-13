@@ -1,0 +1,1 @@
+net.minecraft.client.gui.Font$PreparedTextBuilder net.minecraft.client.gui.Font$StringRenderOutput
