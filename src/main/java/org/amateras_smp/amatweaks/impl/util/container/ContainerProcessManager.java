@@ -60,7 +60,7 @@ public class ContainerProcessManager {
                     }
                 }
             }
-            if (closeGui && Configs.Generic.ON_AUTO_RESTOCK_CLOSE_GUI.getBooleanValue()) {
+            if (closeGui && Configs.Generic.AUTO_RESTOCK_CLOSE_GUI.getBooleanValue()) {
                 player.closeContainer();
             }
 

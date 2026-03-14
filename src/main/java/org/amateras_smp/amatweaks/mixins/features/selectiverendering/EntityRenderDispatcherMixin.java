@@ -1,6 +1,5 @@
 package org.amateras_smp.amatweaks.mixins.features.selectiverendering;
 
-//#if MC >= 12110
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -34,4 +33,3 @@ public class EntityRenderDispatcherMixin {
         }
     }
 }
-//#endif

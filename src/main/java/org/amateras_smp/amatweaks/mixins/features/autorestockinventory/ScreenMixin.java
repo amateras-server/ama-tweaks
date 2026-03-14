@@ -20,14 +20,12 @@ public abstract class ScreenMixin implements AutoProcessableScreen
     private boolean shouldProcessFlag = false;
 
     @Override
-    public void setShouldProcess$AMT(boolean value)
-    {
+    public void setShouldProcess$AMT(boolean value) {
         this.shouldProcessFlag = value;
     }
 
     @Override
-    public boolean shouldProcess$AMT()
-    {
+    public boolean shouldProcess$AMT() {
         return this.shouldProcessFlag;
     }
 }

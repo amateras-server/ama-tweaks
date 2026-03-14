@@ -31,8 +31,8 @@ public class AutoEat {
     private static int foodTakenInventorySlot = -1;
     private static boolean eating = false;
 
-    public static void autoEat(Minecraft mc, LocalPlayer player, ClientPacketListener networkHandler, boolean onlyCheck) {
-        if (!onlyCheck && player.getFoodData().needsFood() && player.getFoodData().getFoodLevel() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue() * 20) {
+    public static void autoEat(Minecraft mc, LocalPlayer player, ClientPacketListener networkHandler) {
+        if (player.getFoodData().needsFood() && player.getFoodData().getFoodLevel() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue() * 20) {
             if (shouldAutoEat(mc)) {
                 HitResult hit = mc.hitResult;
                 if (hit == null) return;
@@ -70,9 +70,11 @@ public class AutoEat {
     }
 
     private static boolean shouldAutoEat(Minecraft mc) {
-        if (mc.gameMode == null || mc.gameMode.getPlayerMode().isCreative()) return false;
-        if (!Configs.Generic.CANCEL_AUTO_EAT_WHILE_DOING_ACTION.getBooleanValue()) return true;
-        return !mc.options.keyUse.isDown() && !mc.options.keyAttack.isDown();
+        if (mc.gameMode == null || mc.player == null || mc.gameMode.getPlayerMode().isCreative()) return false;
+        boolean isBusy = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown();
+        if (isBusy && Configs.Generic.AUTO_EAT_DISABLE_WHILE_IN_USE.getBooleanValue()) return false;
+        if (mc.player.isFallFlying() && Configs.Generic.AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING.getBooleanValue()) return false;
+        return true;
     }
 
     private static void autoEatCheck(Minecraft mc, LocalPlayer player, ClientPacketListener networkHandler) {

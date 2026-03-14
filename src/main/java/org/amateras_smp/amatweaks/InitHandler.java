@@ -25,9 +25,9 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 //$$ import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 //#endif
 //#if MC >= 12101
-//$$ import fi.dy.masa.malilib.registry.Registry;
-//$$ import fi.dy.masa.malilib.util.data.ModInfo;
-//$$ import org.amateras_smp.amatweaks.gui.GuiConfigs;
+import fi.dy.masa.malilib.registry.Registry;
+import fi.dy.masa.malilib.util.data.ModInfo;
+import org.amateras_smp.amatweaks.gui.GuiConfigs;
 //#endif
 
 public class InitHandler implements IInitializationHandler {
@@ -35,9 +35,9 @@ public class InitHandler implements IInitializationHandler {
     public void registerModHandlers() {
         ConfigManager.getInstance().registerConfigHandler(Reference.kModId, new Configs());
         //#if MC >= 12101
-        //$$ Registry.CONFIG_SCREEN.registerConfigScreenFactory(
-        //$$         new ModInfo(Reference.kModId, Reference.kModName, GuiConfigs::new)
-        //$$ );
+        Registry.CONFIG_SCREEN.registerConfigScreenFactory(
+                new ModInfo(Reference.kModId, Reference.kModName, GuiConfigs::new)
+        );
         //#endif
 
         InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());

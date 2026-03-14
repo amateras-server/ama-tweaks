@@ -24,7 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.util.BlockTypeEquals;
-import org.amateras_smp.amatweaks.mixins.features.preventbreakportal.BellBlockIMixin;
+import org.amateras_smp.amatweaks.mixins.features.preventbreakingportal.BellBlockIMixin;
 
 import static net.minecraft.world.level.block.NetherPortalBlock.AXIS;
 

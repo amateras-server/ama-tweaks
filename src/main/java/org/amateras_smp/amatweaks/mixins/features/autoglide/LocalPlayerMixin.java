@@ -31,7 +31,7 @@ public class LocalPlayerMixin {
         if (!FeatureToggle.TWEAK_AUTO_FIREWORK_GLIDE.getBooleanValue()) return;
         if (wasFallFlying) {
             tickCount++;
-            if (tickCount != 0 && tickCount % Configs.Generic.AUTO_FIREWORK_USE_INTERVAL.getIntegerValue() == 0) {
+            if (tickCount != 0 && tickCount % Configs.Generic.AUTO_GLIDE_USE_ROCKET_INTERVAL.getIntegerValue() == 0) {
                 if (minecraft.player == null) return;
                 if (minecraft.player.getDeltaMovement().length() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue()) {
                     AutoGlide.autoUseRocket(minecraft);

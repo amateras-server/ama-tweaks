@@ -20,6 +20,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import org.amateras_smp.amatweaks.AmaTweaks;
 import org.amateras_smp.amatweaks.Reference;
+import org.apache.commons.lang3.tuple.Pair;
 
 public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean> {
     TWEAK_AUTO_EAT("tweakAutoEat", false, "", "Automatically eats food from your inventory when your food level is not full."),
@@ -54,41 +55,38 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     private final boolean singlePlayer;
     private boolean valueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
+    private boolean dirty = false;
+    private Pair<Boolean, String> lastBooleanHotkey;
 
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey) {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT,
                 buildTranslateName(name, "comment"),
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings) {
         this(name, defaultValue, false, defaultHotkey, settings,
                 buildTranslateName(name, "comment"),
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
                 buildTranslateName(name, "comment"),
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName, String translatedName)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName, String translatedName) {
         this(name, defaultValue, false, defaultHotkey,
                 comment,
                 prettyName,
                 translatedName);
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName, String translatedName)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName, String translatedName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
                 comment,
                 prettyName,
@@ -96,56 +94,49 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     }
 
     // Backwards Compatible constructors - START
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment) {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT,
                 comment,
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
                 comment,
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment) {
         this(name, defaultValue, false, defaultHotkey, settings,
                 comment,
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment) {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings,
                 comment,
                 buildTranslateName(name, "prettyName"),
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
-    {
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName) {
         this(name, defaultValue, false, defaultHotkey,
                 comment,
                 prettyName,
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
                 comment,
                 prettyName,
                 buildTranslateName(name, "name"));
     }
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings,
                 comment,
                 prettyName,
@@ -153,8 +144,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     }
     // Backwards Compatible constructors - END
 
-    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName, String translatedName)
-    {
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName, String translatedName) {
         this.name = name;
         this.valueBoolean = defaultValue;
         this.defaultValueBoolean = defaultValue;
@@ -164,6 +154,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
         this.translatedName = translatedName;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey, settings);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
+        this.updateLastBooleanHotkeyValue();
     }
 
     @Override
@@ -180,8 +171,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     public String getConfigGuiDisplayName() {
         String name = StringUtils.getTranslatedOrFallback("config.name." + this.getName().toLowerCase(), this.getName());
 
-        if (this.singlePlayer)
-        {
+        if (this.singlePlayer) {
             return GuiBase.TXT_GOLD + name + GuiBase.TXT_RST;
         }
 
@@ -211,7 +201,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     }
 
     //#if MC >= 12104
-    //$$ @Override
+    @Override
     //#endif
     public String getTranslatedName() {
         String name = StringUtils.getTranslatedOrFallback(this.translatedName, this.name);
@@ -224,52 +214,61 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     }
 
     //#if MC >= 12104
-    //$$ @Override
+    @Override
     //#endif
     public void setPrettyName(String s) {
        this.prettyName = s;
     }
 
     //#if MC >= 12104
-    //$$ @Override
+    @Override
     //#endif
     public void setTranslatedName(String s) {
        this.translatedName = s;
     }
 
     //#if MC >= 12104
-    //$$ @Override
+    @Override
     //#endif
     public void setComment(String s) {
        this.comment = s;
     }
 
     //#if MC >= 12110
-    //$$ @Override
+    @Override
     //#endif
     public boolean isDirty() {
-        return false;
+        return this.dirty;
     }
 
     //#if MC >= 12110
-    //$$ @Override
+    @Override
     //#endif
     public void markDirty() {
-
+        //#if MC >= 12110
+        this.getKeybind().markDirty();
+        //#endif
+        this.dirty = true;
     }
 
     //#if MC >= 12110
-    //$$ @Override
+    @Override
     //#endif
     public void markClean() {
-
+        //#if MC >= 12110
+        this.getKeybind().markClean();
+        //#endif
+        this.dirty = false;
     }
 
     //#if MC >= 12110
-    //$$ @Override
+    @Override
     //#endif
     public void checkIfClean() {
-
+        if (this.isDirty()) {
+            this.markClean();
+            this.onValueChanged();
+        }
     }
 
     @Override
@@ -284,6 +283,19 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
     @Override
     public void setValueFromString(String value) {
+        this.updateLastBooleanHotkeyValue();
+        boolean oldValue = this.valueBoolean;
+
+        switch (value) {
+            case "true" -> this.valueBoolean = true;
+            case "false" -> this.valueBoolean = false;
+            default -> {}
+        }
+
+        if (oldValue != this.valueBoolean) {
+            this.markClean();
+            this.onValueChanged();
+        }
     }
 
     @Override
@@ -315,12 +327,46 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
     @Override
     public void setBooleanValue(boolean value) {
+        this.updateLastBooleanHotkeyValue();
         boolean oldValue = this.valueBoolean;
         this.valueBoolean = value;
 
         if (oldValue != this.valueBoolean) {
+            this.markClean();
             this.onValueChanged();
         }
+    }
+
+    //#if MC >= 12110
+    @Override
+    //#endif
+    public void toggleBooleanValue() {
+        this.updateLastBooleanHotkeyValue();
+        this.valueBoolean = !this.valueBoolean;
+        this.markClean();
+        this.onValueChanged();
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public boolean getLastBooleanValue() {
+        return this.lastBooleanHotkey.getLeft();
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public void updateLastBooleanValue() {
+        this.updateLastBooleanHotkeyValue();
+    }
+
+    public void setEnabledNoCallback() {
+        this.valueBoolean = true;
+    }
+
+    public void setDisabledNoCallback() {
+        this.valueBoolean = false;
     }
 
     @Override
@@ -335,7 +381,51 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
     @Override
     public void resetToDefault() {
+        this.updateLastBooleanHotkeyValue();
+        boolean oldValue = this.valueBoolean;
         this.valueBoolean = this.defaultValueBoolean;
+
+        if (oldValue != this.valueBoolean) {
+            this.markClean();
+            this.onValueChanged();
+        }
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public Pair<Boolean, String> getBooleanHotkeyValue() {
+        return Pair.of(this.valueBoolean, this.keybind.getStringValue());
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public Pair<Boolean, String> getDefaultBooleanHotkeyValue() {
+        return Pair.of(this.defaultValueBoolean, this.keybind.getDefaultStringValue());
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public void setBooleanHotkeyValue(Pair<Boolean, String> value) {
+        this.updateLastBooleanHotkeyValue();
+        this.setBooleanValue(value.getLeft());
+        this.getKeybind().setValueFromString(value.getRight());
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public Pair<Boolean, String> getLastBooleanHotkeyValue() {
+        return this.lastBooleanHotkey;
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public void updateLastBooleanHotkeyValue() {
+        this.lastBooleanHotkey = Pair.of(this.valueBoolean, this.keybind.getStringValue());
     }
 
     @Override
@@ -345,12 +435,23 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
     @Override
     public void setValueFromJsonElement(JsonElement element) {
+        final boolean oldBool = this.valueBoolean;
+        final String oldKeybind = this.keybind.getStringValue();
+
         try {
             if (element.isJsonPrimitive()) {
                 this.valueBoolean = element.getAsBoolean();
-            }
-            else {
+            } else {
                 AmaTweaks.LOGGER.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element);
+            }
+
+            if (oldBool != this.valueBoolean ||
+                oldKeybind != null && !oldKeybind.equals(this.keybind.getStringValue()) || this.isDirty()) {
+                this.markClean();
+
+                if (!this.getLastBooleanHotkeyValue().equals(this.getBooleanHotkeyValue())) {
+                    this.onValueChanged();
+                }
             }
         }
         catch (Exception e) {

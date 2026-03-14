@@ -25,10 +25,8 @@ public class MinecraftMixin {
     //$$ @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;endTick()V"))
     //#endif
     private void onTick(CallbackInfo ci) {
-        if (FeatureToggle.TWEAK_AUTO_EAT.getBooleanValue()) {
-            if (instance.player != null && instance.gameMode != null) {
-                AutoEat.autoEat(instance, instance.player, instance.player.connection, instance.player.isFallFlying() && Configs.Generic.GLIDING_AUTO_EAT_DISABLED.getBooleanValue());
-            }
+        if (FeatureToggle.TWEAK_AUTO_EAT.getBooleanValue() && instance.player != null && instance.gameMode != null) {
+            AutoEat.autoEat(instance, instance.player, instance.player.connection);
         }
     }
 }

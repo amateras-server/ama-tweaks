@@ -17,17 +17,14 @@
     "features.interactionhistory.MinecraftMixin",
     "features.interactionhistory.MultiPlayerGameModeMixin",
     "features.monogui.ClientboundPlayerChatPacketMixin",
-    "features.monogui.PreparedTextMixin",
     "features.monogui.PlayerTeamMixin",
-    "features.preventbreakportal.BellBlockIMixin",
-    "features.preventbreakportal.MultiPlayerGameModeMixin",
-    "features.preventbreakportal.PlacementTweaksMixin",
-    "features.selectiverendering.BlockBehaviourMixin",
-    //#if MC >= 12110
+    "features.monogui.PreparedTextMixin",
+    "features.preventbreakingportal.BellBlockIMixin",
+    "features.preventbreakingportal.MultiPlayerGameModeMixin",
+    "features.preventbreakingportal.PlacementTweaksMixin",
+    "features.selectiverendering.BlockEntityRenderDispatcherMixin",
+    "features.selectiverendering.BlockRenderDispatcherMixin",
     "features.selectiverendering.EntityRenderDispatcherMixin",
-    //#else
-    //$$ "features.selectiverendering.LevelRendererMixin",
-    //#endif
     "features.stepprotection.MultiPlayerGameModeMixin",
     "litematica.MaterialCacheMixin",
     "syncmatica.WidgetSyncmaticaServerPlacementEntryMixin",
@@ -35,5 +32,8 @@
     "tweakermore.SchematicBlockPickerMixin",
     "tweakeroo.ClientPacketListener",
     "tweakeroo.InventoryUtilsMixin"
+  ],
+  "mixins": [
+    "features.selectiverendering.BlockBehaviourMixin"
   ]
 }

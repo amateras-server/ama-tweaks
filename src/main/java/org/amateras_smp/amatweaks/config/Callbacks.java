@@ -19,6 +19,7 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
+import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
@@ -64,6 +65,8 @@ public class Callbacks {
 
         Configs.Generic.INTERACTION_HISTORY_MAX_SIZE.setValueChangeCallback((cfg) -> InteractionHistory.resize());
         Configs.Generic.ENABLE_DEBUG_PRINTS.setValueChangeCallback((cfg) -> InitHandler.initLogLevel(cfg.getBooleanValue()));
+
+        Configs.Lists.PICK_REDIRECT_MAP.setValueChangeCallback((cfg) -> PickRedirect.buildCache());
 
         Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACKLIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
         Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITELIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
@@ -124,8 +127,7 @@ public class Callbacks {
         }
 
         @Override
-        public void onValueChanged(IConfigBoolean config)
-        {
+        public void onValueChanged(IConfigBoolean config) {
             if (config.getBooleanValue()) {
                 KeyMapping.set(InputConstants.getKey(this.keyBind.saveString()), true);
                 KeyMapping.click(InputConstants.getKey(this.keyBind.saveString()));

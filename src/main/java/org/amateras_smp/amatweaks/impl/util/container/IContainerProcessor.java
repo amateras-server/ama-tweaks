@@ -13,8 +13,7 @@ import org.amateras_smp.amatweaks.config.FeatureToggle;
 import java.util.List;
 
 public interface IContainerProcessor {
-    default boolean isEnabled()
-    {
+    default boolean isEnabled() {
         FeatureToggle config = this.getConfig();
         return config.getBooleanValue();
     }

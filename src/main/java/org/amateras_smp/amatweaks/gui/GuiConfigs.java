@@ -84,20 +84,15 @@ public class GuiConfigs extends GuiConfigsBase {
 
         if (tab == ConfigGuiTab.GENERIC) {
             configs = Configs.Generic.OPTIONS;
-        }
-        else if (tab == ConfigGuiTab.LISTS) {
+        } else if (tab == ConfigGuiTab.LISTS) {
             configs = Configs.Lists.OPTIONS;
-        }
-        else if (tab == ConfigGuiTab.TWEAKS) {
+        } else if (tab == ConfigGuiTab.TWEAKS) {
             return ConfigOptionWrapper.createFor(TWEAK_LIST.stream().map(this::wrapConfig).toList());
-        }
-        else if (tab == ConfigGuiTab.GENERIC_HOTKEYS) {
+        } else if (tab == ConfigGuiTab.GENERIC_HOTKEYS) {
             configs = Hotkeys.HOTKEY_LIST;
-        }
-        else if (tab == ConfigGuiTab.DISABLES) {
+        } else if (tab == ConfigGuiTab.DISABLES) {
             configs = Configs.Disable.OPTIONS;
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
 
