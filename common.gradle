@@ -6,98 +6,88 @@ String mixinFile = "ama-tweaks.mixins.json"
 int mcVersion = project.mcVersion
 
 repositories {
-    maven {
-        name = 'Modrinth'
-        url = 'https://api.modrinth.com/maven'
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url 'https://maven.fallenbreath.me/releases'
-    }
+  maven {
+    name = 'Modrinth'
+    url = 'https://api.modrinth.com/maven'
+  }
+  maven {
+    url 'https://jitpack.io'
+  }
+  maven {
+    url 'https://maven.fallenbreath.me/releases'
+  }
 }
 
 // https://github.com/FabricMC/fabric-loader/issues/783
 configurations {
-    modRuntimeOnly.exclude group: 'net.fabricmc', module: 'fabric-loader'
+  modRuntimeOnly.exclude group: 'net.fabricmc', module: 'fabric-loader'
+  modImplementation.exclude group: 'io.github.prospector', module: 'modmenu'
 }
-configurations {
-    modImplementation.exclude group: 'io.github.prospector', module: 'modmenu'
-}
-// String tweakeroo_dependency = mcVersion >= 12100 ? "maven.modrinth:tweakeroo:${project.tweakeroo_version}" : "com.github.Andrews54757:tweakfork:${project.tweakfork_version}"
-// String syncmatica_dependency = mcVersion >= 12005 ? "com.github.sakura-ryoko:syncmatica:${project.syncmatica_version}" : "maven.modrinth:syncmatica:${project.syncmatica_version}"
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+  minecraft "com.mojang:minecraft:${project.minecraft_version}"
+  mappings loom.officialMojangMappings()
+  // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    include("org.apache.logging.log4j:log4j-core:${project.log4j_version}")
-    include("org.apache.logging.log4j:log4j-api:${project.log4j_version}")
+  // include("org.apache.logging.log4j:log4j-core:${project.log4j_version}")
+  // include("org.apache.logging.log4j:log4j-api:${project.log4j_version}")
 
-    // modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
-    include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
+  // modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+  include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
 
-    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
-    modImplementation "maven.modrinth:malilib:${project.malilib_version}"
-    modImplementation "maven.modrinth:tweakeroo:${project.tweakeroo_version}"
-    // if (mcVersion >= 12100) modImplementation "maven.modrinth:tweakeroo:${project.tweakeroo_version}"
-    // else modImplementation files("../../lib/tweakfork-fabric-${project.tweakfork_version}.jar")
-    modImplementation "maven.modrinth:tweakermore:${project.tweakermore_version}"
-    modImplementation "maven.modrinth:item-scroller:${project.itemscroller_version}"
-    modImplementation "maven.modrinth:litematica:${project.litematica_version}"
+  modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+  modImplementation "maven.modrinth:malilib:${project.malilib_version}"
+  modImplementation "maven.modrinth:tweakeroo:${project.tweakeroo_version}"
+  modImplementation "maven.modrinth:tweakermore:${project.tweakermore_version}"
+  modImplementation "maven.modrinth:item-scroller:${project.itemscroller_version}"
+  modImplementation "maven.modrinth:litematica:${project.litematica_version}"
 
-    modImplementation "maven.modrinth:syncmatica:${project.syncmatica_version}"
-    // modImplementation(syncmatica_dependency) {
-    //     exclude group: 'com.github.sakura-ryoko', module: 'malilib'
-    //     if (mcVersion == 12004 || mcVersion == 12006) exclude group: 'fi.dy.masa.malilib', module: 'malilib-fabric-1.20.6'
-    // }
+  modImplementation "maven.modrinth:syncmatica:${project.syncmatica_version}"
 }
 
 JavaVersion JAVA_COMPATIBILITY
 if (mcVersion >= 12005) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_21
+  JAVA_COMPATIBILITY = JavaVersion.VERSION_21
 } else if (mcVersion >= 11800) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_17
+  JAVA_COMPATIBILITY = JavaVersion.VERSION_17
 } else if (mcVersion >= 11700) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_16
+  JAVA_COMPATIBILITY = JavaVersion.VERSION_16
 } else {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_1_8
+  JAVA_COMPATIBILITY = JavaVersion.VERSION_1_8
 }
 JavaVersion MIXIN_COMPATIBILITY_LEVEL = JAVA_COMPATIBILITY
 
 loom {
-    accessWidenerPath = file("${project.mod_id}.accesswidener")
+  accessWidenerPath = file("${project.mod_id}.accesswidener")
 
-    def commonVmArgs = ['-Dmixin.debug.export=true']
-    if (mcVersion < 11904) {
-        // carpet 1.4.100+v230314 for mc1.19.4 and above
-        // fail to pass the check on at MinecraftServer_pingPlayerSampleLimit#modifyPlayerSampleLimit
-        // see https://github.com/gnembon/fabric-carpet/pull/1938
-        commonVmArgs.add('-Dmixin.debug.countInjections=true')
-    }
-    runConfigs.configureEach {
-        runDir '../../run'
-        vmArgs commonVmArgs
-        ideConfigGenerated true
-    }
+  def commonVmArgs = ['-Dmixin.debug.export=true']
+  if (mcVersion < 11904) {
+    // carpet 1.4.100+v230314 for mc1.19.4 and above
+    // fail to pass the check on at MinecraftServer_pingPlayerSampleLimit#modifyPlayerSampleLimit
+    // see https://github.com/gnembon/fabric-carpet/pull/1938
+    commonVmArgs.add('-Dmixin.debug.countInjections=true')
+  }
+  runConfigs.configureEach {
+    runDir '../../run'
+    vmArgs commonVmArgs
+    ideConfigGenerated true
+  }
 
-    runs {
-        def auditVmArgs = ["-D${project.mod_id}.mixin_audit=true"]
-        serverMixinAudit {
-            server()
-            vmArgs auditVmArgs
-            ideConfigGenerated false
-        }
-        clientMixinAudit {
-            client()
-            vmArgs auditVmArgs
-            ideConfigGenerated false
-        }
+  runs {
+    def auditVmArgs = ["-D${project.mod_id}.mixin_audit=true"]
+    serverMixinAudit {
+      server()
+      vmArgs auditVmArgs
+      ideConfigGenerated false
     }
+    clientMixinAudit {
+      client()
+      vmArgs auditVmArgs
+      ideConfigGenerated false
+    }
+  }
 }
 
 String modVersionSuffix = ''
@@ -106,9 +96,9 @@ String artifactVersionSuffix = ''
 // detect github action environment variables
 // https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 if (System.getenv("BUILD_RELEASE") != "true") {
-    String buildNumber = System.getenv("BUILD_ID")
-    modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
-    artifactVersionSuffix = '-SNAPSHOT'  // A non-release artifact is always a SNAPSHOT artifact
+  String buildNumber = System.getenv("BUILD_ID")
+  modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
+  artifactVersionSuffix = '-SNAPSHOT'  // A non-release artifact is always a SNAPSHOT artifact
 }
 String fullModVersion = project.mod_version + modVersionSuffix
 String fullProjectVersion = "v${artifactVersion}-mc${project.minecraft_version}-${modVersionSuffix}"
@@ -123,86 +113,86 @@ String fullArtifactVersion = "${artifactVersion}-mc${project.minecraft_version}-
 
 group = project.maven_group
 if (System.getenv("JITPACK") == "true") {
-	// move mc version into archivesBaseName, so jitpack will be able to organize archives from multiple subprojects correctly
-	base.archivesName = project.archives_base_name + '-mc' + project.minecraft_version
-	fullProjectVersion = 'v' + project.mod_version + modVersionSuffix
-	fullArtifactVersion = artifactVersion + artifactVersionSuffix
+  // move mc version into archivesBaseName, so jitpack will be able to organize archives from multiple subprojects correctly
+  base.archivesName = project.archives_base_name + '-mc' + project.minecraft_version
+  fullProjectVersion = 'v' + project.mod_version + modVersionSuffix
+  fullArtifactVersion = artifactVersion + artifactVersionSuffix
 } else {
-	base.archivesName = project.archives_base_name
-	fullProjectVersion = 'v' + project.mod_version + '-mc' + project.minecraft_version + modVersionSuffix
-	fullArtifactVersion = artifactVersion + '-mc' + project.minecraft_version + artifactVersionSuffix
+  base.archivesName = project.archives_base_name
+  fullProjectVersion = 'v' + project.mod_version + '-mc' + project.minecraft_version + modVersionSuffix
+  fullArtifactVersion = artifactVersion + '-mc' + project.minecraft_version + artifactVersionSuffix
 }
 version = fullProjectVersion
 
 // See https://youtrack.jetbrains.com/issue/IDEA-296490
 // if IDEA complains about "Cannot resolve resource filtering of MatchingCopyAction" and you want to know why
 processResources {
-    from "${project.mod_id}.accesswidener"
+  from "${project.mod_id}.accesswidener"
 
-    inputs.property "id", project.mod_id
-    inputs.property "name", project.mod_name
-    inputs.property "version", artifactVersion
-    inputs.property "minecraft_dependency", project.minecraft_dependency
+  inputs.property "id", project.mod_id
+  inputs.property "name", project.mod_name
+  inputs.property "version", artifactVersion
+  inputs.property "minecraft_dependency", project.minecraft_dependency
 
-    filesMatching("fabric.mod.json") {
-        def valueMap = [
-                "id": project.mod_id,
-                "name": project.mod_name,
-                "version": artifactVersion,
-                "minecraft_dependency": project.minecraft_dependency,
-        ]
-        expand valueMap
-    }
+  filesMatching("fabric.mod.json") {
+    def valueMap = [
+      "id"                  : project.mod_id,
+      "name"                : project.mod_name,
+      "version"             : artifactVersion,
+      "minecraft_dependency": project.minecraft_dependency,
+    ]
+    expand valueMap
+  }
 
-    filesMatching(mixinFile) {
-        filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "JAVA_${MIXIN_COMPATIBILITY_LEVEL.ordinal() + 1}") }
-    }
+  filesMatching(mixinFile) {
+    filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "JAVA_${MIXIN_COMPATIBILITY_LEVEL.ordinal() + 1}") }
+  }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-    if (JAVA_COMPATIBILITY <= JavaVersion.VERSION_1_8) {
-        // suppressed "source/target value 8 is obsolete and will be removed in a future release"
-        options.compilerArgs << '-Xlint:-options'
-    }
+  options.encoding = "UTF-8"
+  options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+  if (JAVA_COMPATIBILITY <= JavaVersion.VERSION_1_8) {
+    // suppressed "source/target value 8 is obsolete and will be removed in a future release"
+    options.compilerArgs << '-Xlint:-options'
+  }
 }
 
 java {
-    sourceCompatibility = JAVA_COMPATIBILITY
-    targetCompatibility = JAVA_COMPATIBILITY
+  sourceCompatibility = JAVA_COMPATIBILITY
+  targetCompatibility = JAVA_COMPATIBILITY
 
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
+  // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+  // if it is present.
+  // If you remove this line, sources will not be generated.
+  withSourcesJar()
 }
 
 jar {
-    from("../../LICENSE") {
-        rename { "${it}_${project.archives_base_name}" }
-    }
+  from("../../LICENSE") {
+    rename { "${it}_${project.archives_base_name}" }
+  }
 }
 
 // configure the maven publication
 publishing {
-    /*
-    publications {
-        create("mavenJava", MavenPublication) {
-            artifactId = project.archives_base_name
-            from components.java
-        }
-    }
+  /*
+  publications {
+      create("mavenJava", MavenPublication) {
+          artifactId = project.archives_base_name
+          from components.java
+      }
+  }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
-    */
+  // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+  repositories {
+      // Add repositories to publish to here.
+      // Notice: This block does NOT have the same function as the block in the top level.
+      // The repositories here will be used for publishing your artifact, not for
+      // retrieving dependencies.
+  }
+  */
 }

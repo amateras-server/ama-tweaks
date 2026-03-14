@@ -28,16 +28,13 @@
   ],
   "depends": {
     "minecraft": "${minecraft_dependency}",
-    "fabricloader": ">=0.16.10",
-    "fabric": "*",
-    "malilib": "*",
-    "modmenu": "*",
-    "tweakermore": "*"
+    "fabricloader": ">=0.18.4",
+    "malilib": "*"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/px7wHEMUpd",
+        "modmenu.discord": "https://discord.gg/MR878KhsCj",
         "modmenu.modrinth": "https://modrinth.com/mod/amatweaks"
       }
     }

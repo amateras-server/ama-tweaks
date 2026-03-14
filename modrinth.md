@@ -1,5 +1,5 @@
 <div align=center>
-  <img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width=256>
+  <img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width=256 alt="Amateras SMP Logo image">
 </div>
 
 
@@ -19,7 +19,7 @@ Currently supports 1.18~1.21.8.
 ## Dependencies
 
 - [malilib](https://modrinth.com/mod/malilib) (required)
-- [modmenu](https://modrinth.com/mod/modmenu) (required)
+- [modmenu](https://modrinth.com/mod/modmenu) (optional)
 - [item-scroller](https://modrinth.com/mod/item-scroller) (optional)
 - [litematica](https://modrinth.com/mod/litematica) (optional)
 - [syncmatica](https://modrinth.com/mod/syncmatica) (optional)

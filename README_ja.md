@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width="256" style="display: block; margin: auto;">
+<img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width="256" style="display: block; margin: auto;" alt="Amateras SMP Logo image">
 
 # AmaTweaks
 

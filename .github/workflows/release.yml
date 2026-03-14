@@ -141,7 +141,7 @@ jobs:
           else
               FILE_PATH=${FILE_PATHS[0]}
           fi
-          
+
           FILE_NAME=$(basename $FILE_PATH)
           FILE_HASH=$(sha256sum $FILE_PATH | awk '{ print $1 }')
           echo "path=$FILE_PATH" >> $GITHUB_OUTPUT
@@ -158,11 +158,11 @@ jobs:
         env:
           CHANGELOG: |-
             ${{ format('{0}{1}', github.event.release.body, steps.get_release.outputs.body) }}
-            
+
             -------
-            
+
             Build Information
-            
+
             - File name: `${{ steps.file_info.outputs.name }}`
             - SHA-256: `${{ steps.file_info.outputs.hash }}`
             - Built from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -187,7 +187,7 @@ jobs:
           game-version-filter: any
           dependencies: |-  # declare the dependencies explicitly, so mc-publish won't try to load from fabric.mod.json
             malilib(required)
-            modmenu(required)
+            modmenu(optional)
             item-scroller(optional)
             litematica(optional)
             syncmatica(optional)
