@@ -38,19 +38,20 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_IN_USE = new ConfigBoolean("autoEatDisableWhileInUse", false, "\"tweakAutoEat\" will not be triggered while using or attacking.");
         public static final ConfigBoolean AUTO_EAT_PUT_BACK_FOOD = new ConfigBoolean("autoEatPutBackFood", false, "\"tweakAutoEat\" puts back the food to the slot where it was.");
         public static final ConfigDouble  AUTO_EAT_THRESHOLD = new ConfigDouble("autoEatThreshold", 1.0, 0, 1.0, "The hunger level threshold for \"tweakAutoEat\".");
-        public static final ConfigInteger AUTO_GLIDE_USE_ROCKET_INTERVAL = new ConfigInteger("autoGlideUseRocketInterval", 60, 1, 1000, "The interval game tick for automatically try to use firework rockets with \"tweakAutoFireworkGlide\".");
+        public static final ConfigInteger AUTO_GLIDE_USE_ROCKET_INTERVAL = new ConfigInteger("autoGlideUseRocketInterval", 60, 1, 1000, "The interval game tick for trying to automatically use firework rockets with \"tweakAutoFireworkGlide\".");
         public static final ConfigBoolean AUTO_GLIDE_PUT_BACK_ROCKET = new ConfigBoolean("autoGlidePutBackRocket", true, "\"tweakAutoFireworkGlide\" puts back the firework rocket to the slot where it was.");
         public static final ConfigDouble  AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rockets.");
         public static final ConfigBoolean AUTO_RESTOCK_CLOSE_GUI = new ConfigBoolean("autoRestockCloseGui", true, "Closes container GUI screen after restocking items by \"tweakAutoRestockInventory\".");
-        public static final ConfigBoolean ENABLE_DEBUG_PRINTS = new ConfigBoolean("enableDebugPrints", false, "Enables debug prints for ama-tweaks developer.");
-        public static final ConfigInteger FIREWORK_SWITCHABLE_SLOT = new ConfigInteger ("fireworkSwitchableSlot", 0, 0, 8, "The slot to switch firework rocket by \"tweakAutoFireworkGlide\". (starts from 0)");
-        public static final ConfigInteger FOOD_SWITCHABLE_SLOT = new ConfigInteger ("foodSwitchableSlot", 0, 0, 8, "The slot to switch food by \"tweakAutoEat\". (starts from 0)");
+        public static final ConfigBoolean AUTO_RESTOCK_SHULKER_BOX_ONLY = new ConfigBoolean("autoRestockShulkerBoxOnly", false, "\"tweaksAutoRestockInventory\" will be triggered only when you open shulker boxes");
+        public static final ConfigInteger FIREWORK_SWITCHABLE_SLOT = new ConfigInteger ("fireworkSwitchableSlot", 0, 0, 8, "The slot to switch firework rocket by \"tweakAutoFireworkGlide\". (0 ~ 8)");
+        public static final ConfigInteger FOOD_SWITCHABLE_SLOT = new ConfigInteger ("foodSwitchableSlot", 0, 0, 8, "The slot to switch food by \"tweakAutoEat\". (0 ~ 8)");
         public static final ConfigInteger INTERACTION_HISTORY_MAX_SIZE = new ConfigInteger("interactionHistoryMaxSize", 10, 10, 1000, "The number of interactions memorized by \"tweakInteractionHistory\".");
-        public static final ConfigBoolean INVENTORY_RESTOCK_ONLY_ALLOW_SHULKER_BOX = new ConfigBoolean("inventoryRestockOnlyAllowShulkerBox", false, "\"tweaksAutoRestockInventory\" will be only triggered when you open shulker boxes");
         public static final ConfigBoolean PERSISTENT_GAMMA_OVERRIDE = new ConfigBoolean("persistentGammaOverride", false, "Fixes a bug of tweakeroo that \"tweakGammaOverride\" will not be enabled on client restart.");
         public static final ConfigBoolean REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL = new ConfigBoolean("refreshPrefilteredPostAutoCollectMaterial", false, "Refreshes pre-filtered material list at the end of \"autoCollectMaterial\" by tweakermore.");
         public static final ConfigBoolean REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED = new ConfigBoolean("refreshWorldRendererOnRenderBlocksChanged", true, "Refreshes client world renderer when \"tweakSelectiveBlockRendering\" settings(contains Lists, FeatureToggle) changed.");
         public static final ConfigBoolean SYNCMATICA_REMOVE_REQUIRE_SHIFT = new ConfigBoolean("syncmaticaRemoveRequireShift", true, "Requires shift to remove shared schematic from the server");
+
+        public static final ConfigBoolean ENABLE_DEBUG_PRINT = new ConfigBoolean("enableDebugPrint", false, "Enables debug print for ama-tweaks developer.");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING,
@@ -61,15 +62,16 @@ public class Configs implements IConfigHandler {
                 AUTO_GLIDE_PUT_BACK_ROCKET,
                 AUTO_GLIDE_SPEED_THRESHOLD,
                 AUTO_RESTOCK_CLOSE_GUI,
-                ENABLE_DEBUG_PRINTS,
+                AUTO_RESTOCK_SHULKER_BOX_ONLY,
                 FIREWORK_SWITCHABLE_SLOT,
                 FOOD_SWITCHABLE_SLOT,
                 INTERACTION_HISTORY_MAX_SIZE,
-                INVENTORY_RESTOCK_ONLY_ALLOW_SHULKER_BOX,
                 PERSISTENT_GAMMA_OVERRIDE,
                 REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL,
                 REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED,
-                SYNCMATICA_REMOVE_REQUIRE_SHIFT
+                SYNCMATICA_REMOVE_REQUIRE_SHIFT,
+
+                ENABLE_DEBUG_PRINT
         );
     }
 
@@ -130,7 +132,7 @@ public class Configs implements IConfigHandler {
 
     public static void onConfigLoaded() {
         Lists.INVENTORY_RESTOCK_ITEMS.setListContents(ImmutableList.of(""), Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings());
-        InitHandler.initLogLevel(Generic.ENABLE_DEBUG_PRINTS.getBooleanValue());
+        InitHandler.initLogLevel(Generic.ENABLE_DEBUG_PRINT.getBooleanValue());
 
         InteractionHistory.resize();
 

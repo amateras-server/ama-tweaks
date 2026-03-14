@@ -29,7 +29,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         Screen screen = Minecraft.getInstance().screen;
         if (screen != null) {
-            ((AutoProcessableScreen) screen).setShouldProcess$AMT(!Configs.Generic.INVENTORY_RESTOCK_ONLY_ALLOW_SHULKER_BOX.getBooleanValue() || packet.getType() == MenuType.SHULKER_BOX);
+            ((AutoProcessableScreen) screen).setShouldProcess$AMT(!Configs.Generic.AUTO_RESTOCK_SHULKER_BOX_ONLY.getBooleanValue() || packet.getType() == MenuType.SHULKER_BOX);
         }
     }
 }
