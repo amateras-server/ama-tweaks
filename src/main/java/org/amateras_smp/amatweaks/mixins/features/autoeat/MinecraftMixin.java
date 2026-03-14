@@ -19,11 +19,7 @@ public class MinecraftMixin {
     @Shadow
     static Minecraft instance;
 
-    //#if MC >= 12110
     @Inject(method = "finishProfilers", at = @At(value = "HEAD"))
-    //#else
-    //$$ @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;endTick()V"))
-    //#endif
     private void onTick(CallbackInfo ci) {
         if (FeatureToggle.TWEAK_AUTO_EAT.getBooleanValue() && instance.player != null && instance.gameMode != null) {
             AutoEat.autoEat(instance, instance.player, instance.player.connection);

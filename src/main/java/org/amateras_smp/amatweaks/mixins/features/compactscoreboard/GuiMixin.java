@@ -55,7 +55,11 @@ public class GuiMixin {
     //#else
     //$$ @Shadow
     //$$ private int screenWidth;
+    //#if MC >= 12000
     //$$ @ModifyArgs(method = "displayScoreboardSidebar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"))
+    //#else
+    //$$ @ModifyArgs(method = "displayScoreboardSidebar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;draw(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/lang/String;FFI)I"))
+    //#endif
     //$$ private void replaceWithCompactFormat(Args args) {
     //$$     String string = args.get(1);
     //$$     if (FeatureToggle.TWEAK_COMPACT_SCOREBOARD.getBooleanValue()) {

@@ -48,7 +48,7 @@ public class ContainerProcessManager {
             List<Slot> allSlots = container.slots;
             List<Slot> playerInvSlots = allSlots.stream().filter(slot -> slot.container instanceof Inventory).collect(Collectors.toList());
             if (allSlots.isEmpty() || playerInvSlots.isEmpty()) return;
-            List<Slot> containerInvSlots = allSlots.stream().filter(slot -> ItemScrollerInventoryUtilsAccessor.areSlotsInSameInventory(slot, allSlots.getFirst())).collect(Collectors.toList());
+            List<Slot> containerInvSlots = allSlots.stream().filter(slot -> ItemScrollerInventoryUtilsAccessor.areSlotsInSameInventory(slot, allSlots.get(0))).collect(Collectors.toList());
             if (containerInvSlots.isEmpty()) return;
 
             boolean closeGui = false;
