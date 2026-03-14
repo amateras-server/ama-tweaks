@@ -29,7 +29,7 @@ dependencies {
   mappings loom.officialMojangMappings()
   // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
   modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
   // include("org.apache.logging.log4j:log4j-core:${project.log4j_version}")
   // include("org.apache.logging.log4j:log4j-api:${project.log4j_version}")
