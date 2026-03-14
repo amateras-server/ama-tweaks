@@ -21,6 +21,8 @@ repositories {
 // https://github.com/FabricMC/fabric-loader/issues/783
 configurations {
   modRuntimeOnly.exclude group: 'net.fabricmc', module: 'fabric-loader'
+}
+configurations {
   modImplementation.exclude group: 'io.github.prospector', module: 'modmenu'
 }
 
