@@ -16,18 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EntityRenderDispatcherMixin {
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private <E extends Entity> void onRenderEntity(E entity, Frustum frustum, double d, double e, double f, CallbackInfoReturnable<Boolean> cir) {
-        if (!FeatureToggle.TWEAK_SELECTIVE_ENTITY_RENDERING.getBooleanValue()) return;
+        if (!FeatureToggle.TWEAK_SELECTIVE_ENTITY_RENDERING.getBooleanValue())
+            return;
         UsageRestriction.ListType type = (UsageRestriction.ListType) Configs.Lists.SELECTIVE_ENTITY_RENDERING_LIST_TYPE.getOptionListValue();
         if (type == UsageRestriction.ListType.NONE) return;
 
         String targetEntity = EntityType.getKey(entity.getType()).toString();
 
         if (type == UsageRestriction.ListType.BLACKLIST) {
-            if(Configs.Lists.SELECTIVE_ENTITY_RENDERING_BLACKLIST.getStrings().contains(targetEntity)) {
+            if (Configs.Lists.SELECTIVE_ENTITY_RENDERING_BLACKLIST.getStrings().contains(targetEntity)) {
                 cir.setReturnValue(false);
             }
         } else if (type == UsageRestriction.ListType.WHITELIST) {
-            if(!Configs.Lists.SELECTIVE_ENTITY_RENDERING_WHITELIST.getStrings().contains(targetEntity)) {
+            if (!Configs.Lists.SELECTIVE_ENTITY_RENDERING_WHITELIST.getStrings().contains(targetEntity)) {
                 cir.setReturnValue(false);
             }
         }

@@ -23,8 +23,8 @@ public class PreventBreakingAdjacentPortal {
     public static void buildLists() {
         PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION.setListType((UsageRestriction.ListType) Configs.Lists.PORTAL_BREAKING_RESTRICTION_LIST_TYPE.getOptionListValue());
         PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION.setListContents(
-                Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACKLIST.getStrings(),
-                Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITELIST.getStrings());
+            Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACKLIST.getStrings(),
+            Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITELIST.getStrings());
     }
 
     public static boolean restriction(BlockPos pos) {
@@ -40,11 +40,11 @@ public class PreventBreakingAdjacentPortal {
     }
 
     private static boolean isThereAdjacentPortal(Level world, BlockPos pos) {
-        return  world.getBlockState(pos.relative(Direction.WEST)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.WEST)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.X ||
-                world.getBlockState(pos.relative(Direction.EAST)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.EAST)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.X ||
-                world.getBlockState(pos.relative(Direction.NORTH)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.NORTH)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.Z ||
-                world.getBlockState(pos.relative(Direction.SOUTH)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.SOUTH)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.Z ||
-                world.getBlockState(pos.relative(Direction.DOWN)).is(Blocks.NETHER_PORTAL) ||
-                world.getBlockState(pos.relative(Direction.UP)).is(Blocks.NETHER_PORTAL);
+        return world.getBlockState(pos.relative(Direction.WEST)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.WEST)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.X ||
+            world.getBlockState(pos.relative(Direction.EAST)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.EAST)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.X ||
+            world.getBlockState(pos.relative(Direction.NORTH)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.NORTH)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.Z ||
+            world.getBlockState(pos.relative(Direction.SOUTH)).is(Blocks.NETHER_PORTAL) && world.getBlockState(pos.relative(Direction.SOUTH)).getValue(NetherPortalBlock.AXIS) == Direction.Axis.Z ||
+            world.getBlockState(pos.relative(Direction.DOWN)).is(Blocks.NETHER_PORTAL) ||
+            world.getBlockState(pos.relative(Direction.UP)).is(Blocks.NETHER_PORTAL);
     }
 }

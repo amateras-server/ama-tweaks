@@ -18,7 +18,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 //#endif
 
 public class BuiltInRegistriesUtil {
-
     //#if MC >= 11900
     public static final DefaultedRegistry<Block> BLOCK = BuiltInRegistries.BLOCK;
     public static final DefaultedRegistry<Item> ITEM = BuiltInRegistries.ITEM;

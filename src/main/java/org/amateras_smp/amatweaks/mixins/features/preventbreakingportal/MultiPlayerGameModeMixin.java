@@ -31,7 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void onAttackBlock(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir) {
-        if (!FeatureToggle.TWEAK_PREVENT_BREAKING_ADJACENT_PORTAL.getBooleanValue()) return;
+        if (!FeatureToggle.TWEAK_PREVENT_BREAKING_ADJACENT_PORTAL.getBooleanValue())
+            return;
         if (!PreventBreakingAdjacentPortal.restriction(pos)) return;
         String preRed = GuiBase.TXT_RED;
         String rst = GuiBase.TXT_RST;
@@ -42,9 +43,9 @@ public class MultiPlayerGameModeMixin {
     }
 
     @Inject(
-            method = "useItemOn",
-            at = @At("HEAD"),
-            cancellable = true
+        method = "useItemOn",
+        at = @At("HEAD"),
+        cancellable = true
     )
     //#if MC >= 11900
     private void onInteractBlock(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {

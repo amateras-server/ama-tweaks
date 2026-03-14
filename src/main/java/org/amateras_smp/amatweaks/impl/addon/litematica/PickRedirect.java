@@ -13,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.BuiltInRegistriesUtil;
 import org.amateras_smp.amatweaks.impl.util.IdentifierUtil;
+
 import java.util.Map;
 import java.util.HashMap;
 
 //#if MC >= 12104
 import net.minecraft.core.Holder.Reference;
 //#endif
-
 
 
 public class PickRedirect {
@@ -52,13 +52,14 @@ public class PickRedirect {
         redirectCache = newCache;
     }
 
-    public static ItemStack getShouldPickItem (BlockState schematicState, ItemStack defaultStack) {
+    public static ItemStack getShouldPickItem(BlockState schematicState, ItemStack defaultStack) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return defaultStack;
         Inventory inventory = mc.player.getInventory();
 
         // if shouldPickStack is in the player inventory why should I override the pick behavior?
-        if (inventory.findSlotMatchingItem(defaultStack) != -1) return defaultStack;
+        if (inventory.findSlotMatchingItem(defaultStack) != -1)
+            return defaultStack;
 
         if (redirectCache == null) buildCache();
 

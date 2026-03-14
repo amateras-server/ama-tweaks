@@ -32,7 +32,7 @@ public class EnhancedRemoveButton {
         }
 
         public void actionPerformedWithButton(ButtonBase button, int arg1) {
-            if(Configs.Disable.DISABLE_SYNCMATICA_REMOVE_BUTTON.getBooleanValue()) {
+            if (Configs.Disable.DISABLE_SYNCMATICA_REMOVE_BUTTON.getBooleanValue()) {
                 ScreenHelper.ifPresent((s) -> {
                     s.addMessage(Message.MessageType.ERROR, "ama_tweaks.error.syncmatica_placements.remove_disabled");
                 });
@@ -43,7 +43,7 @@ public class EnhancedRemoveButton {
                 return;
             }
             Context con = LitematicManager.getInstance().getActiveContext();
-            ExchangeTarget server = ((ClientCommunicationManager)con.getCommunicationManager()).getServer();
+            ExchangeTarget server = ((ClientCommunicationManager) con.getCommunicationManager()).getServer();
             FriendlyByteBuf packetBuf = new FriendlyByteBuf(Unpooled.buffer());
             packetBuf.writeUUID(placementId);
             //#if MC >= 12006

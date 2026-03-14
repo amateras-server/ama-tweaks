@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class ContainerProcessManager {
     private static final List<IContainerProcessor> CONTAINER_PROCESSORS = ImmutableList.of(
-            new AutoRestockInventory()
+        new AutoRestockInventory()
     );
 
     private static boolean hasTweakEnabled() {
@@ -40,10 +40,11 @@ public class ContainerProcessManager {
         LocalPlayer player = mc.player;
         if (player != null && screen instanceof AbstractContainerScreen<?> containerScreen) {
             if (player.isSpectator()) return;
-            if (containerScreen.getMenu() != container || !((AutoProcessableScreen)screen).shouldProcess$AMT()) return;
+            if (containerScreen.getMenu() != container || !((AutoProcessableScreen) screen).shouldProcess$AMT())
+                return;
             if (isInBlackList(containerScreen)) return;
 
-            ((AutoProcessableScreen)screen).setShouldProcess$AMT(false);
+            ((AutoProcessableScreen) screen).setShouldProcess$AMT(false);
             List<Slot> allSlots = container.slots;
             List<Slot> playerInvSlots = allSlots.stream().filter(slot -> slot.container instanceof Inventory).collect(Collectors.toList());
             if (allSlots.isEmpty() || playerInvSlots.isEmpty()) return;
@@ -67,8 +68,7 @@ public class ContainerProcessManager {
         }
     }
 
-    private static <T extends AbstractContainerMenu> boolean isInBlackList(AbstractContainerScreen<T> containerScreen)
-    {
+    private static <T extends AbstractContainerMenu> boolean isInBlackList(AbstractContainerScreen<T> containerScreen) {
         return
             containerScreen instanceof InventoryScreen || // not screen with inventory only (1)
                 containerScreen instanceof CreativeModeInventoryScreen ||  // not screen with inventory only (2)

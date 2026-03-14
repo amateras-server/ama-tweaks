@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlacementTweaks.class)
 public class PlacementTweaksMixin {
     @Shadow(
-            remap = false
+        remap = false
     )
     private static boolean firstWasRotation;
     @Shadow
@@ -55,7 +55,7 @@ public class PlacementTweaksMixin {
     private static boolean isFacingValidForDirection(ItemStack stack, Direction facing) {
         Item item = stack.getItem();
         if (!stack.isEmpty() && item instanceof BlockItem) {
-            Block block = ((BlockItem)item).getBlock();
+            Block block = ((BlockItem) item).getBlock();
             BlockState state = block.defaultBlockState();
             if (state.hasProperty(BlockStateProperties.FACING)) {
                 return true;
@@ -101,9 +101,9 @@ public class PlacementTweaksMixin {
         double x;
         //#if MC >= 12100
         if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
-        //#else
-        //$$ if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
-        //#endif
+            //#else
+            //$$ if (flexible && rotation && !accurate && fi.dy.masa.tweakeroo.config.Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() && isFacingValidForDirection(stackOriginal, sideIn)) {
+            //#endif
             Direction facing = sideIn.getOpposite();
             x = posIn.getX() + 2 + facing.get3DDataValue() * 2;
             if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue()) {
@@ -115,7 +115,7 @@ public class PlacementTweaksMixin {
 
         double y;
         if (fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && fi.dy.masa.tweakeroo.config.Hotkeys.PLACEMENT_Y_MIRROR.getKeybind().isKeybindHeld()) {
-            y = 1.0 - hitVecIn.y + (double)(2 * posIn.getY());
+            y = 1.0 - hitVecIn.y + (double) (2 * posIn.getY());
             hitVecIn = new Vec3(hitVecIn.x, y, hitVecIn.z);
             if (sideIn.getAxis() == Direction.Axis.Y) {
                 posIn = posIn.relative(sideIn);
@@ -127,9 +127,9 @@ public class PlacementTweaksMixin {
     }
 
     @Inject(
-            method = "processRightClickBlockWrapper",
-            at = @At("HEAD"),
-            cancellable = true
+        method = "processRightClickBlockWrapper",
+        at = @At("HEAD"),
+        cancellable = true
     )
     private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand);

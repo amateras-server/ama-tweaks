@@ -13,8 +13,10 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.amateras_smp.amatweaks.config.Callbacks;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.event.InputHandler;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+
 import org.amateras_smp.amatweaks.command.HistoryCommand;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -36,7 +38,7 @@ public class InitHandler implements IInitializationHandler {
         ConfigManager.getInstance().registerConfigHandler(Reference.kModId, new Configs());
         //#if MC >= 12101
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(
-                new ModInfo(Reference.kModId, Reference.kModName, GuiConfigs::new)
+            new ModInfo(Reference.kModId, Reference.kModName, GuiConfigs::new)
         );
         //#endif
 
@@ -55,13 +57,11 @@ public class InitHandler implements IInitializationHandler {
 
     private static void registerCommand(String name, Command<FabricClientCommandSource> command) {
         //#if MC >= 11900
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(literal(name)
-    	//#else
-        //$$ ClientCommandManager.DISPATCHER.register(literal(name)
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher
+        //#else
+        //$$ ClientCommandManager.DISPATCHER
         //#endif
-            .executes(command)
-            .then(argument("arguments", StringArgumentType.greedyString())
-                .executes(command)))
+            .register(literal(name).executes(command).then(argument("arguments", StringArgumentType.greedyString()).executes(command)))
         //#if MC >= 11900
         )
         //#endif

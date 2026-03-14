@@ -59,11 +59,9 @@ public class GuiConfigs extends GuiConfigsBase {
 
         if (tab == ConfigGuiTab.GENERIC) {
             return 120;
-        }
-        else if (tab == ConfigGuiTab.FIXES) {
+        } else if (tab == ConfigGuiTab.FIXES) {
             return 60;
-        }
-        else if (tab == ConfigGuiTab.LISTS) {
+        } else if (tab == ConfigGuiTab.LISTS) {
             return 200;
         }
 
@@ -73,8 +71,8 @@ public class GuiConfigs extends GuiConfigsBase {
     @Override
     protected boolean useKeybindSearch() {
         return GuiConfigs.tab == ConfigGuiTab.TWEAKS ||
-                GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS ||
-                GuiConfigs.tab == ConfigGuiTab.DISABLES;
+            GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS ||
+            GuiConfigs.tab == ConfigGuiTab.DISABLES;
     }
 
     @Override
@@ -122,12 +120,12 @@ public class GuiConfigs extends GuiConfigsBase {
     }
 
     public enum ConfigGuiTab {
-        GENERIC         ("Generic"),
-        FIXES           ("Fixes"),
-        LISTS           ("Lists"),
-        TWEAKS          ("Tweaks"),
-        GENERIC_HOTKEYS ("Hotkeys"),
-        DISABLES        ("Yeets");
+        GENERIC("Generic"),
+        FIXES("Fixes"),
+        LISTS("Lists"),
+        TWEAKS("Tweaks"),
+        GENERIC_HOTKEYS("Hotkeys"),
+        DISABLES("Yeets");
 
         private final String translationKey;
 

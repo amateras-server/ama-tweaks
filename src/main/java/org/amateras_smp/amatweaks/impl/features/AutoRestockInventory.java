@@ -40,15 +40,18 @@ public class AutoRestockInventory implements IContainerProcessor {
     public ProcessResult process(LocalPlayer player, AbstractContainerScreen<?> containerScreen, List<Slot> allSlots, List<Slot> playerInvSlots, List<Slot> containerInvSlots) {
         Minecraft mc = Minecraft.getInstance();
         HitResult hit = mc.hitResult;
-        if (hit == null || hit.getType() != HitResult.Type.BLOCK) return new ProcessResult(false, false);
+        if (hit == null || hit.getType() != HitResult.Type.BLOCK)
+            return new ProcessResult(false, false);
         BlockHitResult hitBlock = (BlockHitResult) hit;
         BlockPos hitBlockPos = hitBlock.getBlockPos();
         ClientLevel clientWorld = mc.level;
 
-        if (mc.player == null || clientWorld == null) return new ProcessResult(false, false);
+        if (mc.player == null || clientWorld == null)
+            return new ProcessResult(false, false);
         BlockEntity container = clientWorld.getBlockEntity(hitBlockPos);
         if (container == null) return new ProcessResult(false, false);
-        if (container instanceof EnderChestBlockEntity) return new ProcessResult(false, false);
+        if (container instanceof EnderChestBlockEntity)
+            return new ProcessResult(false, false);
 
         List<Slot> shouldRestockSlots = new ArrayList<>();
         for (Slot playerSlot : playerInvSlots) {
@@ -62,14 +65,15 @@ public class AutoRestockInventory implements IContainerProcessor {
             }
         }
 
-        if (shouldRestockSlots.isEmpty()) return new ProcessResult(false, false);
+        if (shouldRestockSlots.isEmpty())
+            return new ProcessResult(false, false);
 
         boolean anyRestockable = false;
         outer:
         for (Slot playerSlot : shouldRestockSlots) {
             for (Slot containerSlot : containerInvSlots) {
                 if (!containerSlot.getItem().isEmpty() &&
-                        InventoryUtils.areStacksEqual(containerSlot.getItem(), playerSlot.getItem())) {
+                    InventoryUtils.areStacksEqual(containerSlot.getItem(), playerSlot.getItem())) {
                     anyRestockable = true;
                     break outer;
                 }
@@ -118,7 +122,8 @@ public class AutoRestockInventory implements IContainerProcessor {
                 int availableInSlot = containerCounts[idx];
                 if (availableInSlot <= 0) continue;
 
-                if (!InventoryUtils.areStacksEqual(containerSlot.getItem(), playerStack)) continue;
+                if (!InventoryUtils.areStacksEqual(containerSlot.getItem(), playerStack))
+                    continue;
 
                 int takeAmount = Math.min(remainingRestockAmount, availableInSlot);
 
@@ -131,11 +136,11 @@ public class AutoRestockInventory implements IContainerProcessor {
 
             if (restockedAmount > 0) {
                 ChatFormatting formatting = playerStack.getRarity().
-                        //#if MC >= 12006
+                    //#if MC >= 12006
                         color();
-                        //#else
-                        //$$ color;
-                        //#endif
+                //#else
+                //$$ color;
+                //#endif
                 String stackName = formatting + playerStack.getHoverName().getString() + GuiBase.TXT_RST;
                 restockedMap.put(stackName, restockedMap.getOrDefault(stackName, 0) + restockedAmount);
             }

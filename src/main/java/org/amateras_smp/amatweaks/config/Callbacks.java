@@ -89,6 +89,16 @@ public class Callbacks {
     }
 
     private static class KeyCallbackHotkeysGeneric implements IHotkeyCallback {
+        private static final boolean IS_LITEMATICA_LOADED = checkLitematica();
+
+        private static boolean checkLitematica() {
+            try {
+                Class.forName("fi.dy.masa.litematica.Litematica");
+                return true;
+            } catch (ClassNotFoundException e) {
+                return false;
+            }
+        }
 
         public KeyCallbackHotkeysGeneric() {
         }
@@ -99,8 +109,7 @@ public class Callbacks {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
             } else if (key == Hotkeys.REFRESH_MATERIAL_LIST.getKeybind()) {
-                try {
-                    Class.forName("fi.dy.masa.litematica.Litematica");
+                if (IS_LITEMATICA_LOADED) {
                     MaterialListBase materialList = DataManager.getMaterialList();
                     if (materialList != null) {
                         materialList.reCreateMaterialList();
@@ -108,8 +117,7 @@ public class Callbacks {
                     } else {
                         return false;
                     }
-                } catch (ClassNotFoundException e) {
-                    return false;
+
                 }
             } else if (key == Hotkeys.SEE_INTERACTION_HISTORY.getKeybind()) {
                 return ClientCommandUtil.executeCommand("history");
@@ -131,33 +139,33 @@ public class Callbacks {
             if (config.getBooleanValue()) {
                 KeyMapping.set(InputConstants.getKey(this.keyBind.saveString()), true);
                 KeyMapping.click(InputConstants.getKey(this.keyBind.saveString()));
-            }
-            else {
+            } else {
                 KeyMapping.set(InputConstants.getKey(this.keyBind.saveString()), false);
             }
         }
     }
 
-    private record KeyCallbackAdjustableFeature(IConfigBoolean config) implements IHotkeyCallback {
-            private static IHotkeyCallback createCallback(IConfigBoolean config) {
-                return new KeyCallbackAdjustable(config, new KeyCallbackAdjustableFeature(config));
-            }
+    private record KeyCallbackAdjustableFeature(
+        IConfigBoolean config) implements IHotkeyCallback {
+        private static IHotkeyCallback createCallback(IConfigBoolean config) {
+            return new KeyCallbackAdjustable(config, new KeyCallbackAdjustableFeature(config));
+        }
 
         @Override
-            public boolean onKeyAction(KeyAction action, IKeybind key) {
-                this.config.toggleBooleanValue();
+        public boolean onKeyAction(KeyAction action, IKeybind key) {
+            this.config.toggleBooleanValue();
 
-                boolean enabled = this.config.getBooleanValue();
-                String strStatus = enabled ? "ON" : "OFF";
-                String preGreen = GuiBase.TXT_GREEN;
-                String preRed = GuiBase.TXT_RED;
-                String rst = GuiBase.TXT_RST;
-                String prettyName = this.config.getPrettyName();
-                strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+            boolean enabled = this.config.getBooleanValue();
+            String strStatus = enabled ? "ON" : "OFF";
+            String preGreen = GuiBase.TXT_GREEN;
+            String preRed = GuiBase.TXT_RED;
+            String rst = GuiBase.TXT_RST;
+            String prettyName = this.config.getPrettyName();
+            strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
-                InfoUtils.printActionbarMessage("Toggled %s %s", prettyName, strStatus);
-                return true;
-            }
+            InfoUtils.printActionbarMessage("Toggled %s %s", prettyName, strStatus);
+            return true;
         }
+    }
 
 }

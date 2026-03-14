@@ -19,8 +19,9 @@ public class PreparedTextMixin {
     //#else
     //$$ @ModifyVariable(method = "accept", at = @At("HEAD"), argsOnly = true)
     //#endif
-    private Style onAccept(Style style){
-        if (FeatureToggle.TWEAK_MONO_GUI.getBooleanValue()) return Style.EMPTY.withColor(ChatFormatting.RESET);
+    private Style onAccept(Style style) {
+        if (FeatureToggle.TWEAK_MONO_GUI.getBooleanValue())
+            return Style.EMPTY.withColor(ChatFormatting.RESET);
         return style;
     }
 }

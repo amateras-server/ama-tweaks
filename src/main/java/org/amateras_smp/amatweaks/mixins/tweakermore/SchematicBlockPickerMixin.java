@@ -23,7 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SchematicBlockPickerMixin {
     @Inject(method = "doSchematicWorldPickBlock", at = @At("HEAD"), cancellable = true)
     private static void onPickBlock(Minecraft mc, BlockPos pos, InteractionHand hand, CallbackInfo ci) {
-        if (!FeatureToggle.TWEAK_SELECTIVE_AUTO_PICK.getBooleanValue() || mc.player == null) return;
+        if (!FeatureToggle.TWEAK_SELECTIVE_AUTO_PICK.getBooleanValue() || mc.player == null)
+            return;
         if (SelectiveAutoPick.restrict(mc.player, hand)) ci.cancel();
     }
 }

@@ -29,27 +29,28 @@ public class ClientboundPlayerChatPacketMixin {
     private void onChatMessagePacket(ClientboundPlayerChatPacket packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<net.minecraft.network.protocol.game.ClientboundPlayerChatPacket> packetRef) {
         if (!FeatureToggle.TWEAK_MONO_TEAM_COLOR.getBooleanValue()) return;
         //#if MC >= 12006
-        ChatType.Bound newParameters = new ChatType.Bound(
+        ChatType.Bound newParameters = new ChatType.Bound
         //#else
-        //$$ ChatType.BoundNetwork newParameters = new ChatType.BoundNetwork(
+        //$$ ChatType.BoundNetwork newParameters = new ChatType.BoundNetwork
         //#endif
+            (
                 packet.chatType().chatType(),
                 packet.chatType().name().copy().setStyle(Style.EMPTY.withColor(ChatFormatting.RESET)),
                 packet.chatType().targetName()
-        );
+            );
 
 
         ClientboundPlayerChatPacket newPacket = new ClientboundPlayerChatPacket(
-                //#if MC >= 12105
-                packet.globalIndex(),
-                //#endif
-                packet.sender(),
-                packet.index(),
-                packet.signature(),
-                packet.body(),
-                packet.unsignedContent(),
-                packet.filterMask(),
-                newParameters
+            //#if MC >= 12105
+            packet.globalIndex(),
+            //#endif
+            packet.sender(),
+            packet.index(),
+            packet.signature(),
+            packet.body(),
+            packet.unsignedContent(),
+            packet.filterMask(),
+            newParameters
         );
         packetRef.set(newPacket);
     }

@@ -22,10 +22,10 @@ public class SelectiveRendering {
 
 
     private static boolean isChanged() {
-        return  isEnabled != FeatureToggle.TWEAK_SELECTIVE_BLOCK_RENDERING.getBooleanValue() ||
-                listType != Configs.Lists.SELECTIVE_BLOCK_RENDERING_LIST_TYPE.getOptionListValue() ||
-                !Objects.equals(blackListString, Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACKLIST.getStrings().toString()) ||
-                !Objects.equals(whiteListString, Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITELIST.getStrings().toString());
+        return isEnabled != FeatureToggle.TWEAK_SELECTIVE_BLOCK_RENDERING.getBooleanValue() ||
+            listType != Configs.Lists.SELECTIVE_BLOCK_RENDERING_LIST_TYPE.getOptionListValue() ||
+            !Objects.equals(blackListString, Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACKLIST.getStrings().toString()) ||
+            !Objects.equals(whiteListString, Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITELIST.getStrings().toString());
     }
 
     public static void applyConfig() {
@@ -39,8 +39,8 @@ public class SelectiveRendering {
         if (isChanged()) {
             BLOCKS_LIST.setListType((UsageRestriction.ListType) Configs.Lists.SELECTIVE_BLOCK_RENDERING_LIST_TYPE.getOptionListValue());
             BLOCKS_LIST.setListContents(
-                    Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACKLIST.getStrings(),
-                    Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITELIST.getStrings()
+                Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACKLIST.getStrings(),
+                Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITELIST.getStrings()
             );
 
             // reloads all the world rendering so that the settings change will be applied.

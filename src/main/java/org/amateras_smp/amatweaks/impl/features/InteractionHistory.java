@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.LimitedQueue;
 import org.jetbrains.annotations.Nullable;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 

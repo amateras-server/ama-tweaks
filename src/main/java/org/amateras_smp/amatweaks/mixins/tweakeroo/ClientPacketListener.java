@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Restriction(require = @Condition(Reference.ModIds.tweakeroo))
 @Mixin(net.minecraft.client.multiplayer.ClientPacketListener.class)
@@ -19,7 +20,7 @@ public class ClientPacketListener {
     @Inject(method = "handleLogin", at = @At("TAIL"))
     private void handleLogin(CallbackInfo ci) {
         if (Configs.Generic.PERSISTENT_GAMMA_OVERRIDE.getBooleanValue()) {
-            fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
+            FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
         }
     }
 }

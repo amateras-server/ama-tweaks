@@ -30,7 +30,8 @@ import static net.minecraft.world.level.block.NetherPortalBlock.AXIS;
 
 public class PreventPlacementOnPortalSides {
     public static boolean restriction(Level world, BlockPlaceContext ctx, BlockHitResult hitResult) {
-        if (!FeatureToggle.TWEAK_PREVENT_PLACEMENT_ON_PORTAL_SIDES.getBooleanValue()) return false;
+        if (!FeatureToggle.TWEAK_PREVENT_PLACEMENT_ON_PORTAL_SIDES.getBooleanValue())
+            return false;
         if (ctx == null) {
             return false;
         }
@@ -52,11 +53,11 @@ public class PreventPlacementOnPortalSides {
 
         while (true) {
             if (checkNeighbors(world, blockPos.north(), Direction.Axis.Z, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.south(), Direction.Axis.Z, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.east(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.west(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.above(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos()) ||
-                    checkNeighbors(world, blockPos.below(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos())
+                checkNeighbors(world, blockPos.south(), Direction.Axis.Z, ctx, hitResult, hitResult.getBlockPos()) ||
+                checkNeighbors(world, blockPos.east(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
+                checkNeighbors(world, blockPos.west(), Direction.Axis.X, ctx, hitResult, hitResult.getBlockPos()) ||
+                checkNeighbors(world, blockPos.above(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos()) ||
+                checkNeighbors(world, blockPos.below(), Direction.Axis.Y, ctx, hitResult, hitResult.getBlockPos())
             ) {
                 String preRed = GuiBase.TXT_RED;
                 String rst = GuiBase.TXT_RST;
@@ -68,9 +69,9 @@ public class PreventPlacementOnPortalSides {
 
             //#if MC >= 12000
             if (itemStack.getItem() instanceof DoubleHighBlockItem || itemStack.is(Items.PITCHER_PLANT)) {
-            //#else
-            //$$ if (itemStack.getItem() instanceof DoubleHighBlockItem) {
-            //#endif
+                //#else
+                //$$ if (itemStack.getItem() instanceof DoubleHighBlockItem) {
+                //#endif
                 if (blockPos.equals(hitResult.getBlockPos().relative(hitResult.getDirection()))) {
                     blockPos = blockPos.above();
                 } else if (firstTime) {
@@ -79,8 +80,7 @@ public class PreventPlacementOnPortalSides {
                     break;
                 }
                 firstTime = false;
-            } else
-            if (itemStack.getItem() instanceof BedItem) {
+            } else if (itemStack.getItem() instanceof BedItem) {
                 if (blockPos.equals(hitResult.getBlockPos().relative(hitResult.getDirection()))) {
                     Direction direction = ctx.getHorizontalDirection();
                     blockPos = blockPos.relative(direction);
@@ -126,6 +126,6 @@ public class PreventPlacementOnPortalSides {
     }
 
     public static boolean canRing(BellBlock bell, BlockState blockState, BlockHitResult hitResult, BlockPos blockPos) {
-        return ((BellBlockIMixin) bell).ModIsPointOnBell(blockState, hitResult.getDirection(), hitResult.getLocation().y - (double)blockPos.getY());
+        return ((BellBlockIMixin) bell).ModIsPointOnBell(blockState, hitResult.getDirection(), hitResult.getLocation().y - (double) blockPos.getY());
     }
 }

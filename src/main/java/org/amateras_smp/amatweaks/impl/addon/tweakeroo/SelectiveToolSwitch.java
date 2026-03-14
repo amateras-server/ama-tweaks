@@ -15,8 +15,8 @@ public class SelectiveToolSwitch {
     public static void buildLists() {
         TOOL_RESTRICTION.setListType((UsageRestriction.ListType) Configs.Lists.SELECTIVE_TOOL_SWITCH_LIST_TYPE.getOptionListValue());
         TOOL_RESTRICTION.setListContents(
-                Configs.Lists.SELECTIVE_TOOL_SWITCH_BLACKLIST.getStrings(),
-                Configs.Lists.SELECTIVE_TOOL_SWITCH_WHITELIST.getStrings());
+            Configs.Lists.SELECTIVE_TOOL_SWITCH_BLACKLIST.getStrings(),
+            Configs.Lists.SELECTIVE_TOOL_SWITCH_WHITELIST.getStrings());
     }
 
     public static boolean restrict(BlockState state) {

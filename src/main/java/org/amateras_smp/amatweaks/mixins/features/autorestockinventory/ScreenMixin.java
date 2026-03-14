@@ -14,8 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Restriction(require = @Condition(Reference.ModIds.itemscroller))
 @Mixin(Screen.class)
-public abstract class ScreenMixin implements AutoProcessableScreen
-{
+public abstract class ScreenMixin implements AutoProcessableScreen {
     @Unique
     private boolean shouldProcessFlag = false;
 

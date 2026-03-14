@@ -1,5 +1,5 @@
 {
-  "ama_tweaks.error.syncmatica_placements.remove_disabled" : "couldn't remove syncmatic : remove disabled.",
-  "ama_tweaks.error.syncmatica_placements.remove_require_shift" : "couldn't remove syncmatic : remove require shift.",
+  "ama_tweaks.error.syncmatica_placements.remove_disabled": "Couldn't remove the syncmatic : Removing disabled.",
+  "ama_tweaks.error.syncmatica_placements.remove_require_shift": "Couldn't remove the syncmatic : Removing require shift.",
   "ama_tweaks.label.config_comment.single_player_only": "Single Player Only"
 }

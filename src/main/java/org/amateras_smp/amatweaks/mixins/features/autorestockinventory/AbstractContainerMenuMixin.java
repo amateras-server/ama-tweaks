@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AbstractContainerMenuMixin {
     @Inject(method = "initializeContents", at = @At("TAIL"))
     private void autoContainerProcess(CallbackInfo ci) {
-        ContainerProcessManager.process((AbstractContainerMenu)(Object)this);
+        ContainerProcessManager.process((AbstractContainerMenu) (Object) this);
     }
 }
 

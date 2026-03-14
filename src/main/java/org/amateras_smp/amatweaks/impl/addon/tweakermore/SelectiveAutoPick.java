@@ -17,8 +17,8 @@ public class SelectiveAutoPick {
     public static void buildLists() {
         AUTO_PICK_RESTRICTION.setListType((UsageRestriction.ListType) Configs.Lists.SELECTIVE_AUTO_PICK_LIST_TYPE.getOptionListValue());
         AUTO_PICK_RESTRICTION.setListContents(
-                Configs.Lists.SELECTIVE_AUTO_PICK_BLACKLIST.getStrings(),
-                Configs.Lists.SELECTIVE_AUTO_PICK_WHITELIST.getStrings());
+            Configs.Lists.SELECTIVE_AUTO_PICK_BLACKLIST.getStrings(),
+            Configs.Lists.SELECTIVE_AUTO_PICK_WHITELIST.getStrings());
     }
 
     public static boolean restrict(LocalPlayer player, InteractionHand hand) {

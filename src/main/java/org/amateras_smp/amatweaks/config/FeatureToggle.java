@@ -37,7 +37,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_PICK_BLOCK_REDIRECT("tweakPickBlockRedirect", false, "", "Automatically replaces blocks that should be picked by litematica or tweakermore."),
     TWEAK_PREVENT_BREAKING_ADJACENT_PORTAL("tweakPreventBreakingAdjacentPortal", false, "", "Prevents breaking blocks adjacent to nether portal block."),
     TWEAK_PREVENT_PLACEMENT_ON_PORTAL_SIDES("tweakPreventPlacementOnPortalSides", false, "", "Disables placement on sliced nether portal sides."),
-    TWEAK_SAFE_STEP_PROTECTION("tweakSafeStepProtection",false, "","Restrict Breaking Blocks below you when you're moving forward."),
+    TWEAK_SAFE_STEP_PROTECTION("tweakSafeStepProtection", false, "", "Restrict Breaking Blocks below you when you're moving forward."),
     TWEAK_SELECTIVE_AUTO_PICK("tweakSelectiveAutoPick", false, "", "Adds whitelist/blacklist for autoPickSchematicBlock(in tweakermore)."),
     TWEAK_SELECTIVE_BLOCK_RENDERING("tweakSelectiveBlockRendering", false, "", "Renders blocks in accordance with custom selected list."),
     TWEAK_SELECTIVE_ENTITY_RENDERING("tweakSelectiveEntityRendering", false, "", "Renders entities in accordance with custom selected list."),
@@ -60,87 +60,87 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey) {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT,
-                buildTranslateName(name, "comment"),
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            buildTranslateName(name, "comment"),
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings) {
         this(name, defaultValue, false, defaultHotkey, settings,
-                buildTranslateName(name, "comment"),
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            buildTranslateName(name, "comment"),
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
-                buildTranslateName(name, "comment"),
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            buildTranslateName(name, "comment"),
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName, String translatedName) {
         this(name, defaultValue, false, defaultHotkey,
-                comment,
-                prettyName,
-                translatedName);
+            comment,
+            prettyName,
+            translatedName);
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName, String translatedName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
-                comment,
-                prettyName,
-                translatedName);
+            comment,
+            prettyName,
+            translatedName);
     }
 
     // Backwards Compatible constructors - START
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment) {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT,
-                comment,
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            comment,
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
-                comment,
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            comment,
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment) {
         this(name, defaultValue, false, defaultHotkey, settings,
-                comment,
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            comment,
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment) {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings,
-                comment,
-                buildTranslateName(name, "prettyName"),
-                buildTranslateName(name, "name"));
+            comment,
+            buildTranslateName(name, "prettyName"),
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName) {
         this(name, defaultValue, false, defaultHotkey,
-                comment,
-                prettyName,
-                buildTranslateName(name, "name"));
+            comment,
+            prettyName,
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT,
-                comment,
-                prettyName,
-                buildTranslateName(name, "name"));
+            comment,
+            prettyName,
+            buildTranslateName(name, "name"));
     }
 
     FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName) {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings,
-                comment,
-                prettyName,
-                buildTranslateName(name, "name"));
+            comment,
+            prettyName,
+            buildTranslateName(name, "name"));
     }
     // Backwards Compatible constructors - END
 
@@ -181,7 +181,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     @Override
     public String getPrettyName() {
         return StringUtils.getTranslatedOrFallback(this.prettyName,
-                !this.prettyName.isEmpty() ? this.prettyName : StringUtils.splitCamelCase(this.name.substring(5)));
+            !this.prettyName.isEmpty() ? this.prettyName : StringUtils.splitCamelCase(this.name.substring(5)));
     }
 
     @Override
@@ -217,21 +217,21 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     @Override
     //#endif
     public void setPrettyName(String s) {
-       this.prettyName = s;
+        this.prettyName = s;
     }
 
     //#if MC >= 12104
     @Override
     //#endif
     public void setTranslatedName(String s) {
-       this.translatedName = s;
+        this.translatedName = s;
     }
 
     //#if MC >= 12104
     @Override
     //#endif
     public void setComment(String s) {
-       this.comment = s;
+        this.comment = s;
     }
 
     //#if MC >= 12110
@@ -289,7 +289,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
         switch (value) {
             case "true" -> this.valueBoolean = true;
             case "false" -> this.valueBoolean = false;
-            default -> {}
+            default -> {
+            }
         }
 
         if (oldValue != this.valueBoolean) {
@@ -453,8 +454,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
                     this.onValueChanged();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             AmaTweaks.LOGGER.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element, e);
         }
     }

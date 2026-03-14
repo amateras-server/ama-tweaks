@@ -52,9 +52,9 @@ public class AutoEat {
                     ItemStack stack = player.getInventory().getItem(i);
                     //#if MC >= 12006
                     if (stack.getItem().components().has(DataComponents.FOOD)) {
-                    //#else
-                    //$$ if (stack.getItem().isEdible()) {
-                    //#endif
+                        //#else
+                        //$$ if (stack.getItem().isEdible()) {
+                        //#endif
                         holdOrSwap(i, Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue());
                         if (eating) {
                             KeyMapping.set(InputConstants.getKey(mc.options.keyUse.saveString()), true);
@@ -70,10 +70,13 @@ public class AutoEat {
     }
 
     private static boolean shouldAutoEat(Minecraft mc) {
-        if (mc.gameMode == null || mc.player == null || mc.gameMode.getPlayerMode().isCreative()) return false;
+        if (mc.gameMode == null || mc.player == null || mc.gameMode.getPlayerMode().isCreative())
+            return false;
         boolean isBusy = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown();
-        if (isBusy && Configs.Generic.AUTO_EAT_DISABLE_WHILE_IN_USE.getBooleanValue()) return false;
-        if (mc.player.isFallFlying() && Configs.Generic.AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING.getBooleanValue()) return false;
+        if (isBusy && Configs.Generic.AUTO_EAT_DISABLE_WHILE_IN_USE.getBooleanValue())
+            return false;
+        if (mc.player.isFallFlying() && Configs.Generic.AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING.getBooleanValue())
+            return false;
         return true;
     }
 
@@ -98,7 +101,8 @@ public class AutoEat {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
 
-        if (player == null || mc.getConnection() == null || mc.gameMode == null) return;
+        if (player == null || mc.getConnection() == null || mc.gameMode == null)
+            return;
 
         Inventory inventory = player.getInventory();
         InventoryMenu container = player.inventoryMenu;

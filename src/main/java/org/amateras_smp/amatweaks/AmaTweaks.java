@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class AmaTweaks implements ClientModInitializer {
     public static Logger LOGGER;
+
     @Override
     public void onInitializeClient() {
         LOGGER = LogManager.getLogger(Reference.kModName);

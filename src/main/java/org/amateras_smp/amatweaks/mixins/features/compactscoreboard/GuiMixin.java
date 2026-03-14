@@ -40,10 +40,12 @@ public class GuiMixin {
         if (!FeatureToggle.TWEAK_COMPACT_SCOREBOARD.getBooleanValue())
             return format;
         return (T) new net.minecraft.network.chat.numbers.NumberFormat() {
-            @Override @NotNull
+            @Override
+            @NotNull
             public MutableComponent format(int number) {
                 return net.minecraft.network.chat.Component.literal(FORMATTER.format(number)).withStyle(net.minecraft.ChatFormatting.RED);
             }
+
             @Override
             public NumberFormatType<? extends NumberFormat> type() {
                 return null;

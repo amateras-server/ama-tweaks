@@ -19,9 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin {
-    @Shadow private boolean wasFallFlying;
+    @Shadow
+    private boolean wasFallFlying;
 
-    @Shadow @Final protected Minecraft minecraft;
+    @Shadow
+    @Final
+    protected Minecraft minecraft;
 
     @Unique
     private int tickCount = 0;

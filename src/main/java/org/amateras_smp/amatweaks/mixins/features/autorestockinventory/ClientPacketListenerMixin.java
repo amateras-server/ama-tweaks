@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin {
     @Inject(
-            method = "handleOpenScreen",
-            at = @At("TAIL")
+        method = "handleOpenScreen",
+        at = @At("TAIL")
     )
     private void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         Screen screen = Minecraft.getInstance().screen;

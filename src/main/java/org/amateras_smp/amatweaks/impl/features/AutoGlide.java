@@ -23,6 +23,7 @@ import org.amateras_smp.amatweaks.impl.util.InventoryUtil;
 
 //#if MC >= 12006
 import java.util.Objects;
+
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 //#else
@@ -65,13 +66,13 @@ public class AutoGlide {
                 //#if MC >= 12006
                 DataComponentMap component = stack.getComponents();
                 if (component.has(DataComponents.FIREWORKS)) {
-                if (component.get(DataComponents.FIREWORKS) == null) return;
-                int flightLevel = Objects.requireNonNull(component.get(DataComponents.FIREWORKS)).flightDuration();
-                //#else
-                //$$ CompoundTag nbt = stack.getTag();
-                //$$ if (nbt != null && nbt.contains("Fireworks")) {
-                //$$     int flightLevel = nbt.getCompound("Fireworks").getInt("Flight");
-                //#endif
+                    if (component.get(DataComponents.FIREWORKS) == null) return;
+                    int flightLevel = Objects.requireNonNull(component.get(DataComponents.FIREWORKS)).flightDuration();
+                    //#else
+                    //$$ CompoundTag nbt = stack.getTag();
+                    //$$ if (nbt != null && nbt.contains("Fireworks")) {
+                    //$$     int flightLevel = nbt.getCompound("Fireworks").getInt("Flight");
+                    //#endif
                     if (flightLevel > maxFlightLevelInInventory) {
                         maxFlightLevelInInventory = flightLevel;
                         rocketSlot = i;
@@ -111,7 +112,8 @@ public class AutoGlide {
     private static void holdOrSwap(int sourceInventorySlot, int targetHotbarSlot) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.getConnection() == null || mc.gameMode == null) return;
+        if (player == null || mc.getConnection() == null || mc.gameMode == null)
+            return;
         Inventory inventory = player.getInventory();
         AbstractContainerMenu container = player.inventoryMenu;
         if (sourceInventorySlot >= 0 && sourceInventorySlot != InventoryUtil.getSelectedSlot(inventory) && container == player.containerMenu) {

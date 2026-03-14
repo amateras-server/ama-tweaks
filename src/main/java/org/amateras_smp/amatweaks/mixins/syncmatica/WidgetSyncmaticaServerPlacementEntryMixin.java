@@ -20,11 +20,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Restriction(require = @Condition(Reference.ModIds.syncmatica))
 @Mixin(value = WidgetSyncmaticaServerPlacementEntry.class, remap = false)
 public class WidgetSyncmaticaServerPlacementEntryMixin {
-    @Shadow @Final
+    @Shadow
+    @Final
     private ServerPlacement placement;
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lch/endte/syncmatica/litematica/gui/WidgetSyncmaticaServerPlacementEntry;addButton(Lfi/dy/masa/malilib/gui/button/ButtonBase;Lfi/dy/masa/malilib/gui/button/IButtonActionListener;)Lfi/dy/masa/malilib/gui/button/ButtonBase;", ordinal = 0), index = 1)
     private IButtonActionListener onInitRemoveButton(IButtonActionListener par2) {
-        return new EnhancedRemoveButton.ButtonListener((WidgetSyncmaticaServerPlacementEntry)(Object)this, placement.getId());
+        return new EnhancedRemoveButton.ButtonListener((WidgetSyncmaticaServerPlacementEntry) (Object) this, placement.getId());
     }
 }
