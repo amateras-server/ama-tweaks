@@ -1,8 +1,8 @@
-<img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width="256" style="display: block; margin: auto;" alt="Amateras SMP Logo image">
+<img src="https://raw.githubusercontent.com/amateras-server/ama-tweaks/main/src/main/resources/assets/ama-tweaks/ama_alpha_white_1280.png" width="256" style="display: block; margin: auto;" alt="Amateras SMP logo image">
 
 # AmaTweaks
 
-[English README](README.md)
+[English](README.md)
 
 [![Dev Builds](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
@@ -11,12 +11,12 @@
 [![Discord](https://img.shields.io/discord/1157213775791935539)](https://discord.gg/px7wHEMUpd)
 
 Amateras SMPのためにつくられたクライアント機能系mod。<br>
-現在は1.18から1.21.8までサポートしています。
+現在は1.18から1.21.11までサポートしています。
 
 ## Dependencies
 
-- [malilib](https://modrinth.com/mod/malilib) (必須)
 - [fabric-api](https://modrinth.com/mod/fabric-api) (必須)
+- [malilib](https://modrinth.com/mod/malilib) (必須)
 - [modmenu](https://modrinth.com/mod/modmenu) (任意)
 - [item-scroller](https://modrinth.com/mod/item-scroller) (任意)
 - [litematica](https://modrinth.com/mod/litematica) (任意)
@@ -30,64 +30,64 @@ Amateras SMPのためにつくられたクライアント機能系mod。<br>
 ### tweakAutoEat
 
 > 設定された閾値より食料ゲージが少なくなったときに、インベントリから食料を探して自動で食べる。
-閾値はconfigの`Generic`タブにある`autoEatThreshold`で設定できる。<br>
+閾値はconfigの`Generic`タブにある`autoEatThreshold`で設定できる。  
 
 ### tweakAutoFireworkGlide
 
-> エリトラで滑空中、`Generic`タブの`autoGlideSpeedThreshold`で設定された値よりもプレイヤーの速度が小さくなったときに自動でインベントリからロケット花火を取り出して使用する。<br>
+> エリトラで滑空中、`Generic`タブの`autoGlideSpeedThreshold`で設定された値よりもプレイヤーの速度が小さくなったときに自動でインベントリからロケット花火を取り出して使用する。  
 
 ### tweakAutoRestockInventory
 
 > チェストやシュルカーボックスなどのコンテナ系ブロックを開いたとき、設定されたアイテムリスト内のアイテムをコンテナから探し出してホットバー(インベントリ)に補充する。
-補充するアイテムのリストはconfigの`List`タブにある`inventoryRestockList`で設定できる。デフォルトではロケット花火と金のニンジンがリストに設定されている。<br>
+補充するアイテムのリストはconfigの`List`タブにある`inventoryRestockList`で設定できる。デフォルトではロケット花火と金のニンジンがリストに設定されている。  
 
 ### tweakCompactScoreboard
 
-> サイドバーに表示されるスコアボードの数値をフォーマットしてコンパクトにする。1.20.4以上のバージョンにおける実装は[techutil](https://github.com/Kikugie/techutils)から拝借。<br>
+> サイドバーに表示されるスコアボードの数値をフォーマットしてコンパクトにする。1.20.4以上のバージョンにおける実装は[techutil](https://github.com/Kikugie/techutils)から拝借。  
 
 ### tweakHoldBack
 
-> 後退キーを自動で押し続ける。<br>
+> 後退キーを自動で押し続ける。  
 
 ### tweakHoldForward
 
-> 前進キーを自動で押し続ける。<br>
+> 前進キーを自動で押し続ける。  
 
 ### tweakHoldLeft
 
-> 左に進むキーを自動で押し続ける。<br>
+> 左に進むキーを自動で押し続ける。  
 
 ### tweakHoldRight
 
-> 右に進むキーを自動で押し続ける。<br>
+> 右に進むキーを自動で押し続ける。  
 
 ### tweakInteractionHistory
 
 > プレイヤーによるインタラクションを指定数記録する。
 記録したインタラクションは`/history`コマンドで確認でき、`clearhistory`で破棄できる。
-記録するインタラクションの最大数はGenericタブの`interactionHistoryMaxSize`で指定でき、これをオーバーした場合は最も古いインタラクションが破棄されて新しいものが記録されていく。<br>
+記録するインタラクションの最大数はGenericタブの`interactionHistoryMaxSize`で指定でき、これをオーバーした場合は最も古いインタラクションが破棄されて新しいものが記録されていく。  
 
 ### tweakMonoGui
 
-> guiに表示されるすべてのテキストを白色として表示する。<br>
+> guiに表示されるすべてのテキストを白色として表示する。  
 
 ### tweakMonoTeam
 
-> チームの色を白色に置き換えて表示する.<br>
+> チームの色を白色に置き換えて表示する.  
 
 ### tweakPickBlockRedirect
 
-> litematicaでpickを行う時に、リダイレクトが指定されていればpickするべきブロックをそれに置き換える。リダイレクトマップはconfigの`List`タブにある`pickRedirectMap`で設定できる。<br>
-この機能は耕地ブロックや土の道などの入手不可能アイテムを土としてpickしたり、水を氷としてpickするなどの用途を意図している。<br>
+> litematicaでpickを行う時に、リダイレクトが指定されていればpickするべきブロックをそれに置き換える。リダイレクトマップはconfigの`List`タブにある`pickRedirectMap`で設定できる。  
+この機能は耕地ブロックや土の道などの入手不可能アイテムを土としてpickしたり、水を氷としてpickするなどの用途を意図している。  
 
 ### tweakPreventBreakingAdjacentPortal
 
-> ネザーポータルの枠組みにあたる位置のブロックが壊せなくなる。<br>
+> ネザーポータルの枠組みにあたる位置のブロックが壊せなくなる。  
 
 ### tweakPreventPlacementOnPortalSides
 
 > スライスされたネザーポータルの側面にブロックを置けなくなる。
-この機能は[taichi-tweaks](https://github.com/TaichiServer/taichi-tweaks)より移植。<br>
+この機能は[taichi-tweaks](https://github.com/TaichiServer/taichi-tweaks)より移植。  
 
 ### tweakSafeStepProtection
 
@@ -95,15 +95,12 @@ Amateras SMPのためにつくられたクライアント機能系mod。<br>
 
 ### tweakSelectiveBlockRendering
 
-> [!CAUTION]
-> この機能はブロックエンティティや液体のレンダーセレクションをサポートしていない。<br>
-
-> ブロックの種類ごとに描画を行うかどうかカスタムできる。ブロックの設定はconfigの`List`タブで指定できる。<br>
+> ブロックの種類ごとに描画を行うかどうかカスタムできる。ブロックの設定はconfigの`List`タブで指定できる。  
 configの`Generic`タブにある`refreshWorldRendererOnRenderBlocksChanged`が`true`であるとき、リストの設定が変わるたびにワールドレンダラーを再読み込みする。
-リストに追加するエントリーの記法は、ネームスペースを<strong>含めた</strong>ブロックidを採用。(例: `minecraft:black_stained_glass`, `minecraft:grass_block`, `minecraft:bedrock`など)<br>
+リストに追加するエントリーの記法は、ネームスペースを<strong>含めた</strong>ブロックidを採用。(例: `minecraft:black_stained_glass`, `minecraft:grass_block`, `minecraft:bedrock`など)  
 
 ### tweakSelectiveEntityRendering
 
-> エンティティの種類ごとに描画を行うかどうかカスタムできる。<br>
-リストの記法はネームスペースを<strong><font color=FF5555>含めない</font></strong>エンティティidを採用しています(例: `player`, `tnt`, `zombie`, `item`など)。<br>
-この機能は[taichi-tweaks](https://github.com/TaichiServer/taichi-tweaks)より移植。<br>
+> エンティティの種類ごとに描画を行うかどうかを設定できる。  
+リストの記法はネームスペースを<strong><font color=FF5555>含めない</font></strong>エンティティid (例: `player`, `tnt`, `zombie`, `item`など)。  
+この機能は[taichi-tweaks](https://github.com/TaichiServer/taichi-tweaks)より移植。  

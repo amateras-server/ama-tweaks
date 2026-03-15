@@ -29,7 +29,16 @@
   "depends": {
     "minecraft": "${minecraft_dependency}",
     "fabricloader": ">=0.18.4",
+    "fabric-api": "*",
     "malilib": "*"
+  },
+  "suggests": {
+    "modmenu":  "*",
+    "item-scroller": "*",
+    "litematica": "*",
+    "syncmatica": "*",
+    "tweakermore": "*",
+    "tweakeroo":  "*"
   },
   "custom": {
     "modmenu": {

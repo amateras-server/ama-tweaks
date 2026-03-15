@@ -186,6 +186,7 @@ jobs:
           game-versions: ${{ steps.properties_v.outputs.game_versions }}
           game-version-filter: any
           dependencies: |-  # declare the dependencies explicitly, so mc-publish won't try to load from fabric.mod.json
+            fabric-api(required)
             malilib(required)
             modmenu(optional)
             item-scroller(optional)
