@@ -16,7 +16,8 @@ Amateras SMPのためにつくられたクライアント機能系mod。<br>
 ## Dependencies
 
 - [malilib](https://modrinth.com/mod/malilib) (必須)
-- [modmenu](https://modrinth.com/mod/modmenu) (必須)
+- [fabric-api](https://modrinth.com/mod/fabric-api) (必須)
+- [modmenu](https://modrinth.com/mod/modmenu) (任意)
 - [item-scroller](https://modrinth.com/mod/item-scroller) (任意)
 - [litematica](https://modrinth.com/mod/litematica) (任意)
 - [syncmatica](https://modrinth.com/mod/syncmatica) (任意)

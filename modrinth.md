@@ -19,6 +19,7 @@ Currently supports 1.18~1.21.8.
 ## Dependencies
 
 - [malilib](https://modrinth.com/mod/malilib) (required)
+- [fabric-api](https://modrinth.com/mod/fabric-api) (required)
 - [modmenu](https://modrinth.com/mod/modmenu) (optional)
 - [item-scroller](https://modrinth.com/mod/item-scroller) (optional)
 - [litematica](https://modrinth.com/mod/litematica) (optional)
