@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Restriction(require = @Condition(Reference.ModIds.syncmatica))
+@Restriction(require = {@Condition(Reference.ModIds.syncmatica)})
 @Mixin(value = WidgetSyncmaticaServerPlacementEntry.class, remap = false)
 public class WidgetSyncmaticaServerPlacementEntryMixin {
     @Shadow

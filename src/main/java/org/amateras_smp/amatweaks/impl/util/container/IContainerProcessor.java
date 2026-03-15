@@ -4,11 +4,11 @@
 
 package org.amateras_smp.amatweaks.impl.util.container;
 
-import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ProcessResult;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.inventory.Slot;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
+import org.amateras_smp.amatweaks.impl.features.ProcessResult;
 
 import java.util.List;
 

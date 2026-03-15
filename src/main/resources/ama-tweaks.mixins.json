@@ -6,11 +6,12 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "client": [
+  "mixins": [
     "features.autoeat.MinecraftMixin",
     "features.autoglide.LocalPlayerMixin",
     "features.autorestockinventory.AbstractContainerMenuMixin",
     "features.autorestockinventory.ClientPacketListenerMixin",
+    "features.autorestockinventory.ItemScrollerInventoryUtilsAccessor",
     "features.autorestockinventory.ScreenMixin",
     "features.compactscoreboard.GuiMixin",
     "features.holdmove.MinecraftMixin",
@@ -18,10 +19,11 @@
     "features.interactionhistory.MultiPlayerGameModeMixin",
     "features.monogui.ClientboundPlayerChatPacketMixin",
     "features.monogui.PlayerTeamMixin",
-    "features.monogui.PreparedTextMixin",
+    "features.monogui.PreparedTextBuilderMixin",
     "features.preventbreakingportal.BellBlockIMixin",
     "features.preventbreakingportal.MultiPlayerGameModeMixin",
     "features.preventbreakingportal.PlacementTweaksMixin",
+    "features.selectiverendering.BlockBehaviourMixin",
     "features.selectiverendering.BlockEntityRenderDispatcherMixin",
     "features.selectiverendering.BlockRenderDispatcherMixin",
     "features.selectiverendering.EntityRenderDispatcherMixin",
@@ -33,7 +35,6 @@
     "tweakeroo.ClientPacketListener",
     "tweakeroo.InventoryUtilsMixin"
   ],
-  "mixins": [
-    "features.selectiverendering.BlockBehaviourMixin"
+  "client": [
   ]
 }

@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(PreparedTextBuilder.class)
-public class PreparedTextMixin {
+public class PreparedTextBuilderMixin {
     //#if MC >= 12108
-    @ModifyVariable(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "accept(ILnet/minecraft/network/chat/Style;I)Z", at = @At("HEAD"), argsOnly = true)
     //#else
     //$$ @ModifyVariable(method = "accept", at = @At("HEAD"), argsOnly = true)
     //#endif

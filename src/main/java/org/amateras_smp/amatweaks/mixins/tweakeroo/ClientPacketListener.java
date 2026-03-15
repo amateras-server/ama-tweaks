@@ -9,18 +9,33 @@ import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
-@Restriction(require = @Condition(Reference.ModIds.tweakeroo))
+@Restriction(require = {@Condition(Reference.ModIds.tweakeroo)})
 @Mixin(net.minecraft.client.multiplayer.ClientPacketListener.class)
 public class ClientPacketListener {
+    @Unique
+    private static final boolean isTweakerooLoaded = checkTweakeroo();
+
+    @Unique
+    private static boolean checkTweakeroo() {
+        try {
+            Class.forName("fi.dy.masa.tweakeroo.config.FeatureToggle");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            return false;
+        }
+    }
+
     @Inject(method = "handleLogin", at = @At("TAIL"))
     private void handleLogin(CallbackInfo ci) {
         if (Configs.Generic.PERSISTENT_GAMMA_OVERRIDE.getBooleanValue()) {
-            FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
+            if (isTweakerooLoaded) {
+                fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
+            }
         }
     }
 }

@@ -5,8 +5,8 @@
 package org.amateras_smp.amatweaks.impl.util.container;
 
 import com.google.common.collect.ImmutableList;
-import me.fallenbreath.tweakermore.impl.features.autoContainerProcess.processors.ProcessResult;
-import me.fallenbreath.tweakermore.mixins.tweaks.features.autoContainerProcess.ItemScrollerInventoryUtilsAccessor;
+import org.amateras_smp.amatweaks.impl.features.ProcessResult;
+import org.amateras_smp.amatweaks.mixins.features.autorestockinventory.ItemScrollerInventoryUtilsAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;

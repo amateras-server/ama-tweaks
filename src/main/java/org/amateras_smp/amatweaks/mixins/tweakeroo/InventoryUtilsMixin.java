@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Restriction(require = @Condition(Reference.ModIds.tweakeroo))
+@Restriction(require = {@Condition(Reference.ModIds.tweakeroo)})
 @Mixin(InventoryUtils.class)
 public class InventoryUtilsMixin {
     @Inject(method = "trySwitchToEffectiveTool", at = @At("HEAD"), cancellable = true)

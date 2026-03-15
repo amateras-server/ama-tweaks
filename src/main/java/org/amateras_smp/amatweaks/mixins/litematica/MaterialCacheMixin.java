@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Restriction(require = @Condition(Reference.ModIds.litematica))
+@Restriction(require = {@Condition(Reference.ModIds.litematica)})
 @Mixin(MaterialCache.class)
 public class MaterialCacheMixin {
     @Inject(method = "getRequiredBuildItemForState(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/item/ItemStack;", at = @At("RETURN"), cancellable = true)
