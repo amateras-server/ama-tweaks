@@ -17,16 +17,24 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-public class GuiConfigs extends GuiConfigsBase {
-    // If you have an add-on mod, you can append stuff to these GUI lists by re-assigning a new list to it.
-    // I'd recommend using your own config handler for the config serialization to/from config files.
-    // Although the config dirty marking stuff probably is a mess in this old malilib code base for that stuff...
+//#if MC >= 12111
+import fi.dy.masa.malilib.gui.interfaces.IConfigGuiAllTab;
+//#endif
+
+public class GuiConfigs extends GuiConfigsBase
+    //#if MC >= 12111
+    implements IConfigGuiAllTab
+    //#endif
+{
+
     public static ImmutableList<FeatureToggle> TWEAK_LIST = FeatureToggle.VALUES;
 
-    private static ConfigGuiTab tab = ConfigGuiTab.TWEAKS;
+    private static ConfigGuiTab tab = ConfigGuiTab.ALL;
 
     public GuiConfigs() {
         super(10, 50, Reference.kModId, null, Reference.kModName + " %s", String.format("%s", Reference.kModVersion));
@@ -41,6 +49,7 @@ public class GuiConfigs extends GuiConfigsBase {
         int y = 26;
 
         for (ConfigGuiTab tab : ConfigGuiTab.values()) {
+            if (!this.useAllTab() && tab == ConfigGuiTab.ALL) continue;
             x += this.createButton(x, y, -1, tab);
         }
     }
@@ -59,8 +68,8 @@ public class GuiConfigs extends GuiConfigsBase {
 
         if (tab == ConfigGuiTab.GENERIC) {
             return 120;
-        } else if (tab == ConfigGuiTab.FIXES) {
-            return 60;
+        // } else if (tab == ConfigGuiTab.FIXES) {
+        //     return 60;
         } else if (tab == ConfigGuiTab.LISTS) {
             return 200;
         }
@@ -70,7 +79,8 @@ public class GuiConfigs extends GuiConfigsBase {
 
     @Override
     protected boolean useKeybindSearch() {
-        return GuiConfigs.tab == ConfigGuiTab.TWEAKS ||
+        return GuiConfigs.tab == ConfigGuiTab.ALL ||
+            GuiConfigs.tab == ConfigGuiTab.TWEAKS ||
             GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS ||
             GuiConfigs.tab == ConfigGuiTab.DISABLES;
     }
@@ -80,7 +90,9 @@ public class GuiConfigs extends GuiConfigsBase {
         List<? extends IConfigBase> configs;
         ConfigGuiTab tab = GuiConfigs.tab;
 
-        if (tab == ConfigGuiTab.GENERIC) {
+        if (tab == ConfigGuiTab.ALL) {
+            return this.getAllConfigs();
+        } else if (tab == ConfigGuiTab.GENERIC) {
             configs = Configs.Generic.OPTIONS;
         } else if (tab == ConfigGuiTab.LISTS) {
             configs = Configs.Lists.OPTIONS;
@@ -97,31 +109,48 @@ public class GuiConfigs extends GuiConfigsBase {
         return ConfigOptionWrapper.createFor(configs);
     }
 
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public boolean useAllTab() {
+        return true;
+    }
+
+    //#if MC >= 12111
+    @Override
+    //#endif
+    public List<ConfigOptionWrapper> getAllConfigs() {
+        List<ConfigOptionWrapper> configs = new ArrayList<>();
+
+        configs.addAll(ConfigOptionWrapper.createFor(Configs.Generic.OPTIONS));
+        configs.addAll(ConfigOptionWrapper.createFor(Configs.Lists.OPTIONS));
+        configs.addAll(ConfigOptionWrapper.createFor(TWEAK_LIST.stream().map(this::wrapConfig).toList()));
+        configs.addAll(ConfigOptionWrapper.createFor(Hotkeys.HOTKEY_LIST));
+        configs.addAll(ConfigOptionWrapper.createFor(Configs.Disable.OPTIONS));
+
+        return configs;
+    }
+
     protected BooleanHotkeyGuiWrapper wrapConfig(FeatureToggle config) {
         return new BooleanHotkeyGuiWrapper(config.getName(), config, config.getKeybind());
     }
 
-    private static class ButtonListener implements IButtonActionListener {
-        private final GuiConfigs parent;
-        private final ConfigGuiTab tab;
-
-        public ButtonListener(ConfigGuiTab tab, GuiConfigs parent) {
-            this.tab = tab;
-            this.parent = parent;
-        }
+    private record ButtonListener(ConfigGuiTab tab,
+                                  GuiConfigs parent) implements IButtonActionListener {
 
         @Override
         public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             GuiConfigs.tab = this.tab;
             this.parent.reCreateListWidget(); // apply the new config width
-            this.parent.getListWidget().resetScrollbarPosition();
+            Objects.requireNonNull(this.parent.getListWidget()).resetScrollbarPosition();
             this.parent.initGui();
         }
     }
 
     public enum ConfigGuiTab {
+        ALL("All"),
         GENERIC("Generic"),
-        FIXES("Fixes"),
+        // FIXES("Fixes"),
         LISTS("Lists"),
         TWEAKS("Tweaks"),
         GENERIC_HOTKEYS("Hotkeys"),
