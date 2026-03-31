@@ -12,19 +12,18 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.amateras_smp.amatweaks.config.Configs;
 
 public class PreventBreakingAdjacentPortal {
-    public static final BlockRestriction PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION = new BlockRestriction();
+    private static final BlockRestriction PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION = new BlockRestriction();
 
     public static void buildLists() {
         PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION.setListType((UsageRestriction.ListType) Configs.Lists.PORTAL_BREAKING_RESTRICTION_LIST_TYPE.getOptionListValue());
         PREVENT_BREAKING_ADJACENT_PORTAL_RESTRICTION.setListContents(
-            Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACKLIST.getStrings(),
-            Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITELIST.getStrings());
+            Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACK_LIST.getStrings(),
+            Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITE_LIST.getStrings());
     }
 
     public static boolean restriction(BlockPos pos) {

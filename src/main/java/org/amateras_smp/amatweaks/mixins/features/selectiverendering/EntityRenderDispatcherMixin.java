@@ -24,11 +24,11 @@ public class EntityRenderDispatcherMixin {
         String targetEntity = EntityType.getKey(entity.getType()).toString();
 
         if (type == UsageRestriction.ListType.BLACKLIST) {
-            if (Configs.Lists.SELECTIVE_ENTITY_RENDERING_BLACKLIST.getStrings().contains(targetEntity)) {
+            if (Configs.Lists.SELECTIVE_ENTITY_RENDERING_BLACK_LIST.getStrings().contains(targetEntity)) {
                 cir.setReturnValue(false);
             }
         } else if (type == UsageRestriction.ListType.WHITELIST) {
-            if (!Configs.Lists.SELECTIVE_ENTITY_RENDERING_WHITELIST.getStrings().contains(targetEntity)) {
+            if (!Configs.Lists.SELECTIVE_ENTITY_RENDERING_WHITE_LIST.getStrings().contains(targetEntity)) {
                 cir.setReturnValue(false);
             }
         }

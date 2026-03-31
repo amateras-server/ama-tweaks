@@ -10,9 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
-import net.minecraft.world.inventory.MenuType;
 import org.amateras_smp.amatweaks.Reference;
-import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.impl.util.container.AutoProcessableScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +27,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         Screen screen = Minecraft.getInstance().screen;
         if (screen != null) {
-            ((AutoProcessableScreen) screen).setShouldProcess$AMT(!Configs.Generic.AUTO_RESTOCK_SHULKER_BOX_ONLY.getBooleanValue() || packet.getType() == MenuType.SHULKER_BOX);
+            ((AutoProcessableScreen) screen).setShouldProcess$AMT(true);
         }
     }
 }

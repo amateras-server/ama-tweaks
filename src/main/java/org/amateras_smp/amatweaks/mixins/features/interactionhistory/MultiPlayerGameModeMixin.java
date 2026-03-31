@@ -25,6 +25,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//#if MC < 11904
+//$$ import net.minecraft.client.multiplayer.ClientLevel;
+//#endif
+
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
 
@@ -37,7 +41,11 @@ public class MultiPlayerGameModeMixin {
     }
 
     @Inject(method = "useItemOn", at = @At("RETURN"))
+    //#if MC >= 11904
     private void onInteractBlock(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    //#else
+    //$$ private void onInteractBlock(LocalPlayer player, ClientLevel clientLevel, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    //#endif
         if (!FeatureToggle.TWEAK_INTERACTION_HISTORY.getBooleanValue()) return;
         UseOnContext itemUsageContext = new UseOnContext(player, hand, hitResult);
         BlockPlaceContext ctx = new BlockPlaceContext(itemUsageContext);

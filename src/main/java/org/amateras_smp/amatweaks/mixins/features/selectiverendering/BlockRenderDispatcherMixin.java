@@ -24,10 +24,12 @@ public class BlockRenderDispatcherMixin {
         }
     }
 
+    //#if MC >= 11904
     @Inject(method = "renderLiquid", at = @At("HEAD"), cancellable = true)
     private void onRenderLiquid(BlockPos blockPos, BlockAndTintGetter blockAndTintGetter, VertexConsumer vertexConsumer, BlockState state, FluidState fluidState, CallbackInfo ci) {
         if (FeatureToggle.TWEAK_SELECTIVE_BLOCK_RENDERING.getBooleanValue() && !SelectiveRendering.BLOCKS_LIST.isAllowed(state.getBlock())) {
             ci.cancel();
         }
     }
+    //#endif
 }
