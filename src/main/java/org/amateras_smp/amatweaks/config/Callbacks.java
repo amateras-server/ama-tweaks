@@ -22,6 +22,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
+import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
 import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
 import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
@@ -66,25 +67,29 @@ public class Callbacks {
         Configs.Generic.INTERACTION_HISTORY_MAX_SIZE.setValueChangeCallback((cfg) -> InteractionHistory.resize());
         Configs.Generic.ENABLE_DEBUG_PRINT.setValueChangeCallback((cfg) -> InitHandler.initLogLevel(cfg.getBooleanValue()));
 
+        Configs.Lists.INVENTORY_RESTOCK_ITEMS_BLACK_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
+        Configs.Lists.INVENTORY_RESTOCK_ITEMS_WHITE_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
+        Configs.Lists.INVENTORY_RESTOCK_ITEMS_LIST_TYPE.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
+
         Configs.Lists.PICK_REDIRECT_MAP.setValueChangeCallback((cfg) -> PickRedirect.buildCache());
 
-        Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACKLIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
-        Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITELIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
+        Configs.Lists.PORTAL_BREAKING_RESTRICTION_BLACK_LIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
+        Configs.Lists.PORTAL_BREAKING_RESTRICTION_WHITE_LIST.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
         Configs.Lists.PORTAL_BREAKING_RESTRICTION_LIST_TYPE.setValueChangeCallback((cfg) -> PreventBreakingAdjacentPortal.buildLists());
 
         FeatureToggle.TWEAK_SELECTIVE_AUTO_PICK.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
-        Configs.Lists.SELECTIVE_AUTO_PICK_BLACKLIST.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
-        Configs.Lists.SELECTIVE_AUTO_PICK_WHITELIST.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
+        Configs.Lists.SELECTIVE_AUTO_PICK_BLACK_LIST.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
+        Configs.Lists.SELECTIVE_AUTO_PICK_WHITE_LIST.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
         Configs.Lists.SELECTIVE_AUTO_PICK_LIST_TYPE.setValueChangeCallback((cfg) -> SelectiveAutoPick.buildLists());
 
         FeatureToggle.TWEAK_SELECTIVE_BLOCK_RENDERING.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
-        Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACKLIST.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
-        Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITELIST.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
+        Configs.Lists.SELECTIVE_BLOCK_RENDERING_BLACK_LIST.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
+        Configs.Lists.SELECTIVE_BLOCK_RENDERING_WHITE_LIST.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
         Configs.Lists.SELECTIVE_BLOCK_RENDERING_LIST_TYPE.setValueChangeCallback((cfg) -> SelectiveRendering.buildLists());
 
         FeatureToggle.TWEAK_SELECTIVE_TOOL_SWITCH.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
-        Configs.Lists.SELECTIVE_TOOL_SWITCH_BLACKLIST.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
-        Configs.Lists.SELECTIVE_TOOL_SWITCH_WHITELIST.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
+        Configs.Lists.SELECTIVE_TOOL_SWITCH_BLACK_LIST.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
+        Configs.Lists.SELECTIVE_TOOL_SWITCH_WHITE_LIST.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
         Configs.Lists.SELECTIVE_TOOL_SWITCH_LIST_TYPE.setValueChangeCallback((cfg) -> SelectiveToolSwitch.buildLists());
     }
 

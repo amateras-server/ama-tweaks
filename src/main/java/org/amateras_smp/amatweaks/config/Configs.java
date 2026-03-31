@@ -24,6 +24,7 @@ import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
+import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
 import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
 import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
 import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
@@ -42,6 +43,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean AUTO_GLIDE_PUT_BACK_ROCKET = new ConfigBoolean("autoGlidePutBackRocket", true, "\"tweakAutoFireworkGlide\" puts back the firework rocket to the slot where it was.");
         public static final ConfigDouble AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rockets.");
         public static final ConfigBoolean AUTO_RESTOCK_CLOSE_GUI = new ConfigBoolean("autoRestockCloseGui", true, "Closes container GUI screen after restocking items by \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_ENABLE_EMPTY_SLOTS = new ConfigBoolean("autoRestockEnableEmptySlots", true, "Restocks to empty slots in inventory by \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_IGNORE_ENDER_CHEST = new ConfigBoolean("autoRestockIgnoreEnderChest", true, "\"tweaksAutoRestockInventory\" will not be triggered when you open ender chests");
+        public static final ConfigInteger AUTO_RESTOCK_MIN_NUM_STACKS = new ConfigInteger("autoRestockMinNumStacks", 1, 1, 36, "The minimum number of stacks to restock with \"tweakAutoRestockInventory\".");
         public static final ConfigBoolean AUTO_RESTOCK_SHULKER_BOX_ONLY = new ConfigBoolean("autoRestockShulkerBoxOnly", false, "\"tweaksAutoRestockInventory\" will be triggered only when you open shulker boxes");
         public static final ConfigInteger FIREWORK_SWITCHABLE_SLOT = new ConfigInteger("fireworkSwitchableSlot", 0, 0, 8, "The slot to switch firework rocket by \"tweakAutoFireworkGlide\". (0 ~ 8)");
         public static final ConfigInteger FOOD_SWITCHABLE_SLOT = new ConfigInteger("foodSwitchableSlot", 0, 0, 8, "The slot to switch food by \"tweakAutoEat\". (0 ~ 8)");
@@ -62,6 +66,9 @@ public class Configs implements IConfigHandler {
             AUTO_GLIDE_PUT_BACK_ROCKET,
             AUTO_GLIDE_SPEED_THRESHOLD,
             AUTO_RESTOCK_CLOSE_GUI,
+            AUTO_RESTOCK_ENABLE_EMPTY_SLOTS,
+            AUTO_RESTOCK_IGNORE_ENDER_CHEST,
+            AUTO_RESTOCK_MIN_NUM_STACKS,
             AUTO_RESTOCK_SHULKER_BOX_ONLY,
             FIREWORK_SWITCHABLE_SLOT,
             FOOD_SWITCHABLE_SLOT,
@@ -76,49 +83,52 @@ public class Configs implements IConfigHandler {
     }
 
     public static class Lists {
-        public static final ConfigStringList INVENTORY_RESTOCK_LIST = new ConfigStringList("inventoryRestockList", ImmutableList.of("minecraft:firework_rocket", "minecraft:golden_carrot", "minecraft:experience_bottle"), "The items to restock with tweakAutoRestockHotbar.");
-        public static final ItemRestriction INVENTORY_RESTOCK_ITEMS = new ItemRestriction();
+        public static final ConfigOptionList INVENTORY_RESTOCK_ITEMS_LIST_TYPE = new ConfigOptionList("inventoryRestockItemsListType", ItemRestriction.ListType.WHITELIST, "The type of the list used for \"tweakAutoRestockInventory\" restocking items.");
+        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_BLACK_LIST = new ConfigStringList("inventoryRestockItemsListBlacklist", ImmutableList.of(""), "The items not to restock with \"tweakAutoRestockInventory\".");
+        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_WHITE_LIST = new ConfigStringList("inventoryRestockItemsListWhitelist", ImmutableList.of("minecraft:firework_rocket", "minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop", "minecraft:experience_bottle", "minecraft:totem_of_undying"), "The items to restock with \"tweakAutoRestockInventory\".");
 
         public static final ConfigStringList PICK_REDIRECT_MAP = new ConfigStringList("pickRedirectMap", ImmutableList.of("minecraft:farmland, minecraft:dirt", "minecraft:dirt_path, minecraft:dirt", "minecraft:water, minecraft:ice", "minecraft:bubble_column, minecraft:ice"), "replacement reference of litematica block pick");
 
         public static final ConfigOptionList PORTAL_BREAKING_RESTRICTION_LIST_TYPE = new ConfigOptionList("portalBreakingRestrictionListType", UsageRestriction.ListType.WHITELIST, "The type of the list used for \"tweakPreventBreakingAdjacentPortal\" restriction effects.");
-        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_BLACKLIST = new ConfigStringList("portalBreakingRestrictionBlackList", ImmutableList.of(""), "The items that will be restricted by \"tweakPreventBreakingAdjacentPortal\".");
-        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_WHITELIST = new ConfigStringList("portalBreakingRestrictionWhiteList", ImmutableList.of("minecraft:obsidian"), "The items that will not be restricted by \"tweakPreventBreakingAdjacentPortal\".");
+        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_BLACK_LIST = new ConfigStringList("portalBreakingRestrictionBlackList", ImmutableList.of(""), "The items that will be restricted by \"tweakPreventBreakingAdjacentPortal\".");
+        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_WHITE_LIST = new ConfigStringList("portalBreakingRestrictionWhiteList", ImmutableList.of("minecraft:obsidian"), "The items that will not be restricted by \"tweakPreventBreakingAdjacentPortal\".");
 
         public static final ConfigOptionList SELECTIVE_AUTO_PICK_LIST_TYPE = new ConfigOptionList("selectiveAutoPickListType", UsageRestriction.ListType.NONE, "The type of the list used for selective auto pick.");
-        public static final ConfigStringList SELECTIVE_AUTO_PICK_WHITELIST = new ConfigStringList("selectiveAutoPickWhiteList", ImmutableList.of(), "The items when it is in hand auto pick will work.");
-        public static final ConfigStringList SELECTIVE_AUTO_PICK_BLACKLIST = new ConfigStringList("selectiveAutoPickBlackList", ImmutableList.of("minecraft:golden_carrot", "minecraft:ender_chest", "minecraft:shulker_box", "minecraft:totem_of_undying"), "The items when it is in hand auto pick will not work.");
+        public static final ConfigStringList SELECTIVE_AUTO_PICK_WHITE_LIST = new ConfigStringList("selectiveAutoPickWhiteList", ImmutableList.of(), "The items when it is in hand auto pick will work.");
+        public static final ConfigStringList SELECTIVE_AUTO_PICK_BLACK_LIST = new ConfigStringList("selectiveAutoPickBlackList", ImmutableList.of("minecraft:golden_carrot", "minecraft:ender_chest", "minecraft:shulker_box", "minecraft:totem_of_undying"), "The items when it is in hand auto pick will not work.");
 
         public static final ConfigOptionList SELECTIVE_BLOCK_RENDERING_LIST_TYPE = new ConfigOptionList("selectiveBlockRenderingListType", UsageRestriction.ListType.NONE, "The type of the list used for selective block rendering.");
-        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_WHITELIST = new ConfigStringList("selectiveBlockRenderingWhiteList", ImmutableList.of(), "The blocks that will be rendered.");
-        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_BLACKLIST = new ConfigStringList("selectiveBlockRenderingBlackList", ImmutableList.of(), "The blocks that will not be rendered.");
+        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_WHITE_LIST = new ConfigStringList("selectiveBlockRenderingWhiteList", ImmutableList.of(), "The blocks that will be rendered.");
+        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_BLACK_LIST = new ConfigStringList("selectiveBlockRenderingBlackList", ImmutableList.of(), "The blocks that will not be rendered.");
 
         public static final ConfigOptionList SELECTIVE_ENTITY_RENDERING_LIST_TYPE = new ConfigOptionList("selectiveEntityRenderingListType", UsageRestriction.ListType.NONE, "The type of the list used for selective entity rendering.");
-        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_WHITELIST = new ConfigStringList("selectiveEntityRenderingWhiteList", ImmutableList.of(), "The entities that will be rendered.");
-        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_BLACKLIST = new ConfigStringList("selectiveEntityRenderingBlackList", ImmutableList.of(), "The entities that will not be rendered.");
+        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_WHITE_LIST = new ConfigStringList("selectiveEntityRenderingWhiteList", ImmutableList.of(), "The entities that will be rendered.");
+        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_BLACK_LIST = new ConfigStringList("selectiveEntityRenderingBlackList", ImmutableList.of(), "The entities that will not be rendered.");
 
         public static final ConfigOptionList SELECTIVE_TOOL_SWITCH_LIST_TYPE = new ConfigOptionList("selectiveToolSwitchListType", UsageRestriction.ListType.NONE, "The type of the list used for selective tool switch.");
-        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_WHITELIST = new ConfigStringList("selectiveToolSwitchWhiteList", ImmutableList.of(), "The blocks that tweakToolSwitch will work on break.");
-        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_BLACKLIST = new ConfigStringList("selectiveToolSwitchBlackList", ImmutableList.of(), "The blocks that tweakToolSwitch will not work on break.");
+        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_WHITE_LIST = new ConfigStringList("selectiveToolSwitchWhiteList", ImmutableList.of(), "The blocks that tweakToolSwitch will work on break.");
+        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_BLACK_LIST = new ConfigStringList("selectiveToolSwitchBlackList", ImmutableList.of(), "The blocks that tweakToolSwitch will not work on break.");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-            INVENTORY_RESTOCK_LIST,
+            INVENTORY_RESTOCK_ITEMS_LIST_TYPE,
+            INVENTORY_RESTOCK_ITEMS_BLACK_LIST,
+            INVENTORY_RESTOCK_ITEMS_WHITE_LIST,
             PICK_REDIRECT_MAP,
             PORTAL_BREAKING_RESTRICTION_LIST_TYPE,
-            PORTAL_BREAKING_RESTRICTION_BLACKLIST,
-            PORTAL_BREAKING_RESTRICTION_WHITELIST,
+            PORTAL_BREAKING_RESTRICTION_BLACK_LIST,
+            PORTAL_BREAKING_RESTRICTION_WHITE_LIST,
             SELECTIVE_AUTO_PICK_LIST_TYPE,
-            SELECTIVE_AUTO_PICK_WHITELIST,
-            SELECTIVE_AUTO_PICK_BLACKLIST,
+            SELECTIVE_AUTO_PICK_WHITE_LIST,
+            SELECTIVE_AUTO_PICK_BLACK_LIST,
             SELECTIVE_BLOCK_RENDERING_LIST_TYPE,
-            SELECTIVE_BLOCK_RENDERING_WHITELIST,
-            SELECTIVE_BLOCK_RENDERING_BLACKLIST,
+            SELECTIVE_BLOCK_RENDERING_WHITE_LIST,
+            SELECTIVE_BLOCK_RENDERING_BLACK_LIST,
             SELECTIVE_ENTITY_RENDERING_LIST_TYPE,
-            SELECTIVE_ENTITY_RENDERING_WHITELIST,
-            SELECTIVE_ENTITY_RENDERING_BLACKLIST,
+            SELECTIVE_ENTITY_RENDERING_WHITE_LIST,
+            SELECTIVE_ENTITY_RENDERING_BLACK_LIST,
             SELECTIVE_TOOL_SWITCH_LIST_TYPE,
-            SELECTIVE_TOOL_SWITCH_WHITELIST,
-            SELECTIVE_TOOL_SWITCH_BLACKLIST
+            SELECTIVE_TOOL_SWITCH_WHITE_LIST,
+            SELECTIVE_TOOL_SWITCH_BLACK_LIST
         );
     }
 
@@ -131,13 +141,13 @@ public class Configs implements IConfigHandler {
     }
 
     public static void onConfigLoaded() {
-        Lists.INVENTORY_RESTOCK_ITEMS.setListContents(ImmutableList.of(""), Configs.Lists.INVENTORY_RESTOCK_LIST.getStrings());
         InitHandler.initLogLevel(Generic.ENABLE_DEBUG_PRINT.getBooleanValue());
 
         InteractionHistory.resize();
 
         PreventBreakingAdjacentPortal.buildLists();
 
+        AutoRestockInventory.buildLists();
         PickRedirect.buildCache();
         SelectiveAutoPick.buildLists();
         SelectiveToolSwitch.buildLists();
