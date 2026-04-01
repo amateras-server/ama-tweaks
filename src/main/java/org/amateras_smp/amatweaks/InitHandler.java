@@ -50,11 +50,11 @@ public class InitHandler implements IInitializationHandler {
     private static void registerCommand(String name, Command<FabricClientCommandSource> command) {
         //#if MC >= 11900
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher
-                //#else
-                //$$ ClientCommandManager.DISPATCHER
-                //#endif
+        //#else
+        //$$ ClientCommandManager.DISPATCHER
+        //#endif
                 .register(literal(name).executes(command).then(argument("arguments", StringArgumentType.greedyString()).executes(command)))
-            //#if MC >= 11900
+        //#if MC >= 11900
         )
         //#endif
         ;
