@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
     @Shadow
-    static Minecraft instance;
+    private static Minecraft instance;
 
     @Inject(method = "finishProfilers", at = @At(value = "HEAD"))
     private void onTick(CallbackInfo ci) {

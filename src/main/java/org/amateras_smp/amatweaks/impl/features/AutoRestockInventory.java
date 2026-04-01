@@ -10,6 +10,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
@@ -98,7 +99,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         if (shouldRestockSlots.isEmpty() && emptySlots.isEmpty())
             return new ProcessResult(false, false);
 
-        HashMap<Item, Integer> restockedMap = executeRestock(containerScreen, shouldRestockSlots, emptySlots, containerInvSlots);
+        HashMap<Item, Integer> restockedMap = executeRestock(containerScreen, playerInvSlots, shouldRestockSlots, emptySlots, containerInvSlots);
 
         if (restockedMap.isEmpty()) return new ProcessResult(false, false);
 
@@ -121,7 +122,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         return new ProcessResult(true, true);
     }
 
-    private HashMap<Item, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> shouldRestockSlots, List<Slot> emptySlots, List<Slot> containerSlots) {
+    private HashMap<Item, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> playerInvSlots, List<Slot> shouldRestockSlots, List<Slot> emptySlots, List<Slot> containerSlots) {
         HashMap<Item, Integer> restockedMap = new HashMap<>();
 
         int[] containerCounts = new int[containerSlots.size()];
@@ -173,10 +174,18 @@ public class AutoRestockInventory implements IContainerProcessor {
                 }
             }
 
+            HashMap<Item, Integer> playerInventoryCounts = new HashMap<>();
+            for (Slot slot : playerInvSlots) {
+                ItemStack stack = slot.getItem();
+                if (!stack.isEmpty()) {
+                    playerInventoryCounts.put(stack.getItem(), playerInventoryCounts.getOrDefault(stack.getItem(), 0) + stack.getCount());
+                }
+            }
+
             for (Item item : candidateItems) {
                 int maxStackSize = item.getDefaultMaxStackSize();
                 int restockMinCount = maxStackSize * restockMinNumStacks;
-                int currentTotal = restockedMap.getOrDefault(item, 0);
+                int currentTotal = playerInventoryCounts.getOrDefault(item, 0);
 
                 while (currentTotal < restockMinCount && emptySlotIdx < emptySlots.size()) {
                     Slot currentTargetSlot = emptySlots.get(emptySlotIdx);

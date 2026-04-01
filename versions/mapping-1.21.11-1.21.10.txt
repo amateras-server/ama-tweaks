@@ -1,1 +1,2 @@
 net.minecraft.resources.Identifier net.minecraft.resources.ResourceLocation
+fi.dy.masa.malilib.util.data.json.JsonUtils fi.dy.masa.malilib.util.JsonUtils

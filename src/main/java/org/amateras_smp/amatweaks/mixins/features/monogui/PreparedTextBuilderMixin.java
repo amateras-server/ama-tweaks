@@ -4,24 +4,26 @@
 
 package org.amateras_smp.amatweaks.mixins.features.monogui;
 
-import net.minecraft.client.gui.Font.PreparedTextBuilder;
-import net.minecraft.network.chat.Style;
-import net.minecraft.ChatFormatting;
-import org.amateras_smp.amatweaks.config.FeatureToggle;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-@Mixin(PreparedTextBuilder.class)
-public class PreparedTextBuilderMixin {
-    //#if MC >= 12108
-    @ModifyVariable(method = "accept(ILnet/minecraft/network/chat/Style;I)Z", at = @At("HEAD"), argsOnly = true)
-    //#else
-    //$$ @ModifyVariable(method = "accept", at = @At("HEAD"), argsOnly = true)
-    //#endif
-    private Style onAccept(Style style) {
-        if (FeatureToggle.TWEAK_MONO_GUI.getBooleanValue())
-            return Style.EMPTY.withColor(ChatFormatting.RESET);
-        return style;
-    }
-}
+//#if MC <= 12111
+//$$ import net.minecraft.client.gui.Font.PreparedTextBuilder;
+//$$ import net.minecraft.network.chat.Style;
+//$$ import net.minecraft.ChatFormatting;
+//$$ import org.amateras_smp.amatweaks.config.FeatureToggle;
+//$$ import org.spongepowered.asm.mixin.Mixin;
+//$$ import org.spongepowered.asm.mixin.injection.At;
+//$$ import org.spongepowered.asm.mixin.injection.ModifyVariable;
+//$$
+//$$ @Mixin(PreparedTextBuilder.class)
+//$$ public class PreparedTextBuilderMixin {
+//$$     //#if MC >= 12108
+//$$     @ModifyVariable(method = "accept(ILnet/minecraft/network/chat/Style;I)Z", at = @At("HEAD"), argsOnly = true)
+//$$     //#else
+//$$     //$$ @ModifyVariable(method = "accept", at = @At("HEAD"), argsOnly = true)
+//$$     //#endif
+//$$     private Style onAccept(Style style) {
+//$$         if (FeatureToggle.TWEAK_MONO_GUI.getBooleanValue())
+//$$             return Style.EMPTY.withColor(ChatFormatting.RESET);
+//$$         return style;
+//$$     }
+//$$ }
+//#endif

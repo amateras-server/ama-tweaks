@@ -3,7 +3,7 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "client side utilities mod made for amateras",
+  "description": "Client side utilities mod made for Amateras",
   "license": "MIT",
   "authors": [
     "pugur"
@@ -14,7 +14,6 @@
   },
   "icon": "assets/ama-tweaks/ama_alpha_white_1280.png",
   "environment": "client",
-  "accessWidener": "ama-tweaks.accesswidener",
   "entrypoints": {
     "client": [
       "org.amateras_smp.amatweaks.AmaTweaks"
@@ -26,6 +25,7 @@
   "mixins": [
     "ama-tweaks.mixins.json"
   ],
+  "accessWidener": "ama-tweaks.accesswidener",
   "depends": {
     "minecraft": "${minecraft_dependency}",
     "fabricloader": ">=0.15.0",
@@ -33,12 +33,12 @@
     "malilib": "*"
   },
   "suggests": {
-    "modmenu":  "*",
+    "modmenu": "*",
     "item-scroller": "*",
     "litematica": "*",
     "syncmatica": "*",
     "tweakermore": "*",
-    "tweakeroo":  "*"
+    "tweakeroo": "*"
   },
   "custom": {
     "modmenu": {

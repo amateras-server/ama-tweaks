@@ -19,19 +19,23 @@
     "features.interactionhistory.MultiPlayerGameModeMixin",
     "features.monogui.ClientboundPlayerChatPacketMixin",
     "features.monogui.PlayerTeamMixin",
-    "features.monogui.PreparedTextBuilderMixin",
+    //#if MC <= 12111
+    //$$ "features.monogui.PreparedTextBuilderMixin",
+    //$$ "features.selectiverendering.BlockRenderDispatcherMixin",
+    //#endif
     "features.preventbreakingportal.BellBlockIMixin",
     "features.preventbreakingportal.MultiPlayerGameModeMixin",
     "features.preventbreakingportal.PlacementTweaksMixin",
     "features.selectiverendering.BlockBehaviourMixin",
     "features.selectiverendering.BlockEntityRenderDispatcherMixin",
-    "features.selectiverendering.BlockRenderDispatcherMixin",
     "features.selectiverendering.EntityRenderDispatcherMixin",
     "features.stepprotection.MultiPlayerGameModeMixin",
     "litematica.MaterialCacheMixin",
     "syncmatica.WidgetSyncmaticaServerPlacementEntryMixin",
-    "tweakermore.ContainerMaterialListItemCollectorMixin",
-    "tweakermore.SchematicBlockPickerMixin",
+    //#if MC <= 12111
+    //$$ "tweakermore.ContainerMaterialListItemCollectorMixin",
+    //$$ "tweakermore.SchematicBlockPickerMixin",
+    //#endif
     "tweakeroo.ClientPacketListener",
     "tweakeroo.InventoryUtilsMixin"
   ],

@@ -13,7 +13,7 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.config.options.*;
-import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.data.json.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.Minecraft;
@@ -159,7 +159,11 @@ public class Configs implements IConfigHandler {
         File configFile = new File(getConfigDirectory(), CONFIG_FILE_NAME);
 
         if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
-            JsonElement element = JsonUtils.parseJsonFile(configFile);
+            //#if MC >= 12111
+            JsonElement element = JsonUtils.parseJsonFile(configFile.toPath());
+            //#else
+            //$$ JsonElement element = JsonUtils.parseJsonFile(configFile);
+            //#endif
 
             if (element != null && element.isJsonObject()) {
                 JsonObject root = element.getAsJsonObject();
@@ -188,7 +192,11 @@ public class Configs implements IConfigHandler {
             ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", FeatureToggle.VALUES);
             ConfigUtils.writeConfigBase(root, "Disables", Disable.OPTIONS);
 
-            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            //#if MC >= 12111
+            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME).toPath());
+            //#else
+            //$$ JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            //#endif
         } else {
             AmaTweaks.LOGGER.error("saveToFile(): config directory '{}' does not exist", dir.toString());
         }

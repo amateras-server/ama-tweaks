@@ -1,9 +1,11 @@
+final int mcVersion = project.mcVersion
+final boolean unobfuscated = mcVersion >= 26_00_00
+
 apply plugin: 'maven-publish'
-apply plugin: 'fabric-loom'
+apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-loom-remap'
 apply plugin: 'com.replaymod.preprocess'
 
 String mixinFile = "ama-tweaks.mixins.json"
-int mcVersion = project.mcVersion
 
 repositories {
   maven {
@@ -11,10 +13,14 @@ repositories {
     url = 'https://api.modrinth.com/maven'
   }
   maven {
-    url 'https://jitpack.io'
+    url = 'https://jitpack.io'
   }
   maven {
-    url 'https://maven.fallenbreath.me/releases'
+    url = 'https://masa.dy.fi/maven'
+    content { includeModule('carpet', 'fabric-carpet') }
+  }
+  maven {
+    url = 'https://maven.fallenbreath.me/releases'
   }
 }
 
@@ -27,30 +33,38 @@ configurations {
 }
 
 dependencies {
+  def autoImplementation = { Object... args -> unobfuscated ? implementation(*args) : modImplementation(*args) }
+  def autoRuntimeOnly = { Object... args -> unobfuscated ? runtimeOnly(*args) : modRuntimeOnly(*args) }
+  def autoCompileOnly = { Object... args -> unobfuscated ? compileOnly(*args) : modCompileOnly(*args) }
+
   minecraft "com.mojang:minecraft:${project.minecraft_version}"
-  mappings loom.officialMojangMappings()
-  // mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+  if (!unobfuscated) {
+    mappings loom.officialMojangMappings()
+  }
 
-  // include("org.apache.logging.log4j:log4j-core:${project.log4j_version}")
-  // include("org.apache.logging.log4j:log4j-api:${project.log4j_version}")
+  autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+  autoImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-  // modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
-  include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
+  // autoImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+  include(autoImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
 
-  modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
-  modImplementation "maven.modrinth:malilib:${project.malilib_version}"
-  modImplementation "maven.modrinth:tweakeroo:${project.tweakeroo_version}"
-  modImplementation "maven.modrinth:tweakermore:${project.tweakermore_version}"
-  modImplementation "maven.modrinth:item-scroller:${project.itemscroller_version}"
-  modImplementation "maven.modrinth:litematica:${project.litematica_version}"
+  autoImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+  autoImplementation "maven.modrinth:malilib:${project.malilib_version}"
+  autoImplementation "maven.modrinth:tweakeroo:${project.tweakeroo_version}"
 
-  modImplementation "maven.modrinth:syncmatica:${project.syncmatica_version}"
+  if (!unobfuscated) {
+    autoImplementation "maven.modrinth:tweakermore:${project.tweakermore_version}"
+  }
+  autoImplementation "maven.modrinth:item-scroller:${project.itemscroller_version}"
+  autoImplementation "maven.modrinth:litematica:${project.litematica_version}"
+
+  autoImplementation "maven.modrinth:syncmatica:${project.syncmatica_version}"
 }
 
 JavaVersion JAVA_COMPATIBILITY
-if (mcVersion >= 12005) {
+if (mcVersion >= 260100) {
+  JAVA_COMPATIBILITY = JavaVersion.VERSION_25
+} else if (mcVersion >= 12005) {
   JAVA_COMPATIBILITY = JavaVersion.VERSION_21
 } else if (mcVersion >= 11800) {
   JAVA_COMPATIBILITY = JavaVersion.VERSION_17

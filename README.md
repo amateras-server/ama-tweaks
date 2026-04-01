@@ -5,8 +5,6 @@
 
 # AmaTweaks
 
-[日本語](https://github.com/amateras-server/ama-tweaks/blob/main/README_ja.md)
-
 [![Dev Builds](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml/badge.svg)](https://github.com/amateras-server/ama-tweaks/actions/workflows/gradle.yml)
 [![License](https://img.shields.io/github/license/amateras-server/ama-tweaks.svg)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amateras-server/ama-tweaks.svg)](https://github.com/amateras-server/ama-tweaks/issues)
@@ -14,7 +12,7 @@
 [![Discord](https://img.shields.io/discord/1377258772166348890)](https://discord.gg/MR878KhsCj)
 
 A client-side utility mod made for Amateras SMP.  
-Currently supports 1.18~1.21.11.
+Currently supports 1.18~26.1.
 
 ## Dependencies
 

@@ -27,21 +27,21 @@ public class LocalPlayerMixin {
     protected Minecraft minecraft;
 
     @Unique
-    private int tickCount = 0;
+    private int autoGlideTickCount = 0;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void onTick(CallbackInfo ci) {
         if (!FeatureToggle.TWEAK_AUTO_FIREWORK_GLIDE.getBooleanValue()) return;
         if (wasFallFlying) {
-            tickCount++;
-            if (tickCount != 0 && tickCount % Configs.Generic.AUTO_GLIDE_USE_ROCKET_INTERVAL.getIntegerValue() == 0) {
+            autoGlideTickCount++;
+            if (autoGlideTickCount != 0 && autoGlideTickCount % Configs.Generic.AUTO_GLIDE_USE_ROCKET_INTERVAL.getIntegerValue() == 0) {
                 if (minecraft.player == null) return;
                 if (minecraft.player.getDeltaMovement().length() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue()) {
                     AutoGlide.autoUseRocket(minecraft);
                 }
             }
         } else {
-            tickCount = 0;
+            autoGlideTickCount = 0;
         }
     }
 }
