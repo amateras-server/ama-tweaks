@@ -13,13 +13,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.amateras_smp.amatweaks.config.Callbacks;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.event.InputHandler;
-
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
-
 import org.amateras_smp.amatweaks.command.HistoryCommand;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
 
 //#if MC >= 11900
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -31,6 +25,10 @@ import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import org.amateras_smp.amatweaks.gui.GuiConfigs;
 //#endif
+
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
+
 
 public class InitHandler implements IInitializationHandler {
     @Override
@@ -49,20 +47,14 @@ public class InitHandler implements IInitializationHandler {
         Callbacks.init();
     }
 
-    public static void initLogLevel(boolean shouldEnableDebug) {
-        Configurator.setLevel(Reference.kModName, shouldEnableDebug ? Level.DEBUG : Level.INFO);
-        if (shouldEnableDebug) AmaTweaks.LOGGER.debug("debug print is enabled");
-        else AmaTweaks.LOGGER.info("debug print is disabled");
-    }
-
     private static void registerCommand(String name, Command<FabricClientCommandSource> command) {
         //#if MC >= 11900
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher
-        //#else
-        //$$ ClientCommandManager.DISPATCHER
-        //#endif
-            .register(literal(name).executes(command).then(argument("arguments", StringArgumentType.greedyString()).executes(command)))
-        //#if MC >= 11900
+                //#else
+                //$$ ClientCommandManager.DISPATCHER
+                //#endif
+                .register(literal(name).executes(command).then(argument("arguments", StringArgumentType.greedyString()).executes(command)))
+            //#if MC >= 11900
         )
         //#endif
         ;

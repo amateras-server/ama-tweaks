@@ -9,12 +9,16 @@ import net.fabricmc.api.ClientModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// import org.apache.logging.log4j.core.config.Configurator;
+// import static org.apache.logging.log4j.Level.DEBUG;
+
 public class AmaTweaks implements ClientModInitializer {
     public static Logger LOGGER;
 
     @Override
     public void onInitializeClient() {
         LOGGER = LogManager.getLogger(Reference.kModName);
+        // Configurator.setLevel(LOGGER, DEBUG);
 
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
         InitHandler.registerCommandsOnClientLoad();
