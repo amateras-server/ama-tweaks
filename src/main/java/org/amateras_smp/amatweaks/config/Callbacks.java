@@ -65,7 +65,6 @@ public class Callbacks {
         // FeatureToggle.TWEAK_.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_));
 
         Configs.Generic.INTERACTION_HISTORY_MAX_SIZE.setValueChangeCallback((cfg) -> InteractionHistory.resize());
-        Configs.Generic.ENABLE_DEBUG_PRINT.setValueChangeCallback((cfg) -> InitHandler.initLogLevel(cfg.getBooleanValue()));
 
         Configs.Lists.INVENTORY_RESTOCK_ITEMS_BLACK_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
         Configs.Lists.INVENTORY_RESTOCK_ITEMS_WHITE_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());

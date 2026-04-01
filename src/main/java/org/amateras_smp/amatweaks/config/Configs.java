@@ -55,8 +55,6 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED = new ConfigBoolean("refreshWorldRendererOnRenderBlocksChanged", true, "Refreshes client world renderer when \"tweakSelectiveBlockRendering\" settings(contains Lists, FeatureToggle) changed.");
         public static final ConfigBoolean SYNCMATICA_REMOVE_REQUIRE_SHIFT = new ConfigBoolean("syncmaticaRemoveRequireShift", true, "Requires shift to remove shared schematic from the server");
 
-        public static final ConfigBoolean ENABLE_DEBUG_PRINT = new ConfigBoolean("enableDebugPrint", false, "Enables debug print for ama-tweaks developer.");
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
             AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING,
             AUTO_EAT_DISABLE_WHILE_IN_USE,
@@ -76,9 +74,7 @@ public class Configs implements IConfigHandler {
             PERSISTENT_GAMMA_OVERRIDE,
             REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL,
             REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED,
-            SYNCMATICA_REMOVE_REQUIRE_SHIFT,
-
-            ENABLE_DEBUG_PRINT
+            SYNCMATICA_REMOVE_REQUIRE_SHIFT
         );
     }
 
@@ -141,8 +137,6 @@ public class Configs implements IConfigHandler {
     }
 
     public static void onConfigLoaded() {
-        InitHandler.initLogLevel(Generic.ENABLE_DEBUG_PRINT.getBooleanValue());
-
         InteractionHistory.resize();
 
         PreventBreakingAdjacentPortal.buildLists();
