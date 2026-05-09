@@ -163,7 +163,7 @@ public class AutoRestockInventory implements IContainerProcessor {
 
         final int restockMinNumStacks = Configs.Generic.AUTO_RESTOCK_MIN_NUM_STACKS.getIntegerValue();
 
-        if (Configs.Generic.AUTO_RESTOCK_ENABLE_EMPTY_SLOTS.getBooleanValue()) {
+        if (Configs.Generic.AUTO_RESTOCK_ENABLE_EMPTY_SLOTS.getBooleanValue() && !emptySlots.isEmpty()) {
             int emptySlotIdx = emptySlots.size() - 1;
 
             List<Item> candidateItems = new ArrayList<>();
