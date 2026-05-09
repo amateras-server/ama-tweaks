@@ -10,7 +10,6 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
@@ -103,23 +102,28 @@ public class AutoRestockInventory implements IContainerProcessor {
 
         if (restockedMap.isEmpty()) return new ProcessResult(false, false);
 
+        List<String> restockedContents = getRestockedContents(restockedMap);
+        String message = FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + " : " + Joiner.on(", ").join(restockedContents);
+        InfoUtils.printActionbarMessage(message);
+
+        return new ProcessResult(true, true);
+    }
+
+    private static List<String> getRestockedContents(HashMap<Item, Integer> restockedMap) {
         List<String> restockedContents = new ArrayList<>();
 
         for (HashMap.Entry<Item, Integer> entry : restockedMap.entrySet()) {
             ItemStack stack = entry.getKey().getDefaultInstance();
             ChatFormatting formatting = stack.getRarity().
-                //#if MC >= 12006
-                    color();
+            //#if MC >= 12006
+            color();
             //#else
             //$$ color;
             //#endif
             String stackName = formatting + stack.getHoverName().getString() + GuiBase.TXT_RST;
             restockedContents.add(String.format("%s +%s", stackName, GuiBase.TXT_GREEN + entry.getValue() + GuiBase.TXT_RST));
         }
-        String message = FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + " : " + Joiner.on(", ").join(restockedContents);
-        InfoUtils.printActionbarMessage(message);
-
-        return new ProcessResult(true, true);
+        return restockedContents;
     }
 
     private HashMap<Item, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> playerInvSlots, List<Slot> shouldRestockSlots, List<Slot> emptySlots, List<Slot> containerSlots) {
