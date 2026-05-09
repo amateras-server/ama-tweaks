@@ -227,7 +227,7 @@ public class AutoRestockInventory implements IContainerProcessor {
 
                     if (movedInThisCycle > 0) {
                         currentTotal += movedInThisCycle;
-                        restockedMap.put(item, currentTotal);
+                        restockedMap.put(item, restockedMap.getOrDefault(item, 0) + movedInThisCycle);
                     } else {
                         break;
                     }
