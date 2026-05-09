@@ -98,7 +98,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         if (shouldRestockSlots.isEmpty() && emptySlots.isEmpty())
             return new ProcessResult(false, false);
 
-        HashMap<Item, Integer> restockedMap = executeRestock(containerScreen, playerInvSlots, shouldRestockSlots, emptySlots, containerInvSlots);
+        HashMap<Item, Integer> restockedMap = executeRestock(containerScreen, playerInvSlots, shouldRestockSlots, emptySlots, containerInvSlots, player.getOffhandItem());
 
         if (restockedMap.isEmpty()) return new ProcessResult(false, false);
 
@@ -126,7 +126,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         return restockedContents;
     }
 
-    private HashMap<Item, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> playerInvSlots, List<Slot> shouldRestockSlots, List<Slot> emptySlots, List<Slot> containerSlots) {
+    private HashMap<Item, Integer> executeRestock(AbstractContainerScreen<?> containerScreen, List<Slot> playerInvSlots, List<Slot> shouldRestockSlots, List<Slot> emptySlots, List<Slot> containerSlots, ItemStack offhandStack) {
         HashMap<Item, Integer> restockedMap = new HashMap<>();
 
         int[] containerCounts = new int[containerSlots.size()];
@@ -184,6 +184,9 @@ public class AutoRestockInventory implements IContainerProcessor {
                 if (!stack.isEmpty()) {
                     playerInventoryCounts.put(stack.getItem(), playerInventoryCounts.getOrDefault(stack.getItem(), 0) + stack.getCount());
                 }
+            }
+            if (Configs.Generic.AUTO_RESTOCK_COUNT_OFFHAND.getBooleanValue() && !offhandStack.isEmpty()) {
+                playerInventoryCounts.put(offhandStack.getItem(), playerInventoryCounts.getOrDefault(offhandStack.getItem(), 0) + offhandStack.getCount());
             }
 
             for (Item item : candidateItems) {

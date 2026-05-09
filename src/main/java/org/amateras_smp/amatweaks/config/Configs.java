@@ -40,6 +40,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean AUTO_GLIDE_PUT_BACK_ROCKET = new ConfigBoolean("autoGlidePutBackRocket", true, "\"tweakAutoFireworkGlide\" puts back the firework rocket to the slot where it was.");
         public static final ConfigDouble AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rockets.");
         public static final ConfigBoolean AUTO_RESTOCK_CLOSE_GUI = new ConfigBoolean("autoRestockCloseGui", true, "Closes container GUI screen after restocking items by \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_COUNT_OFFHAND = new ConfigBoolean("autoRestockCountOffhand", true, "Counts offhand item stack into inventory stacks which used for empty slots restock of \"tweakAutoRestockInventory\".");
         public static final ConfigBoolean AUTO_RESTOCK_ENABLE_EMPTY_SLOTS = new ConfigBoolean("autoRestockEnableEmptySlots", true, "Restocks to empty slots in inventory by \"tweakAutoRestockInventory\".");
         public static final ConfigBoolean AUTO_RESTOCK_IGNORE_ENDER_CHEST = new ConfigBoolean("autoRestockIgnoreEnderChest", true, "\"tweaksAutoRestockInventory\" will not be triggered when you open ender chests");
         public static final ConfigInteger AUTO_RESTOCK_MIN_NUM_STACKS = new ConfigInteger("autoRestockMinNumStacks", 1, 1, 36, "The minimum number of stacks to restock with \"tweakAutoRestockInventory\".");
@@ -61,6 +62,7 @@ public class Configs implements IConfigHandler {
             AUTO_GLIDE_PUT_BACK_ROCKET,
             AUTO_GLIDE_SPEED_THRESHOLD,
             AUTO_RESTOCK_CLOSE_GUI,
+            AUTO_RESTOCK_COUNT_OFFHAND,
             AUTO_RESTOCK_ENABLE_EMPTY_SLOTS,
             AUTO_RESTOCK_IGNORE_ENDER_CHEST,
             AUTO_RESTOCK_MIN_NUM_STACKS,
