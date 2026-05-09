@@ -5,6 +5,7 @@
 package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.util.InventoryUtils;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
@@ -31,6 +32,15 @@ public class AutoEat {
     private static int foodTakenInventorySlot = -1;
     private static boolean eating = false;
 
+    private static final ItemRestriction AUTO_EAT_RESTRICTION = new ItemRestriction();
+
+    public static void buildLists() {
+        AUTO_EAT_RESTRICTION.setListType((ItemRestriction.ListType) Configs.Lists.AUTO_EAT_ITEMS_LIST_TYPE.getOptionListValue());
+        AUTO_EAT_RESTRICTION.setListContents(
+            Configs.Lists.AUTO_EAT_ITEMS_BLACK_LIST.getStrings(),
+            Configs.Lists.AUTO_EAT_ITEMS_WHITE_LIST.getStrings());
+    }
+
     public static void autoEat(Minecraft mc, LocalPlayer player, ClientPacketListener networkHandler) {
         if (player.getFoodData().needsFood() && player.getFoodData().getFoodLevel() <= Configs.Generic.AUTO_EAT_THRESHOLD.getDoubleValue() * 20) {
             if (shouldAutoEat(mc)) {
@@ -55,6 +65,11 @@ public class AutoEat {
                         //#else
                         //$$ if (stack.getItem().isEdible()) {
                         //#endif
+
+                        if (!AUTO_EAT_RESTRICTION.isAllowed(stack.getItem())) {
+                            continue;
+                        }
+
                         holdOrSwap(i, Configs.Generic.FOOD_SWITCHABLE_SLOT.getIntegerValue());
                         if (eating) {
                             KeyMapping.set(InputConstants.getKey(mc.options.keyUse.saveString()), true);

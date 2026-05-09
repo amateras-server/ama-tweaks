@@ -24,10 +24,7 @@ import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
-import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
-import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
-import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
-import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
+import org.amateras_smp.amatweaks.impl.features.*;
 
 import java.io.File;
 
@@ -36,7 +33,7 @@ public class Configs implements IConfigHandler {
 
     public static class Generic {
         public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING = new ConfigBoolean("autoEatDisableWhileElytraFlying", false, "Disables \"tweakAutoEat\" when you're gliding with elytra.");
-        public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_IN_USE = new ConfigBoolean("autoEatDisableWhileInUse", false, "\"tweakAutoEat\" will not be triggered while using or attacking.");
+        public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_IN_USE = new ConfigBoolean("autoEatDisableWhileInUse", true, "\"tweakAutoEat\" will not be triggered while using or attacking.");
         public static final ConfigBoolean AUTO_EAT_PUT_BACK_FOOD = new ConfigBoolean("autoEatPutBackFood", false, "\"tweakAutoEat\" puts back the food to the slot where it was.");
         public static final ConfigDouble AUTO_EAT_THRESHOLD = new ConfigDouble("autoEatThreshold", 1.0, 0, 1.0, "The hunger level threshold for \"tweakAutoEat\".");
         public static final ConfigInteger AUTO_GLIDE_USE_ROCKET_INTERVAL = new ConfigInteger("autoGlideUseRocketInterval", 60, 1, 1000, "The interval game tick for trying to automatically use firework rockets with \"tweakAutoFireworkGlide\".");
@@ -79,6 +76,10 @@ public class Configs implements IConfigHandler {
     }
 
     public static class Lists {
+        public static final ConfigOptionList AUTO_EAT_ITEMS_LIST_TYPE = new ConfigOptionList("autoEatItemsListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakAutoEat\" restriction.");
+        public static final ConfigStringList AUTO_EAT_ITEMS_BLACK_LIST = new ConfigStringList("autoEatItemsListBlacklist", ImmutableList.of(""), "The items not to eat with \"tweakAutoEat\".");
+        public static final ConfigStringList AUTO_EAT_ITEMS_WHITE_LIST = new ConfigStringList("autoEatItemsListWhitelist", ImmutableList.of("minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop"), "The items to eat with \"tweakAutoEat\".");
+
         public static final ConfigOptionList INVENTORY_RESTOCK_ITEMS_LIST_TYPE = new ConfigOptionList("inventoryRestockItemsListType", ItemRestriction.ListType.WHITELIST, "The type of the list used for \"tweakAutoRestockInventory\" restocking items.");
         public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_BLACK_LIST = new ConfigStringList("inventoryRestockItemsListBlacklist", ImmutableList.of(""), "The items not to restock with \"tweakAutoRestockInventory\".");
         public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_WHITE_LIST = new ConfigStringList("inventoryRestockItemsListWhitelist", ImmutableList.of("minecraft:firework_rocket", "minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop", "minecraft:experience_bottle", "minecraft:totem_of_undying"), "The items to restock with \"tweakAutoRestockInventory\".");
@@ -106,6 +107,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigStringList SELECTIVE_TOOL_SWITCH_BLACK_LIST = new ConfigStringList("selectiveToolSwitchBlackList", ImmutableList.of(), "The blocks that tweakToolSwitch will not work on break.");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+            AUTO_EAT_ITEMS_LIST_TYPE,
+            AUTO_EAT_ITEMS_BLACK_LIST,
+            AUTO_EAT_ITEMS_WHITE_LIST,
             INVENTORY_RESTOCK_ITEMS_LIST_TYPE,
             INVENTORY_RESTOCK_ITEMS_BLACK_LIST,
             INVENTORY_RESTOCK_ITEMS_WHITE_LIST,
@@ -141,6 +145,7 @@ public class Configs implements IConfigHandler {
 
         PreventBreakingAdjacentPortal.buildLists();
 
+        AutoEat.buildLists();
         AutoRestockInventory.buildLists();
         PickRedirect.buildCache();
         SelectiveAutoPick.buildLists();
