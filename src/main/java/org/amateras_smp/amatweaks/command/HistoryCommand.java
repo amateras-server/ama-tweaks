@@ -28,6 +28,7 @@ public class HistoryCommand {
         InteractionHistory.printInteraction();
 
         MutableComponent message = TextUtil.createEmpty();
+        message.append(PREFIX);
         boolean hasContent = false;
 
         if (!InteractionHistory.blockInteractionHistory.isEmpty()) {
