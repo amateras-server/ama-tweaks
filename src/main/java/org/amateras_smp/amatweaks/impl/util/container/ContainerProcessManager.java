@@ -6,7 +6,7 @@ package org.amateras_smp.amatweaks.impl.util.container;
 
 import com.google.common.collect.ImmutableList;
 import org.amateras_smp.amatweaks.impl.features.ProcessResult;
-import org.amateras_smp.amatweaks.mixins.features.autorestockinventory.ItemScrollerInventoryUtilsAccessor;
+import org.amateras_smp.amatweaks.mixins.features.auto_restock_inventory.ItemScrollerInventoryUtilsAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;

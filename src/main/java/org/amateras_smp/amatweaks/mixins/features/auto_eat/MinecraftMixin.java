@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.autoeat;
+package org.amateras_smp.amatweaks.mixins.features.auto_eat;
 
 import net.minecraft.client.Minecraft;
 import org.amateras_smp.amatweaks.config.FeatureToggle;

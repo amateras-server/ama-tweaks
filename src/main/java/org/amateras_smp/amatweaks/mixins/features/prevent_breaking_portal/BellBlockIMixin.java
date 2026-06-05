@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.preventbreakingportal;
+package org.amateras_smp.amatweaks.mixins.features.prevent_breaking_portal;
 
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;

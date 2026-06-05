@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.selectiverendering;
+package org.amateras_smp.amatweaks.mixins.features.selective_rendering;
 
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.RenderShape;

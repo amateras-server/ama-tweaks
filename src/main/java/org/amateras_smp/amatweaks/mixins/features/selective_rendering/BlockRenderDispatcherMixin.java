@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.selectiverendering;
+package org.amateras_smp.amatweaks.mixins.features.selective_rendering;
 
 //#if MC <= 12111
 //$$ import com.mojang.blaze3d.vertex.PoseStack;

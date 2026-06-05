@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.monogui;
+package org.amateras_smp.amatweaks.mixins.features.mono_gui;
 
 //#if MC <= 12111
 //$$ import net.minecraft.client.gui.Font.PreparedTextBuilder;

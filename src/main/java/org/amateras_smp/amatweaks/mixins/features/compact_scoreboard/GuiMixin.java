@@ -2,7 +2,7 @@
 // This file is part of the AmaTweaks project and is licensed under the terms of
 // the MIT License. See the LICENSE file for details.
 
-package org.amateras_smp.amatweaks.mixins.features.compactscoreboard;
+package org.amateras_smp.amatweaks.mixins.features.compact_scoreboard;
 
 import net.minecraft.client.gui.Gui;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
