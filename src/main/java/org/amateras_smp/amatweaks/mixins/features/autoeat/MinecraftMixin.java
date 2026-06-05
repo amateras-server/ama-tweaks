@@ -5,7 +5,6 @@
 package org.amateras_smp.amatweaks.mixins.features.autoeat;
 
 import net.minecraft.client.Minecraft;
-import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.features.AutoEat;
 import org.spongepowered.asm.mixin.Mixin;

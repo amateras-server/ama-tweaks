@@ -19,7 +19,6 @@ import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.Minecraft;
 
 import org.amateras_smp.amatweaks.AmaTweaks;
-import org.amateras_smp.amatweaks.InitHandler;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;

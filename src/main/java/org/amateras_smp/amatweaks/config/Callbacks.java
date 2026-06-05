@@ -7,7 +7,6 @@ package org.amateras_smp.amatweaks.config;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
-import org.amateras_smp.amatweaks.InitHandler;
 import org.amateras_smp.amatweaks.gui.GuiConfigs;
 import fi.dy.masa.litematica.data.DataManager;
 import fi.dy.masa.litematica.materials.MaterialListBase;
