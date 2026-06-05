@@ -4,47 +4,73 @@
 
 package org.amateras_smp.amatweaks.command;
 
+import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
+import org.amateras_smp.amatweaks.impl.util.TextUtil;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
-
-//#if MC >= 11900
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-//#else
-//$$ import net.minecraft.network.chat.TextComponent;
-//#endif
-
 
 public class HistoryCommand {
     public static Command<FabricClientCommandSource> command = HistoryCommand::callback;
     public static Command<FabricClientCommandSource> clearCommand = HistoryCommand::clear;
 
+    private static final Component PREFIX = TextUtil.createEmpty()
+            .append(TextUtil.withFormat("[", ChatFormatting.GRAY))
+            .append(TextUtil.withFormat("Ama Tweaks - Interaction History", ChatFormatting.GOLD))
+            .append(TextUtil.withFormat("] ", ChatFormatting.GRAY));
+
     public static int callback(CommandContext<FabricClientCommandSource> context) {
         InteractionHistory.printInteraction();
-        StringBuilder message = new StringBuilder();
+
+        MutableComponent message = TextUtil.createEmpty();
+        boolean hasContent = false;
+
         if (!InteractionHistory.blockInteractionHistory.isEmpty()) {
-            message.append("=== Block Interactions ===\n");
-            for (var b : InteractionHistory.blockInteractionHistory) {
-                message.append(b.toString()).append("\n");
+            if (hasContent)
+                message.append("\n");
+
+            // header
+            message.append(TextUtil.withFormat("═══ ", ChatFormatting.DARK_GRAY))
+                    .append(TextUtil.withFormat("Block Interactions", ChatFormatting.AQUA))
+                    .append(TextUtil.withFormat(" ═══\n", ChatFormatting.DARK_GRAY));
+
+            for (InteractionHistory.BlockInteraction b : InteractionHistory.blockInteractionHistory) {
+                message.append(TextUtil.withFormat(" ❖ ", ChatFormatting.DARK_AQUA))
+                        .append(TextUtil.withFormat(b.toString(), ChatFormatting.GRAY))
+                        .append("\n");
             }
-        }
-        if (!InteractionHistory.entityInteractionHistory.isEmpty()) {
-            message.append("=== Entity Interactions ===\n");
-            for (var e : InteractionHistory.entityInteractionHistory) {
-                message.append(e.toString()).append("\n");
-            }
-        }
-        if (!message.isEmpty() && message.charAt(message.length() - 1) == '\n') {
-            message.deleteCharAt(message.length() - 1);
+            hasContent = true;
         }
 
-        if (!message.toString().isBlank()) {
-            //#if MC >= 11900
-            context.getSource().sendFeedback(Component.literal(message.toString()));
-            //#else
-            //$$ context.getSource().sendFeedback(new TextComponent(message.toString()));
-            //#endif
+        if (!InteractionHistory.entityInteractionHistory.isEmpty()) {
+            if (hasContent)
+                message.append("\n");
+
+            // header
+            message.append(TextUtil.withFormat("═══ ", ChatFormatting.DARK_GRAY))
+                    .append(TextUtil.withFormat("Entity Interactions", ChatFormatting.LIGHT_PURPLE))
+                    .append(TextUtil.withFormat(" ═══\n", ChatFormatting.DARK_GRAY));
+
+            for (InteractionHistory.EntityInteraction e : InteractionHistory.entityInteractionHistory) {
+                message.append(TextUtil.withFormat(" ❖ ", ChatFormatting.LIGHT_PURPLE))
+                        .append(TextUtil.withFormat(e.toString(), ChatFormatting.GRAY))
+                        .append("\n");
+            }
+            hasContent = true;
+        }
+
+        if (hasContent) {
+            context.getSource().sendFeedback(message);
+        } else {
+            context.getSource().sendFeedback(
+                    TextUtil.createEmpty()
+                            .append(PREFIX)
+                            .append(TextUtil.withFormat("No interaction history found.", ChatFormatting.RED)));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -54,12 +80,11 @@ public class HistoryCommand {
         InteractionHistory.blockInteractionHistory.clear();
         InteractionHistory.entityInteractionHistory.clear();
 
-        String message = "Cleared interaction history cache";
-        //#if MC >= 11900
-        context.getSource().sendFeedback(Component.literal(message));
-        //#else
-        //$$ context.getSource().sendFeedback(new TextComponent(message));
-        //#endif
+        Component clearMessage = TextUtil.createEmpty()
+                .append(PREFIX)
+                .append(TextUtil.withFormat("Successfully cleared interaction history cache.", ChatFormatting.GREEN));
+
+        context.getSource().sendFeedback(clearMessage);
         return Command.SINGLE_SUCCESS;
     }
 }
