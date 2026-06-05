@@ -22,7 +22,7 @@ public class HistoryCommand {
     private static final Component PREFIX = TextUtil.createEmpty()
             .append(TextUtil.withFormat("[", ChatFormatting.GRAY))
             .append(TextUtil.withFormat("Ama Tweaks - Interaction History", ChatFormatting.GOLD))
-            .append(TextUtil.withFormat("] ", ChatFormatting.GRAY));
+            .append(TextUtil.withFormat("]\n", ChatFormatting.GRAY));
 
     public static int callback(CommandContext<FabricClientCommandSource> context) {
         InteractionHistory.printInteraction();
