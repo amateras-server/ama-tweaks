@@ -4,8 +4,10 @@
 
 package org.amateras_smp.amatweaks.impl.features;
 
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,6 +43,14 @@ public class ItemPickupFilter {
             return;
         }
 
+        ChatFormatting color = stack.getRarity().
+            //#if MC >= 12006
+            color();
+            //#else
+            //$$ color;
+            //#endif
+        String itemStr = color + stack.getHoverName().getString() + GuiBase.TXT_RST;
+
         //#if MC >= 260000
         gameMode.handleContainerInput(0, slotId, 0, ContainerInput.PICKUP, player);
         gameMode.handleContainerInput(0, OUTSIDE_SCREEN_SLOT_ID, 0, ContainerInput.PICKUP, player);
@@ -49,7 +59,7 @@ public class ItemPickupFilter {
         //$$ gameMode.handleInventoryMouseClick(0, OUTSIDE_SCREEN_SLOT_ID, 0, ClickType.PICKUP, player);
         //#endif
 
-        String message = "[" + Reference.kModName + "] (" + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + String.format("): dropped %s", stack.getHoverName().getString());
+        String message = GuiBase.TXT_YELLOW +  "[" + Reference.kModName + "] " + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + GuiBase.TXT_GRAY + ": " + GuiBase.TXT_RST + "Dropped " + itemStr;
         InfoUtils.printActionbarMessage(message);
     }
 }
