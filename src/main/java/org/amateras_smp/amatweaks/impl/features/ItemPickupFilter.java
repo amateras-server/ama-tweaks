@@ -11,21 +11,16 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.config.Configs;
-
-//#if MC >= 260000
-import net.minecraft.world.inventory.ContainerInput;
-//#else
-//$$ import net.minecraft.world.inventory.ClickType;
-//#endif
+import org.amateras_smp.amatweaks.impl.util.InventoryUtil;
 
 public class ItemPickupFilter {
     private static final ItemRestriction ITEM_PICKUP_FILTER_RESTRICTION = new ItemRestriction();
-
-    private static final int OUTSIDE_SCREEN_SLOT_ID = -999;
 
     public static void buildLists() {
         ITEM_PICKUP_FILTER_RESTRICTION.setListType((ItemRestriction.ListType) Configs.Lists.ITEM_PICKUP_FILTER_LIST_TYPE.getOptionListValue());
@@ -34,15 +29,32 @@ public class ItemPickupFilter {
             Configs.Lists.ITEM_PICKUP_FILTER_WHITE_LIST.getStrings());
     }
 
-    public static void acceptOrDrop(Minecraft minecraft, LocalPlayer player, int slotId, ItemStack stack) {
+    public static void acceptOrDrop(Minecraft minecraft, LocalPlayer player, int containerId, int rawSlotId, ItemStack stack) {
         if (!FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getBooleanValue() || ITEM_PICKUP_FILTER_RESTRICTION.isAllowed(stack.getItem())) {
             return;
         }
         MultiPlayerGameMode gameMode = minecraft.gameMode;
+        AbstractContainerMenu containerMenu = player.containerMenu;
         if (gameMode == null) {
             return;
         }
 
+        if (containerId != 0) {
+            if (rawSlotId < 0 || rawSlotId >= containerMenu.slots.size()) {
+                return;
+            }
+            Slot slot = containerMenu.getSlot(rawSlotId);
+            // Only proceed if the item actually landed in the player's personal inventory slots within the chest GUI.
+            if (slot.container != player.getInventory()) {
+                return;
+            }
+        } else {
+            // If it's the standard inventory (containerId 0), guard with standard crafting/armor grid offset.
+            if (rawSlotId < net.minecraft.world.entity.player.Inventory.getSelectionSize() ||
+                rawSlotId >= net.minecraft.world.entity.player.Inventory.INVENTORY_SIZE + net.minecraft.world.entity.player.Inventory.getSelectionSize()) {
+                return;
+            }
+        }
         ChatFormatting color = stack.getRarity().
             //#if MC >= 12006
             color();
@@ -51,13 +63,7 @@ public class ItemPickupFilter {
             //#endif
         String itemStr = color + stack.getHoverName().getString() + GuiBase.TXT_RST;
 
-        //#if MC >= 260000
-        gameMode.handleContainerInput(0, slotId, 0, ContainerInput.PICKUP, player);
-        gameMode.handleContainerInput(0, OUTSIDE_SCREEN_SLOT_ID, 0, ContainerInput.PICKUP, player);
-        //#else
-        //$$ gameMode.handleInventoryMouseClick(0, slotId, 0, ClickType.PICKUP, player);
-        //$$ gameMode.handleInventoryMouseClick(0, OUTSIDE_SCREEN_SLOT_ID, 0, ClickType.PICKUP, player);
-        //#endif
+        InventoryUtil.dropSlot(gameMode, containerId, rawSlotId, player);
 
         String message = GuiBase.TXT_YELLOW +  "[" + Reference.kModName + "] " + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + GuiBase.TXT_GRAY + ": " + GuiBase.TXT_RST + "Dropped " + itemStr;
         InfoUtils.printActionbarMessage(message);
