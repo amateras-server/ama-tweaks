@@ -65,15 +65,19 @@ Implementation of >=mc1.20.4 was ported from [techutils](https://github.com/Kiku
 
 ### tweakInteractionHistory
 
-> Cache specified number of player interactions.
+> Caches specified number of player interactions.
 The interactions can be checked with `/history` command in the game and cleared with `/clearinteractions`.
 The number of interaction to keep can be set by `interactionHistoryMaxSize` in config `Generic`.  
+
+### tweakItemPickupFilter
+
+> Filters items to pickup.
 
 ### tweakMonoGui
 
 > Overrides text color in gui with white.  
 
-### tweakMonoTeam
+### tweakMonoTeamColor
 
 > Overrides text color of team with white.  
 
@@ -95,6 +99,10 @@ This feature was ported from [taichi-tweaks](https://github.com/TaichiServer/tai
 > Prevent breaking blocks below you while you're moving forward or sideways.  
 This can be useful for activities like perimeter digging.  
 
+### tweakSelectiveAutoPick
+
+> Adds whitelist/blacklist for tweakermore's `autoPickSchematicBlock`
+
 ### tweakSelectiveBlockRendering
 
 > Renders only specified blocks. The blocks can be configured in the `List` tab so check it. This feature will reload the entire world (renderer) on settings changed.  
@@ -105,3 +113,7 @@ List entries example: `minecraft:white_stained_glass`, `minecraft:dirt`, `minecr
 > Renders only specified entities. The entities can be configured in the `List` tab.
 List entries example: `player`, `tnt`, `slime`, `item`.  
 This feature was ported from [taichi-tweaks](https://github.com/TaichiServer/taichi-tweaks).  
+
+### tweakSelectiveToolSwitch
+
+> Adds whitelist/blacklist for tweakeroo's `tweakToolSwitch`.
