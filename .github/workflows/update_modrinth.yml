@@ -18,7 +18,7 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests
-      
+
       - name: Update modrinth description
         env:
           MODRINTH_ID: Nbm4n3Oh  # https://modrinth.com/mod/amatweaks
@@ -38,5 +38,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add modrinth.md
-          git commit -m "auto update modrinth.md"
+          git commit -m "docs: auto update modrinth.md"
           git push
