@@ -49,7 +49,7 @@ public class ItemPickupFilter {
         //$$ gameMode.handleInventoryMouseClick(0, OUTSIDE_SCREEN_SLOT_ID, 0, ClickType.PICKUP, player);
         //#endif
 
-        String message = "[" + Reference.kModId + "] (" + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + String.format("): dropped %s", stack.getHoverName().getString());
+        String message = "[" + Reference.kModName + "] (" + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + String.format("): dropped %s", stack.getHoverName().getString());
         InfoUtils.printActionbarMessage(message);
     }
 }

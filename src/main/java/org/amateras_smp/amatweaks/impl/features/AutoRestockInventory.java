@@ -104,7 +104,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         if (restockedMap.isEmpty()) return new ProcessResult(false, false);
 
         List<String> restockedContents = getRestockedContents(restockedMap);
-        String message = "[" + Reference.kModId + "] (" + FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + "): " + Joiner.on(", ").join(restockedContents);
+        String message = "[" + Reference.kModName + "] (" + FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + "): " + Joiner.on(", ").join(restockedContents);
         InfoUtils.printActionbarMessage(message);
 
         return new ProcessResult(true, true);
