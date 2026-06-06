@@ -78,17 +78,21 @@ public class Configs implements IConfigHandler {
 
     public static class Lists {
         public static final ConfigOptionList AUTO_EAT_ITEMS_LIST_TYPE = new ConfigOptionList("autoEatItemsListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakAutoEat\" restriction.");
-        public static final ConfigStringList AUTO_EAT_ITEMS_BLACK_LIST = new ConfigStringList("autoEatItemsListBlacklist", ImmutableList.of(""), "The items not to eat with \"tweakAutoEat\".");
+        public static final ConfigStringList AUTO_EAT_ITEMS_BLACK_LIST = new ConfigStringList("autoEatItemsListBlacklist", ImmutableList.of(), "The items not to eat with \"tweakAutoEat\".");
         public static final ConfigStringList AUTO_EAT_ITEMS_WHITE_LIST = new ConfigStringList("autoEatItemsListWhitelist", ImmutableList.of("minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop"), "The items to eat with \"tweakAutoEat\".");
 
         public static final ConfigOptionList INVENTORY_RESTOCK_ITEMS_LIST_TYPE = new ConfigOptionList("inventoryRestockItemsListType", ItemRestriction.ListType.WHITELIST, "The type of the list used for \"tweakAutoRestockInventory\" restocking items.");
-        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_BLACK_LIST = new ConfigStringList("inventoryRestockItemsListBlacklist", ImmutableList.of(""), "The items not to restock with \"tweakAutoRestockInventory\".");
+        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_BLACK_LIST = new ConfigStringList("inventoryRestockItemsListBlacklist", ImmutableList.of(), "The items not to restock with \"tweakAutoRestockInventory\".");
         public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_WHITE_LIST = new ConfigStringList("inventoryRestockItemsListWhitelist", ImmutableList.of("minecraft:firework_rocket", "minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop", "minecraft:experience_bottle", "minecraft:totem_of_undying"), "The items to restock with \"tweakAutoRestockInventory\".");
+
+        public static final ConfigOptionList ITEM_PICKUP_FILTER_LIST_TYPE = new ConfigOptionList("itemPickupFilterListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakItemPickupFilter\".");
+        public static final ConfigStringList ITEM_PICKUP_FILTER_BLACK_LIST = new ConfigStringList("itemPickupFilterBlackList", ImmutableList.of(), "The items which are not allowed to pickup");
+        public static final ConfigStringList ITEM_PICKUP_FILTER_WHITE_LIST = new ConfigStringList("itemPickupFilterWhiteList", ImmutableList.of(), "The items which are allowed to pickup");
 
         public static final ConfigStringList PICK_REDIRECT_MAP = new ConfigStringList("pickRedirectMap", ImmutableList.of("minecraft:farmland, minecraft:dirt", "minecraft:dirt_path, minecraft:dirt", "minecraft:water, minecraft:ice", "minecraft:bubble_column, minecraft:ice"), "replacement reference of litematica block pick");
 
         public static final ConfigOptionList PORTAL_BREAKING_RESTRICTION_LIST_TYPE = new ConfigOptionList("portalBreakingRestrictionListType", UsageRestriction.ListType.WHITELIST, "The type of the list used for \"tweakPreventBreakingAdjacentPortal\" restriction effects.");
-        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_BLACK_LIST = new ConfigStringList("portalBreakingRestrictionBlackList", ImmutableList.of(""), "The items that will be restricted by \"tweakPreventBreakingAdjacentPortal\".");
+        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_BLACK_LIST = new ConfigStringList("portalBreakingRestrictionBlackList", ImmutableList.of(), "The items that will be restricted by \"tweakPreventBreakingAdjacentPortal\".");
         public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_WHITE_LIST = new ConfigStringList("portalBreakingRestrictionWhiteList", ImmutableList.of("minecraft:obsidian"), "The items that will not be restricted by \"tweakPreventBreakingAdjacentPortal\".");
 
         public static final ConfigOptionList SELECTIVE_AUTO_PICK_LIST_TYPE = new ConfigOptionList("selectiveAutoPickListType", UsageRestriction.ListType.NONE, "The type of the list used for selective auto pick.");
@@ -114,6 +118,9 @@ public class Configs implements IConfigHandler {
             INVENTORY_RESTOCK_ITEMS_LIST_TYPE,
             INVENTORY_RESTOCK_ITEMS_BLACK_LIST,
             INVENTORY_RESTOCK_ITEMS_WHITE_LIST,
+            ITEM_PICKUP_FILTER_LIST_TYPE,
+            ITEM_PICKUP_FILTER_BLACK_LIST,
+            ITEM_PICKUP_FILTER_WHITE_LIST,
             PICK_REDIRECT_MAP,
             PORTAL_BREAKING_RESTRICTION_LIST_TYPE,
             PORTAL_BREAKING_RESTRICTION_BLACK_LIST,
@@ -148,6 +155,7 @@ public class Configs implements IConfigHandler {
 
         AutoEat.buildLists();
         AutoRestockInventory.buildLists();
+        ItemPickupFilter.buildLists();
         PickRedirect.buildCache();
         SelectiveAutoPick.buildLists();
         SelectiveToolSwitch.buildLists();

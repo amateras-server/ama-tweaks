@@ -32,6 +32,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_HOLD_LEFT("tweakHoldLeft", false, "", "Hold moving left."),
     TWEAK_HOLD_RIGHT("tweakHoldRight", false, "", "Hold moving right."),
     TWEAK_INTERACTION_HISTORY("tweakInteractionHistory", false, "", "Remember some interactions to break blocks, use items, attack entities. Can check the history by typing /history command."),
+    TWEAK_ITEM_PICKUP_FILTER("tweakItemPickupFilter", false, "", "Filter items to pickup."),
     TWEAK_MONO_GUI("tweakMonoGui", false, "", "Render monochrome gui. including tweakMonoChat, tweakMonoTeamColor."),
     TWEAK_MONO_TEAM_COLOR("tweakMonoTeamColor", false, "", "Render monochrome team color."),
     TWEAK_PICK_BLOCK_REDIRECT("tweakPickBlockRedirect", false, "", "Automatically replaces blocks that should be picked by litematica or tweakermore."),

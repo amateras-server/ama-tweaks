@@ -5,8 +5,10 @@
 package org.amateras_smp.amatweaks.config;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
+import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.gui.GuiConfigs;
 import fi.dy.masa.litematica.data.DataManager;
 import fi.dy.masa.litematica.materials.MaterialListBase;
@@ -21,10 +23,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
-import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
-import org.amateras_smp.amatweaks.impl.features.InteractionHistory;
-import org.amateras_smp.amatweaks.impl.features.PreventBreakingAdjacentPortal;
-import org.amateras_smp.amatweaks.impl.features.SelectiveRendering;
+import org.amateras_smp.amatweaks.impl.features.*;
 import org.amateras_smp.amatweaks.impl.util.ClientCommandUtil;
 
 public class Callbacks {
@@ -50,6 +49,7 @@ public class Callbacks {
         FeatureToggle.TWEAK_HOLD_FORWARD.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOLD_FORWARD));
         FeatureToggle.TWEAK_HOLD_LEFT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOLD_LEFT));
         FeatureToggle.TWEAK_HOLD_RIGHT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOLD_RIGHT));
+        FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_ITEM_PICKUP_FILTER));
         FeatureToggle.TWEAK_INTERACTION_HISTORY.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_INTERACTION_HISTORY));
         FeatureToggle.TWEAK_MONO_GUI.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_MONO_GUI));
         FeatureToggle.TWEAK_MONO_TEAM_COLOR.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_MONO_TEAM_COLOR));
@@ -68,6 +68,10 @@ public class Callbacks {
         Configs.Lists.INVENTORY_RESTOCK_ITEMS_BLACK_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
         Configs.Lists.INVENTORY_RESTOCK_ITEMS_WHITE_LIST.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
         Configs.Lists.INVENTORY_RESTOCK_ITEMS_LIST_TYPE.setValueChangeCallback((cfg) -> AutoRestockInventory.buildLists());
+
+        Configs.Lists.ITEM_PICKUP_FILTER_BLACK_LIST.setValueChangeCallback((cfg) -> ItemPickupFilter.buildLists());
+        Configs.Lists.ITEM_PICKUP_FILTER_WHITE_LIST.setValueChangeCallback((cfg) -> ItemPickupFilter.buildLists());
+        Configs.Lists.ITEM_PICKUP_FILTER_LIST_TYPE.setValueChangeCallback((cfg) -> ItemPickupFilter.buildLists());
 
         Configs.Lists.PICK_REDIRECT_MAP.setValueChangeCallback((cfg) -> PickRedirect.buildCache());
 
@@ -95,6 +99,9 @@ public class Callbacks {
         private static final boolean IS_LITEMATICA_LOADED = checkLitematica();
 
         private static boolean checkLitematica() {
+            if (FabricLoader.getInstance().isModLoaded(Reference.ModIds.litematica))  {
+                return true;
+            }
             try {
                 Class.forName("fi.dy.masa.litematica.Litematica");
                 return true;
