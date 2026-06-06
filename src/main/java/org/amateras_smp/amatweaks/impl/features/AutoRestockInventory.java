@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.core.BlockPos;
+import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.Configs;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.impl.util.container.IContainerProcessor;
@@ -103,7 +104,7 @@ public class AutoRestockInventory implements IContainerProcessor {
         if (restockedMap.isEmpty()) return new ProcessResult(false, false);
 
         List<String> restockedContents = getRestockedContents(restockedMap);
-        String message = FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + " : " + Joiner.on(", ").join(restockedContents);
+        String message = "[" + Reference.kModId + "] (" + FeatureToggle.TWEAK_AUTO_RESTOCK_INVENTORY.getPrettyName() + "): " + Joiner.on(", ").join(restockedContents);
         InfoUtils.printActionbarMessage(message);
 
         return new ProcessResult(true, true);

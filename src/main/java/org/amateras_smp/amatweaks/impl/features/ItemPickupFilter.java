@@ -4,11 +4,13 @@
 
 package org.amateras_smp.amatweaks.impl.features;
 
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
+import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.amateras_smp.amatweaks.config.Configs;
 
@@ -46,5 +48,8 @@ public class ItemPickupFilter {
         //$$ gameMode.handleInventoryMouseClick(0, slotId, 0, ClickType.PICKUP, player);
         //$$ gameMode.handleInventoryMouseClick(0, OUTSIDE_SCREEN_SLOT_ID, 0, ClickType.PICKUP, player);
         //#endif
+
+        String message = "[" + Reference.kModId + "] (" + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + String.format("): dropped %s", stack.getHoverName().getString());
+        InfoUtils.printActionbarMessage(message);
     }
 }
