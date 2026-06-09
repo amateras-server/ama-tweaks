@@ -1,18 +1,16 @@
-# User-specific stuff
-.idea/
-.vscode/
-bin/
-
 *.iml
 *.ipr
 *.iws
+.vscode/
+bin/
 
-# jdtls
+# Eclipse
 .project
 .settings/
 .classpath
 
 # IntelliJ
+.idea/
 out/
 
 # mpeltonen/sbt-idea plugin
