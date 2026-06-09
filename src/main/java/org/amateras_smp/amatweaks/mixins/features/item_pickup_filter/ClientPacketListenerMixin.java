@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.amateras_smp.amatweaks.AmaTweaks;
@@ -23,49 +24,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin {
-    @Unique
-    private Item amatweaks$lastPickedItem = null;
-
-    @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
-    private void onItemPickup(final ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || minecraft.level == null || packet.getPlayerId() != minecraft.player.getId()) {
-            return;
-        }
-
-        Entity pickedEntity = minecraft.level.getEntity(packet.getItemId());
-        if (pickedEntity instanceof ItemEntity itemEntity) {
-            ItemStack itemStack = itemEntity.getItem();
-            if (!itemStack.isEmpty()) {
-                this.amatweaks$lastPickedItem = itemStack.getItem();
-            }
-        }
-    }
-
-    @Inject(method = "handleContainerSetSlot", at = @At("TAIL"))
+    @Inject(method = "handleContainerSetSlot", at = @At("HEAD"))
     private void onContainerSlotUpdate(final ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        if (amatweaks$lastPickedItem == null) {
-            return;
-        }
-
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null || minecraft.level == null) {
             return;
         }
 
         int packetContainerId = packet.getContainerId();
-        if (packetContainerId != minecraft.player.containerMenu.containerId) {
+        AbstractContainerMenu currentMenu = minecraft.player.containerMenu;
+        if (packetContainerId != currentMenu.containerId) {
             return;
         }
 
         int slotId = packet.getSlot();
-        ItemStack itemStack = packet.getItem();
 
-        if (!itemStack.isEmpty() && itemStack.getItem() == this.amatweaks$lastPickedItem) {
-            this.amatweaks$lastPickedItem = null;
+        ItemStack currentStack = currentMenu.getSlot(slotId).getItem();
+        ItemStack newStack = packet.getItem();
+
+        if (!currentStack.isEmpty() && currentStack.getItem() == newStack.getItem()) {
+            return;
+        }
+
+        if (!newStack.isEmpty()) {
             minecraft.execute(() -> {
-                // ClickSlot and drop the stack all.
-                ItemPickupFilter.acceptOrDrop(minecraft, minecraft.player, packetContainerId, slotId, itemStack);
+                ItemPickupFilter.acceptOrDrop(minecraft, minecraft.player, packetContainerId, slotId, newStack);
             });
         }
     }
