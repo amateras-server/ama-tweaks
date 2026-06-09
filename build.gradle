@@ -1,7 +1,7 @@
 plugins {
   id 'maven-publish'
-  id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
-  id 'net.fabricmc.fabric-loom-remap' version '1.15-SNAPSHOT' apply false
+  id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT' apply false
+  id 'net.fabricmc.fabric-loom-remap' version '1.16-SNAPSHOT' apply false
 
   // https://github.com/ReplayMod/preprocessor
   // https://github.com/Fallen-Breath/preprocessor
@@ -14,22 +14,22 @@ plugins {
 preprocess {
   strictExtraMappings = false
 
-  // def mc011701 = createNode('1.17.1', 1_17_01, '')
-  def mc011802 = createNode('1.18.2', 1_18_02, '')
-  def mc011904 = createNode('1.19.4', 1_19_04, '')
-  def mc012001 = createNode('1.20.1', 1_20_01, '')
-  def mc012002 = createNode('1.20.2', 1_20_02, '')
-  def mc012004 = createNode('1.20.4', 1_20_04, '')
-  def mc012006 = createNode('1.20.6', 1_20_06, '')
-  def mc012101 = createNode('1.21.1', 1_21_01, '')
-  def mc012104 = createNode('1.21.4', 1_21_04, '')
-  def mc012105 = createNode('1.21.5', 1_21_05, '')
-  def mc012108 = createNode('1.21.8', 1_21_08, '')
-  def mc012110 = createNode('1.21.10', 1_21_10, '')
+  def mc260101 = createNode('26.1.1', 26_01_01, '')
   def mc012111 = createNode('1.21.11', 1_21_11, '')
-  def mc260100 = createNode('26.1', 26_01_00, '')
+  def mc012110 = createNode('1.21.10', 1_21_10, '')
+  def mc012108 = createNode('1.21.8', 1_21_08, '')
+  def mc012105 = createNode('1.21.5', 1_21_05, '')
+  def mc012104 = createNode('1.21.4', 1_21_04, '')
+  def mc012101 = createNode('1.21.1', 1_21_01, '')
+  def mc012006 = createNode('1.20.6', 1_20_06, '')
+  def mc012004 = createNode('1.20.4', 1_20_04, '')
+  def mc012002 = createNode('1.20.2', 1_20_02, '')
+  def mc012001 = createNode('1.20.1', 1_20_01, '')
+  // def mc011904 = createNode('1.19.4', 1_19_04, '')
+  // def mc011802 = createNode('1.18.2', 1_18_02, '')
+  // def mc011701 = createNode('1.17.1', 1_17_01, '')
 
-  mc260100.link(mc012111, file('versions/mapping-26.1-1.21.11.txt'))
+  mc260101.link(mc012111, file('versions/mapping-26.1.1-1.21.11.txt'))
   mc012111.link(mc012110, file('versions/mapping-1.21.11-1.21.10.txt'))
   mc012110.link(mc012108, null)
   mc012108.link(mc012105, file('versions/mapping-1.21.8-1.21.5.txt'))
@@ -39,8 +39,8 @@ preprocess {
   mc012006.link(mc012004, file('versions/mapping-1.20.6-1.20.4.txt'))
   mc012004.link(mc012002, null)
   mc012002.link(mc012001, null)
-  mc012001.link(mc011904, null)
-  mc011904.link(mc011802, file('versions/mapping-1.19.4-1.18.2.txt'))
+  // mc012001.link(mc011904, null)
+  // mc011904.link(mc011802, file('versions/mapping-1.19.4-1.18.2.txt'))
   // mc011802.link(mc011701, null)
 
   for (final def node in getNodes()) {
