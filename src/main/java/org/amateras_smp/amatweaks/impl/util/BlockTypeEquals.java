@@ -100,6 +100,21 @@ public class BlockTypeEquals {
 
             //#if MC >= 260200
             blockState.is(Blocks.BED.pick(DyeColor.BLACK)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.BLUE)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.BROWN)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.CYAN)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.GRAY)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.GREEN)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.LIGHT_BLUE)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.LIGHT_GRAY)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.LIME)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.MAGENTA)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.ORANGE)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.PINK)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.PURPLE)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.RED)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.WHITE)) ||
+            blockState.is(Blocks.BED.pick(DyeColor.YELLOW)) ||
             //#else
             //$$ blockState.is(Blocks.BLACK_BED) ||
             //$$ blockState.is(Blocks.BLUE_BED) ||
