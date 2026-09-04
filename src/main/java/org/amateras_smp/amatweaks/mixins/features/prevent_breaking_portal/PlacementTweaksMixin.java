@@ -131,7 +131,11 @@ public class PlacementTweaksMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    //#if MC >= 12111
+    private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, boolean hitInside, CallbackInfoReturnable<InteractionResult> cir) {
+    //#else
+    //$$ private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    //#endif
         BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand);
         BlockPlaceContext ctx = new BlockPlaceContext(new UseOnContext(player, hand, hitResult));
 
