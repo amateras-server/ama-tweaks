@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import org.amateras_smp.amatweaks.config.FeatureToggle;
+import org.amateras_smp.amatweaks.impl.util.ScreenUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +22,7 @@ public class MinecraftMixin {
 
         if (mc.player == null) return;
 
-        if (mc.screen == null) {
+        if (ScreenUtil.getScreen(mc) == null) {
             if (FeatureToggle.TWEAK_HOLD_FORWARD.getBooleanValue()) {
                 KeyMapping.set(InputConstants.getKey(mc.options.keyUp.saveString()), true);
             }

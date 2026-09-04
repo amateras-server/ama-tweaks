@@ -49,5 +49,4 @@ public class IdentifierUtil {
     public static Identifier id(PoiType poiType) {
         return BuiltInRegistriesUtil.POINT_OF_INTEREST_TYPE.getKey(poiType);
     }
-
 }

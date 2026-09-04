@@ -7,6 +7,10 @@ package org.amateras_smp.amatweaks.impl.util;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 
+//#if MC >= 260200
+import net.minecraft.world.item.DyeColor;
+//#endif
+
 public class BlockTypeEquals {
     public static boolean isSneakingInteractionCancel(BlockState blockState) {
         return blockState.is(Blocks.CRAFTING_TABLE) ||
@@ -32,22 +36,43 @@ public class BlockTypeEquals {
             blockState.is(Blocks.HOPPER) ||
             blockState.is(Blocks.TRAPPED_CHEST) ||
             blockState.is(Blocks.SHULKER_BOX) ||
-            blockState.is(Blocks.BLACK_SHULKER_BOX) ||
-            blockState.is(Blocks.BLUE_SHULKER_BOX) ||
-            blockState.is(Blocks.BROWN_SHULKER_BOX) ||
-            blockState.is(Blocks.CYAN_SHULKER_BOX) ||
-            blockState.is(Blocks.GRAY_SHULKER_BOX) ||
-            blockState.is(Blocks.GREEN_SHULKER_BOX) ||
-            blockState.is(Blocks.LIGHT_BLUE_SHULKER_BOX) ||
-            blockState.is(Blocks.LIGHT_GRAY_SHULKER_BOX) ||
-            blockState.is(Blocks.LIME_SHULKER_BOX) ||
-            blockState.is(Blocks.MAGENTA_SHULKER_BOX) ||
-            blockState.is(Blocks.ORANGE_SHULKER_BOX) ||
-            blockState.is(Blocks.PINK_SHULKER_BOX) ||
-            blockState.is(Blocks.PURPLE_SHULKER_BOX) ||
-            blockState.is(Blocks.RED_SHULKER_BOX) ||
-            blockState.is(Blocks.WHITE_SHULKER_BOX) ||
-            blockState.is(Blocks.YELLOW_SHULKER_BOX) ||
+
+            //#if MC >= 260200
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.BLACK)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.BLUE)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.BROWN)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.CYAN)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.GRAY)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.GREEN)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.LIGHT_BLUE)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.LIGHT_GRAY)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.LIME)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.MAGENTA)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.ORANGE)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.PINK)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.PURPLE)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.RED)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.WHITE)) ||
+            blockState.is(Blocks.DYED_SHULKER_BOX.pick(DyeColor.YELLOW)) ||
+            //#else
+            //$$ blockState.is(Blocks.BLACK_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.BLUE_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.BROWN_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.CYAN_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.GRAY_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.GREEN_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.LIGHT_BLUE_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.LIGHT_GRAY_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.LIME_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.MAGENTA_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.ORANGE_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.PINK_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.PURPLE_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.RED_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.WHITE_SHULKER_BOX) ||
+            //$$ blockState.is(Blocks.YELLOW_SHULKER_BOX) ||
+            //#endif
+
             blockState.is(Blocks.COMPOSTER) ||
             blockState.is(Blocks.NOTE_BLOCK) ||
             blockState.is(Blocks.FLOWER_POT) ||
@@ -71,22 +96,29 @@ public class BlockTypeEquals {
             blockState.is(Blocks.WARPED_TRAPDOOR) ||
             blockState.is(Blocks.REDSTONE_WIRE) ||
             blockState.is(Blocks.LEVER) ||
-            blockState.is(Blocks.BLACK_BED) ||
-            blockState.is(Blocks.BLUE_BED) ||
-            blockState.is(Blocks.BROWN_BED) ||
-            blockState.is(Blocks.CYAN_BED) ||
-            blockState.is(Blocks.GRAY_BED) ||
-            blockState.is(Blocks.GREEN_BED) ||
-            blockState.is(Blocks.LIGHT_BLUE_BED) ||
-            blockState.is(Blocks.LIGHT_GRAY_BED) ||
-            blockState.is(Blocks.LIME_BED) ||
-            blockState.is(Blocks.MAGENTA_BED) ||
-            blockState.is(Blocks.ORANGE_BED) ||
-            blockState.is(Blocks.PINK_BED) ||
-            blockState.is(Blocks.PURPLE_BED) ||
-            blockState.is(Blocks.RED_BED) ||
-            blockState.is(Blocks.WHITE_BED) ||
-            blockState.is(Blocks.YELLOW_BED) ||
+
+
+            //#if MC >= 260200
+            blockState.is(Blocks.BED.pick(DyeColor.BLACK)) ||
+            //#else
+            //$$ blockState.is(Blocks.BLACK_BED) ||
+            //$$ blockState.is(Blocks.BLUE_BED) ||
+            //$$ blockState.is(Blocks.BROWN_BED) ||
+            //$$ blockState.is(Blocks.CYAN_BED) ||
+            //$$ blockState.is(Blocks.GRAY_BED) ||
+            //$$ blockState.is(Blocks.GREEN_BED) ||
+            //$$ blockState.is(Blocks.LIGHT_BLUE_BED) ||
+            //$$ blockState.is(Blocks.LIGHT_GRAY_BED) ||
+            //$$ blockState.is(Blocks.LIME_BED) ||
+            //$$ blockState.is(Blocks.MAGENTA_BED) ||
+            //$$ blockState.is(Blocks.ORANGE_BED) ||
+            //$$ blockState.is(Blocks.PINK_BED) ||
+            //$$ blockState.is(Blocks.PURPLE_BED) ||
+            //$$ blockState.is(Blocks.RED_BED) ||
+            //$$ blockState.is(Blocks.WHITE_BED) ||
+            //$$ blockState.is(Blocks.YELLOW_BED) ||
+            //#endif
+
             blockState.is(Blocks.ACACIA_DOOR) ||
             blockState.is(Blocks.BIRCH_DOOR) ||
             blockState.is(Blocks.CRIMSON_DOOR) ||

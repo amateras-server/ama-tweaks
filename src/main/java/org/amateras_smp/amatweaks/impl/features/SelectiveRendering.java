@@ -45,7 +45,11 @@ public class SelectiveRendering {
 
             // reloads all the world rendering so that the settings change will be applied.
             if (Configs.Generic.REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED.getBooleanValue()) {
-                Minecraft.getInstance().levelRenderer.allChanged();
+                //#if MC >= 260200
+                Minecraft.getInstance().levelRenderer.resetLevelRenderData();
+                //#else
+                //$$ Minecraft.getInstance().levelRenderer.allChanged();
+                //#endif
             }
             applyConfig();
         }

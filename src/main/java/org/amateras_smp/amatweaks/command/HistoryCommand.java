@@ -32,9 +32,6 @@ public class HistoryCommand {
         boolean hasContent = false;
 
         if (!InteractionHistory.blockInteractionHistory.isEmpty()) {
-            if (hasContent)
-                message.append("\n");
-
             // header
             message.append(TextUtil.withFormat("═══ ", ChatFormatting.DARK_GRAY))
                     .append(TextUtil.withFormat("Block Interactions", ChatFormatting.AQUA))
