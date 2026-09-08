@@ -7,6 +7,9 @@ package org.amateras_smp.amatweaks.impl.util.container;
 import com.google.common.collect.ImmutableList;
 import org.amateras_smp.amatweaks.impl.features.ProcessResult;
 import org.amateras_smp.amatweaks.mixins.features.auto_restock_inventory.ItemScrollerInventoryUtilsAccessor;
+import org.amateras_smp.amatweaks.config.Configs;
+import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
+import org.amateras_smp.amatweaks.impl.util.ScreenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -14,8 +17,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import org.amateras_smp.amatweaks.config.Configs;
-import org.amateras_smp.amatweaks.impl.features.AutoRestockInventory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class ContainerProcessManager {
     public static void process(AbstractContainerMenu container) {
         if (!hasTweakEnabled()) return;
         Minecraft mc = Minecraft.getInstance();
-        Screen screen = mc.screen;
+        Screen screen = ScreenUtil.getScreen(mc);
         LocalPlayer player = mc.player;
         if (player != null && screen instanceof AbstractContainerScreen<?> containerScreen) {
             if (player.isSpectator()) return;

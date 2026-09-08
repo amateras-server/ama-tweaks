@@ -74,8 +74,8 @@ public class PlacementTweaksMixin {
     }
 
     @Unique
-    private static BlockHitResult getFinalHitResult(LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, boolean hitInside) {
-        BlockHitResult hitResult = new BlockHitResult(hitVecIn, sideIn, posIn, hitInside);
+    private static BlockHitResult getFinalHitResult(LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand) {
+        BlockHitResult hitResult = new BlockHitResult(hitVecIn, sideIn, posIn, false);
         BlockPlaceContext ctx = new BlockPlaceContext(new UseOnContext(player, hand, hitResult));
         BlockState state = world.getBlockState(posIn);
         ItemStack stackOriginal;
@@ -123,7 +123,7 @@ public class PlacementTweaksMixin {
             }
         }
 
-        return new BlockHitResult(hitVecIn, sideIn, posIn, hitInside);
+        return new BlockHitResult(hitVecIn, sideIn, posIn, false);
     }
 
     @Inject(
@@ -131,16 +131,12 @@ public class PlacementTweaksMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand
-        //#if MC >= 12111
-        , boolean hitInside
-        //#endif
-        , CallbackInfoReturnable<InteractionResult> cir) {
-        //#if MC >= 12111
-        BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand, hitInside);
-        //#else
-        //$$ BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand, false);
-        //#endif
+    //#if MC >= 12111
+    private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, boolean hitInside, CallbackInfoReturnable<InteractionResult> cir) {
+    //#else
+    //$$ private static void onProcessRightClickBlockWrapper(MultiPlayerGameMode controller, LocalPlayer player, ClientLevel world, BlockPos posIn, Direction sideIn, Vec3 hitVecIn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    //#endif
+        BlockHitResult hitResult = getFinalHitResult(player, world, posIn, sideIn, hitVecIn, hand);
         BlockPlaceContext ctx = new BlockPlaceContext(new UseOnContext(player, hand, hitResult));
 
         if (PreventPlacementOnPortalSides.restriction(world, ctx, hitResult)) {

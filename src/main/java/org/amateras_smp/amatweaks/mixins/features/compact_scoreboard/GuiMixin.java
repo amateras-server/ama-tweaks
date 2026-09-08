@@ -4,7 +4,11 @@
 
 package org.amateras_smp.amatweaks.mixins.features.compact_scoreboard;
 
-import net.minecraft.client.gui.Gui;
+//#if MC >= 260200
+import net.minecraft.client.gui.Hud;
+//#else
+//$$ import net.minecraft.client.gui.Gui;
+//#endif
 import org.amateras_smp.amatweaks.config.FeatureToggle;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +28,11 @@ import net.minecraft.network.chat.numbers.NumberFormatType;
 //$$ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 //#endif
 
-@Mixin(Gui.class)
+//#if MC >= 260200
+@Mixin(value = Hud.class, remap = false)
+//#else
+//$$ @Mixin(value = Gui.class, remap = false)
+//#endif
 public class GuiMixin {
     @Unique
     private static final NumberFormat FORMATTER = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT);

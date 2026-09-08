@@ -87,7 +87,7 @@ public class Configs implements IConfigHandler {
 
         public static final ConfigOptionList ITEM_PICKUP_FILTER_LIST_TYPE = new ConfigOptionList("itemPickupFilterListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakItemPickupFilter\".");
         public static final ConfigStringList ITEM_PICKUP_FILTER_BLACK_LIST = new ConfigStringList("itemPickupFilterBlackList", ImmutableList.of(), "The items which are not allowed to pickup");
-        public static final ConfigStringList ITEM_PICKUP_FILTER_WHITE_LIST = new ConfigStringList("itemPickupFilterWhiteList", ImmutableList.of(), "The items which are allowed to pickup");
+        public static final ConfigStringList ITEM_PICKUP_FILTER_WHITE_LIST = new ConfigStringList("itemPickupFilterWhiteList", ImmutableList.of("minecraft:shulker_box", "minecraft:white_shulker_box", "minecraft:ender_chest"), "The items which are allowed to pickup");
 
         public static final ConfigStringList PICK_REDIRECT_MAP = new ConfigStringList("pickRedirectMap", ImmutableList.of("minecraft:farmland, minecraft:dirt", "minecraft:dirt_path, minecraft:dirt", "minecraft:water, minecraft:ice", "minecraft:bubble_column, minecraft:ice"), "replacement reference of litematica block pick");
 

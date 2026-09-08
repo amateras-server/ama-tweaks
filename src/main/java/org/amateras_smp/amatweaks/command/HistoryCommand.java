@@ -21,7 +21,7 @@ public class HistoryCommand {
 
     private static final Component PREFIX = TextUtil.createEmpty()
             .append(TextUtil.withFormat("[", ChatFormatting.GRAY))
-            .append(Component.translatable("ama_tweaks.command.history.title").withStyle(ChatFormatting.GOLD))
+            .append(TextUtil.withFormat("Ama Tweaks - Interaction History", ChatFormatting.GOLD))
             .append(TextUtil.withFormat("]\n", ChatFormatting.GRAY));
 
     public static int callback(CommandContext<FabricClientCommandSource> context) {
@@ -32,12 +32,9 @@ public class HistoryCommand {
         boolean hasContent = false;
 
         if (!InteractionHistory.blockInteractionHistory.isEmpty()) {
-            if (hasContent)
-                message.append("\n");
-
             // header
             message.append(TextUtil.withFormat("═══ ", ChatFormatting.DARK_GRAY))
-                    .append(Component.translatable("ama_tweaks.command.history.block_interactions").withStyle(ChatFormatting.AQUA))
+                    .append(TextUtil.withFormat("Block Interactions", ChatFormatting.AQUA))
                     .append(TextUtil.withFormat(" ═══\n", ChatFormatting.DARK_GRAY));
 
             for (InteractionHistory.BlockInteraction b : InteractionHistory.blockInteractionHistory) {
@@ -54,7 +51,7 @@ public class HistoryCommand {
 
             // header
             message.append(TextUtil.withFormat("═══ ", ChatFormatting.DARK_GRAY))
-                    .append(Component.translatable("ama_tweaks.command.history.entity_interactions").withStyle(ChatFormatting.LIGHT_PURPLE))
+                    .append(TextUtil.withFormat("Entity Interactions", ChatFormatting.LIGHT_PURPLE))
                     .append(TextUtil.withFormat(" ═══\n", ChatFormatting.DARK_GRAY));
 
             for (InteractionHistory.EntityInteraction e : InteractionHistory.entityInteractionHistory) {
@@ -71,7 +68,7 @@ public class HistoryCommand {
             context.getSource().sendFeedback(
                     TextUtil.createEmpty()
                             .append(PREFIX)
-                            .append(Component.translatable("ama_tweaks.command.history.no_history").withStyle(ChatFormatting.RED)));
+                            .append(TextUtil.withFormat("No interaction history found.", ChatFormatting.RED)));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -83,7 +80,7 @@ public class HistoryCommand {
 
         Component clearMessage = TextUtil.createEmpty()
                 .append(PREFIX)
-                .append(Component.translatable("ama_tweaks.command.history.cleared").withStyle(ChatFormatting.GREEN));
+                .append(TextUtil.withFormat("Successfully cleared interaction history cache.", ChatFormatting.GREEN));
 
         context.getSource().sendFeedback(clearMessage);
         return Command.SINGLE_SUCCESS;

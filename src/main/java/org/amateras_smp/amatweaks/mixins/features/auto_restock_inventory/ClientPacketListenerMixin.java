@@ -12,6 +12,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import org.amateras_smp.amatweaks.Reference;
 import org.amateras_smp.amatweaks.impl.util.container.AutoProcessableScreen;
+import org.amateras_smp.amatweaks.impl.util.ScreenUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,7 +26,7 @@ public abstract class ClientPacketListenerMixin {
         at = @At("TAIL")
     )
     private void handleOpenScreen(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = ScreenUtil.getScreen(Minecraft.getInstance());
         if (screen != null) {
             ((AutoProcessableScreen) screen).setShouldProcess$AMT(true);
         }
