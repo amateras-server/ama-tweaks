@@ -1,0 +1,31 @@
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
+// the MIT License. See the LICENSE file for details.
+
+package org.amateras_smp.amatweaks.impl.addon.tweakermore;
+
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import org.amateras_smp.amatweaks.config.Configs;
+
+public class SelectiveAutoPick {
+    public static final ItemRestriction AUTO_PICK_RESTRICTION = new ItemRestriction();
+
+    public static void buildLists() {
+        AUTO_PICK_RESTRICTION.setListType((UsageRestriction.ListType) Configs.Lists.SELECTIVE_AUTO_PICK_LIST_TYPE.getOptionListValue());
+        AUTO_PICK_RESTRICTION.setListContents(
+            Configs.Lists.SELECTIVE_AUTO_PICK_BLACK_LIST.getStrings(),
+            Configs.Lists.SELECTIVE_AUTO_PICK_WHITE_LIST.getStrings());
+    }
+
+    public static boolean restrict(LocalPlayer player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.isEmpty()) {
+            return false;
+        }
+        return !AUTO_PICK_RESTRICTION.isAllowed(stack.getItem());
+    }
+}

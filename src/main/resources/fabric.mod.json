@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "Client side utilities mod made for Amateras",
+  "license": "MIT",
+  "authors": [
+    "pugur"
+  ],
+  "contact": {
+    "sources": "https://github.com/amateras-server/ama-tweaks",
+    "issues": "https://github.com/amateras-server/ama-tweaks/issues"
+  },
+  "icon": "assets/ama-tweaks/ama_alpha_white_1280.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "org.amateras_smp.amatweaks.AmaTweaks"
+    ],
+    "modmenu": [
+      "org.amateras_smp.amatweaks.compat.modmenu.ModMenuImpl"
+    ]
+  },
+  "mixins": [
+    "ama-tweaks.mixins.json"
+  ],
+  "accessWidener": "ama-tweaks.accesswidener",
+  "depends": {
+    "minecraft": "${minecraft_dependency}",
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "malilib": "*"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "item-scroller": "*",
+    "litematica": "*",
+    "syncmatica": "*",
+    "tweakermore": "*",
+    "tweakeroo": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/MR878KhsCj",
+        "modmenu.modrinth": "https://modrinth.com/mod/amatweaks"
+      }
+    }
+  }
+}

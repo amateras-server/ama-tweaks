@@ -1,0 +1,27 @@
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
+// the MIT License. See the LICENSE file for details.
+
+package org.amateras_smp.amatweaks.mixins.features.auto_eat;
+
+import net.minecraft.client.Minecraft;
+import org.amateras_smp.amatweaks.config.FeatureToggle;
+import org.amateras_smp.amatweaks.impl.features.AutoEat;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(Minecraft.class)
+public class MinecraftMixin {
+    @Shadow
+    private static Minecraft instance;
+
+    @Inject(method = "finishProfilers", at = @At(value = "HEAD"))
+    private void onTick(CallbackInfo ci) {
+        if (FeatureToggle.TWEAK_AUTO_EAT.getBooleanValue() && instance.player != null && instance.gameMode != null) {
+            AutoEat.autoEat(instance, instance.player, instance.player.connection);
+        }
+    }
+}

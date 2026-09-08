@@ -1,0 +1,45 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.amateras_smp.amatweaks.mixins",
+  "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "features.auto_eat.MinecraftMixin",
+    "features.auto_glide.LocalPlayerMixin",
+    "features.auto_restock_inventory.AbstractContainerMenuMixin",
+    "features.auto_restock_inventory.ClientPacketListenerMixin",
+    "features.auto_restock_inventory.ItemScrollerInventoryUtilsAccessor",
+    "features.auto_restock_inventory.ScreenMixin",
+    "features.compact_scoreboard.GuiMixin",
+    "features.hold_move.MinecraftMixin",
+    "features.interaction_history.MinecraftMixin",
+    "features.interaction_history.MultiPlayerGameModeMixin",
+    "features.item_pickup_filter.ClientPacketListenerMixin",
+    "features.mono_gui.ClientboundPlayerChatPacketMixin",
+    "features.mono_gui.PlayerTeamMixin",
+    //#if MC <= 12111
+    //$$ "features.mono_gui.PreparedTextBuilderMixin",
+    //$$ "features.selective_rendering.BlockRenderDispatcherMixin",
+    //#endif
+    "features.prevent_breaking_portal.BellBlockIMixin",
+    "features.prevent_breaking_portal.MultiPlayerGameModeMixin",
+    "features.prevent_breaking_portal.PlacementTweaksMixin",
+    "features.selective_rendering.BlockBehaviourMixin",
+    "features.selective_rendering.BlockEntityRenderDispatcherMixin",
+    "features.selective_rendering.EntityRenderDispatcherMixin",
+    "features.safe_step_protection.MultiPlayerGameModeMixin",
+    "litematica.MaterialCacheMixin",
+    "syncmatica.WidgetSyncmaticaServerPlacementEntryMixin",
+    //#if MC <= 12111
+    //$$ "tweakermore.ContainerMaterialListItemCollectorMixin",
+    //$$ "tweakermore.SchematicBlockPickerMixin",
+    //#endif
+    "tweakeroo.ClientPacketListener",
+    "tweakeroo.InventoryUtilsMixin"
+  ],
+  "client": [
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "fabric-api": "fabric_api_version",
+  "malilib": "malilib_version",
+  "modmenu": "modmenu_version",
+  "item-scroller": "itemscroller_version",
+  "litematica": "litematica_version",
+  "syncmatica": "syncmatica_version",
+  "tweakermore": "tweakermore_version",
+  "tweakeroo": "tweakeroo_version"
+}

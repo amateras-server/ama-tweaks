@@ -1,0 +1,226 @@
+// Copyright (c) 2025 Amateras-Server
+// This file is part of the AmaTweaks project and is licensed under the terms of
+// the MIT License. See the LICENSE file for details.
+
+package org.amateras_smp.amatweaks.config;
+
+import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import fi.dy.masa.malilib.config.ConfigUtils;
+import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.config.IHotkeyTogglable;
+import fi.dy.masa.malilib.config.options.*;
+import fi.dy.masa.malilib.util.data.json.JsonUtils;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+import net.minecraft.client.Minecraft;
+
+import org.amateras_smp.amatweaks.AmaTweaks;
+import org.amateras_smp.amatweaks.Reference;
+import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
+import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
+import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
+import org.amateras_smp.amatweaks.impl.features.*;
+
+import java.io.File;
+
+public class Configs implements IConfigHandler {
+    private static final String CONFIG_FILE_NAME = Reference.kModId + ".json";
+
+    public static class Generic {
+        public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING = new ConfigBoolean("autoEatDisableWhileElytraFlying", false, "Disables \"tweakAutoEat\" when you're gliding with elytra.");
+        public static final ConfigBoolean AUTO_EAT_DISABLE_WHILE_IN_USE = new ConfigBoolean("autoEatDisableWhileInUse", true, "\"tweakAutoEat\" will not be triggered while using or attacking.");
+        public static final ConfigBoolean AUTO_EAT_PUT_BACK_FOOD = new ConfigBoolean("autoEatPutBackFood", false, "\"tweakAutoEat\" puts back the food to the slot where it was.");
+        public static final ConfigDouble AUTO_EAT_THRESHOLD = new ConfigDouble("autoEatThreshold", 1.0, 0, 1.0, "The hunger level threshold for \"tweakAutoEat\".");
+        public static final ConfigInteger AUTO_GLIDE_USE_ROCKET_INTERVAL = new ConfigInteger("autoGlideUseRocketInterval", 60, 1, 1000, "The interval game tick for trying to automatically use firework rockets with \"tweakAutoFireworkGlide\".");
+        public static final ConfigBoolean AUTO_GLIDE_PUT_BACK_ROCKET = new ConfigBoolean("autoGlidePutBackRocket", true, "\"tweakAutoFireworkGlide\" puts back the firework rocket to the slot where it was.");
+        public static final ConfigDouble AUTO_GLIDE_SPEED_THRESHOLD = new ConfigDouble("autoGlideSpeedThreshold", 15.0, 0, 1000, "The speed threshold for \"tweakAutoFireworkGlide\" to use firework rockets.");
+        public static final ConfigBoolean AUTO_RESTOCK_CLOSE_GUI = new ConfigBoolean("autoRestockCloseGui", true, "Closes container GUI screen after restocking items by \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_COUNT_OFFHAND = new ConfigBoolean("autoRestockCountOffhand", true, "Counts offhand item stack into inventory stacks which used for empty slots restock of \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_ENABLE_EMPTY_SLOTS = new ConfigBoolean("autoRestockEnableEmptySlots", true, "Restocks to empty slots in inventory by \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_IGNORE_ENDER_CHEST = new ConfigBoolean("autoRestockIgnoreEnderChest", true, "\"tweaksAutoRestockInventory\" will not be triggered when you open ender chests");
+        public static final ConfigInteger AUTO_RESTOCK_MIN_NUM_STACKS = new ConfigInteger("autoRestockMinNumStacks", 1, 1, 36, "The minimum number of stacks to restock with \"tweakAutoRestockInventory\".");
+        public static final ConfigBoolean AUTO_RESTOCK_SHULKER_BOX_ONLY = new ConfigBoolean("autoRestockShulkerBoxOnly", false, "\"tweaksAutoRestockInventory\" will be triggered only when you open shulker boxes");
+        public static final ConfigInteger FIREWORK_SWITCHABLE_SLOT = new ConfigInteger("fireworkSwitchableSlot", 0, 0, 8, "The slot to switch firework rocket by \"tweakAutoFireworkGlide\". (0 ~ 8)");
+        public static final ConfigInteger FOOD_SWITCHABLE_SLOT = new ConfigInteger("foodSwitchableSlot", 0, 0, 8, "The slot to switch food by \"tweakAutoEat\". (0 ~ 8)");
+        public static final ConfigInteger INTERACTION_HISTORY_MAX_SIZE = new ConfigInteger("interactionHistoryMaxSize", 10, 10, 1000, "The number of interactions memorized by \"tweakInteractionHistory\".");
+        public static final ConfigBoolean PERSISTENT_GAMMA_OVERRIDE = new ConfigBoolean("persistentGammaOverride", false, "Fixes a bug of tweakeroo that \"tweakGammaOverride\" will not be enabled on client restart.");
+        public static final ConfigBoolean REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL = new ConfigBoolean("refreshPrefilteredPostAutoCollectMaterial", false, "Refreshes pre-filtered material list at the end of \"autoCollectMaterial\" by tweakermore.");
+        public static final ConfigBoolean REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED = new ConfigBoolean("refreshWorldRendererOnRenderBlocksChanged", true, "Refreshes client world renderer when \"tweakSelectiveBlockRendering\" settings(contains Lists, FeatureToggle) changed.");
+        public static final ConfigBoolean SYNCMATICA_REMOVE_REQUIRE_SHIFT = new ConfigBoolean("syncmaticaRemoveRequireShift", true, "Requires shift to remove shared schematic from the server");
+
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+            AUTO_EAT_DISABLE_WHILE_ELYTRA_FLYING,
+            AUTO_EAT_DISABLE_WHILE_IN_USE,
+            AUTO_EAT_PUT_BACK_FOOD,
+            AUTO_EAT_THRESHOLD,
+            AUTO_GLIDE_USE_ROCKET_INTERVAL,
+            AUTO_GLIDE_PUT_BACK_ROCKET,
+            AUTO_GLIDE_SPEED_THRESHOLD,
+            AUTO_RESTOCK_CLOSE_GUI,
+            AUTO_RESTOCK_COUNT_OFFHAND,
+            AUTO_RESTOCK_ENABLE_EMPTY_SLOTS,
+            AUTO_RESTOCK_IGNORE_ENDER_CHEST,
+            AUTO_RESTOCK_MIN_NUM_STACKS,
+            AUTO_RESTOCK_SHULKER_BOX_ONLY,
+            FIREWORK_SWITCHABLE_SLOT,
+            FOOD_SWITCHABLE_SLOT,
+            INTERACTION_HISTORY_MAX_SIZE,
+            PERSISTENT_GAMMA_OVERRIDE,
+            REFRESH_PREFILTERED_POST_AUTO_COLLECT_MATERIAL,
+            REFRESH_WORLD_RENDERER_ON_RENDER_BLOCKS_CHANGED,
+            SYNCMATICA_REMOVE_REQUIRE_SHIFT
+        );
+    }
+
+    public static class Lists {
+        public static final ConfigOptionList AUTO_EAT_ITEMS_LIST_TYPE = new ConfigOptionList("autoEatItemsListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakAutoEat\" restriction.");
+        public static final ConfigStringList AUTO_EAT_ITEMS_BLACK_LIST = new ConfigStringList("autoEatItemsListBlacklist", ImmutableList.of(), "The items not to eat with \"tweakAutoEat\".");
+        public static final ConfigStringList AUTO_EAT_ITEMS_WHITE_LIST = new ConfigStringList("autoEatItemsListWhitelist", ImmutableList.of("minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop"), "The items to eat with \"tweakAutoEat\".");
+
+        public static final ConfigOptionList INVENTORY_RESTOCK_ITEMS_LIST_TYPE = new ConfigOptionList("inventoryRestockItemsListType", ItemRestriction.ListType.WHITELIST, "The type of the list used for \"tweakAutoRestockInventory\" restocking items.");
+        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_BLACK_LIST = new ConfigStringList("inventoryRestockItemsListBlacklist", ImmutableList.of(), "The items not to restock with \"tweakAutoRestockInventory\".");
+        public static final ConfigStringList INVENTORY_RESTOCK_ITEMS_WHITE_LIST = new ConfigStringList("inventoryRestockItemsListWhitelist", ImmutableList.of("minecraft:firework_rocket", "minecraft:golden_carrot", "minecraft:cooked_beef", "minecraft:cooked_porkchop", "minecraft:experience_bottle", "minecraft:totem_of_undying"), "The items to restock with \"tweakAutoRestockInventory\".");
+
+        public static final ConfigOptionList ITEM_PICKUP_FILTER_LIST_TYPE = new ConfigOptionList("itemPickupFilterListType", ItemRestriction.ListType.NONE, "The type of the list used for \"tweakItemPickupFilter\".");
+        public static final ConfigStringList ITEM_PICKUP_FILTER_BLACK_LIST = new ConfigStringList("itemPickupFilterBlackList", ImmutableList.of(), "The items which are not allowed to pickup");
+        public static final ConfigStringList ITEM_PICKUP_FILTER_WHITE_LIST = new ConfigStringList("itemPickupFilterWhiteList", ImmutableList.of(), "The items which are allowed to pickup");
+
+        public static final ConfigStringList PICK_REDIRECT_MAP = new ConfigStringList("pickRedirectMap", ImmutableList.of("minecraft:farmland, minecraft:dirt", "minecraft:dirt_path, minecraft:dirt", "minecraft:water, minecraft:ice", "minecraft:bubble_column, minecraft:ice"), "replacement reference of litematica block pick");
+
+        public static final ConfigOptionList PORTAL_BREAKING_RESTRICTION_LIST_TYPE = new ConfigOptionList("portalBreakingRestrictionListType", UsageRestriction.ListType.WHITELIST, "The type of the list used for \"tweakPreventBreakingAdjacentPortal\" restriction effects.");
+        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_BLACK_LIST = new ConfigStringList("portalBreakingRestrictionBlackList", ImmutableList.of(), "The items that will be restricted by \"tweakPreventBreakingAdjacentPortal\".");
+        public static final ConfigStringList PORTAL_BREAKING_RESTRICTION_WHITE_LIST = new ConfigStringList("portalBreakingRestrictionWhiteList", ImmutableList.of("minecraft:obsidian"), "The items that will not be restricted by \"tweakPreventBreakingAdjacentPortal\".");
+
+        public static final ConfigOptionList SELECTIVE_AUTO_PICK_LIST_TYPE = new ConfigOptionList("selectiveAutoPickListType", UsageRestriction.ListType.NONE, "The type of the list used for selective auto pick.");
+        public static final ConfigStringList SELECTIVE_AUTO_PICK_WHITE_LIST = new ConfigStringList("selectiveAutoPickWhiteList", ImmutableList.of(), "The items when it is in hand auto pick will work.");
+        public static final ConfigStringList SELECTIVE_AUTO_PICK_BLACK_LIST = new ConfigStringList("selectiveAutoPickBlackList", ImmutableList.of("minecraft:golden_carrot", "minecraft:ender_chest", "minecraft:shulker_box", "minecraft:totem_of_undying"), "The items when it is in hand auto pick will not work.");
+
+        public static final ConfigOptionList SELECTIVE_BLOCK_RENDERING_LIST_TYPE = new ConfigOptionList("selectiveBlockRenderingListType", UsageRestriction.ListType.NONE, "The type of the list used for selective block rendering.");
+        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_WHITE_LIST = new ConfigStringList("selectiveBlockRenderingWhiteList", ImmutableList.of(), "The blocks that will be rendered.");
+        public static final ConfigStringList SELECTIVE_BLOCK_RENDERING_BLACK_LIST = new ConfigStringList("selectiveBlockRenderingBlackList", ImmutableList.of(), "The blocks that will not be rendered.");
+
+        public static final ConfigOptionList SELECTIVE_ENTITY_RENDERING_LIST_TYPE = new ConfigOptionList("selectiveEntityRenderingListType", UsageRestriction.ListType.NONE, "The type of the list used for selective entity rendering.");
+        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_WHITE_LIST = new ConfigStringList("selectiveEntityRenderingWhiteList", ImmutableList.of(), "The entities that will be rendered.");
+        public static final ConfigStringList SELECTIVE_ENTITY_RENDERING_BLACK_LIST = new ConfigStringList("selectiveEntityRenderingBlackList", ImmutableList.of(), "The entities that will not be rendered.");
+
+        public static final ConfigOptionList SELECTIVE_TOOL_SWITCH_LIST_TYPE = new ConfigOptionList("selectiveToolSwitchListType", UsageRestriction.ListType.NONE, "The type of the list used for selective tool switch.");
+        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_WHITE_LIST = new ConfigStringList("selectiveToolSwitchWhiteList", ImmutableList.of(), "The blocks that tweakToolSwitch will work on break.");
+        public static final ConfigStringList SELECTIVE_TOOL_SWITCH_BLACK_LIST = new ConfigStringList("selectiveToolSwitchBlackList", ImmutableList.of(), "The blocks that tweakToolSwitch will not work on break.");
+
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+            AUTO_EAT_ITEMS_LIST_TYPE,
+            AUTO_EAT_ITEMS_BLACK_LIST,
+            AUTO_EAT_ITEMS_WHITE_LIST,
+            INVENTORY_RESTOCK_ITEMS_LIST_TYPE,
+            INVENTORY_RESTOCK_ITEMS_BLACK_LIST,
+            INVENTORY_RESTOCK_ITEMS_WHITE_LIST,
+            ITEM_PICKUP_FILTER_LIST_TYPE,
+            ITEM_PICKUP_FILTER_BLACK_LIST,
+            ITEM_PICKUP_FILTER_WHITE_LIST,
+            PICK_REDIRECT_MAP,
+            PORTAL_BREAKING_RESTRICTION_LIST_TYPE,
+            PORTAL_BREAKING_RESTRICTION_BLACK_LIST,
+            PORTAL_BREAKING_RESTRICTION_WHITE_LIST,
+            SELECTIVE_AUTO_PICK_LIST_TYPE,
+            SELECTIVE_AUTO_PICK_WHITE_LIST,
+            SELECTIVE_AUTO_PICK_BLACK_LIST,
+            SELECTIVE_BLOCK_RENDERING_LIST_TYPE,
+            SELECTIVE_BLOCK_RENDERING_WHITE_LIST,
+            SELECTIVE_BLOCK_RENDERING_BLACK_LIST,
+            SELECTIVE_ENTITY_RENDERING_LIST_TYPE,
+            SELECTIVE_ENTITY_RENDERING_WHITE_LIST,
+            SELECTIVE_ENTITY_RENDERING_BLACK_LIST,
+            SELECTIVE_TOOL_SWITCH_LIST_TYPE,
+            SELECTIVE_TOOL_SWITCH_WHITE_LIST,
+            SELECTIVE_TOOL_SWITCH_BLACK_LIST
+        );
+    }
+
+    public static class Disable {
+        public static final ConfigBooleanHotkeyed DISABLE_SYNCMATICA_REMOVE_BUTTON = new ConfigBooleanHotkeyed("disableSyncmaticaRemoveButton", false, "", "Disables the schematic remove button from syncmatica GUI.");
+
+        public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
+            DISABLE_SYNCMATICA_REMOVE_BUTTON
+        );
+    }
+
+    public static void onConfigLoaded() {
+        InteractionHistory.resize();
+
+        PreventBreakingAdjacentPortal.buildLists();
+
+        AutoEat.buildLists();
+        AutoRestockInventory.buildLists();
+        ItemPickupFilter.buildLists();
+        PickRedirect.buildCache();
+        SelectiveAutoPick.buildLists();
+        SelectiveToolSwitch.buildLists();
+        SelectiveRendering.buildLists();
+        SelectiveRendering.applyConfig();
+    }
+
+    public static void loadFromFile() {
+        File configFile = new File(getConfigDirectory(), CONFIG_FILE_NAME);
+
+        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
+            //#if MC >= 12111
+            JsonElement element = JsonUtils.parseJsonFile(configFile.toPath());
+            //#else
+            //$$ JsonElement element = JsonUtils.parseJsonFile(configFile);
+            //#endif
+
+            if (element != null && element.isJsonObject()) {
+                JsonObject root = element.getAsJsonObject();
+                ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
+                // ConfigUtils.readConfigBase(root, "Fixes", Fixes.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Lists", Lists.OPTIONS);
+                ConfigUtils.readHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
+                ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", FeatureToggle.VALUES);
+                ConfigUtils.readConfigBase(root, "Disables", Disable.OPTIONS);
+            }
+        }
+
+        onConfigLoaded();
+    }
+
+    public static void saveToFile() {
+        File dir = getConfigDirectory();
+
+        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
+            JsonObject root = new JsonObject();
+
+            ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
+            // ConfigUtils.writeConfigBase(root, "Fixes", Configs.Fixes.OPTIONS);
+            ConfigUtils.writeHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
+            ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
+            ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", FeatureToggle.VALUES);
+            ConfigUtils.writeConfigBase(root, "Disables", Disable.OPTIONS);
+
+            //#if MC >= 12111
+            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME).toPath());
+            //#else
+            //$$ JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            //#endif
+        } else {
+            AmaTweaks.LOGGER.error("saveToFile(): config directory '{}' does not exist", dir.toString());
+        }
+    }
+
+    @Override
+    public void load() {
+        loadFromFile();
+    }
+
+    @Override
+    public void save() {
+        saveToFile();
+    }
+
+    private static File getConfigDirectory() {
+        return new File(Minecraft.getInstance().gameDirectory, "config");
+    }
+}
