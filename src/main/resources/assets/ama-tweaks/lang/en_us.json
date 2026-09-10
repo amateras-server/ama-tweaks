@@ -1,5 +1,19 @@
 {
   "ama_tweaks.error.syncmatica_placements.remove_disabled": "Couldn't remove the syncmatic : Removing disabled.",
   "ama_tweaks.error.syncmatica_placements.remove_require_shift": "Couldn't remove the syncmatic : Removing require shift.",
-  "ama_tweaks.label.config_comment.single_player_only": "Single Player Only"
+  "ama_tweaks.label.config_comment.single_player_only": "Single Player Only",
+
+  "ama_tweaks.message.on": "ON",
+  "ama_tweaks.message.off": "OFF",
+  "ama_tweaks.message.placement_restricted_portal_sides": "placement restricted by tweakPreventPlacementOnPortalSides",
+  "ama_tweaks.message.breaking_restricted_safe_step": "breaking restricted by tweakSafeStepProtection",
+  "ama_tweaks.message.breaking_restricted_portal": "breaking restricted by tweakPreventBreakingAdjacentToPortal",
+  "ama_tweaks.message.dropped": "Dropped ",
+  "Toggled %s %s": "Toggled %s %s",
+
+  "ama_tweaks.command.history.title": "Ama Tweaks - Interaction History",
+  "ama_tweaks.command.history.block_interactions": "Block Interactions",
+  "ama_tweaks.command.history.entity_interactions": "Entity Interactions",
+  "ama_tweaks.command.history.no_history": "No interaction history found.",
+  "ama_tweaks.command.history.cleared": "Successfully cleared interaction history cache."
 }

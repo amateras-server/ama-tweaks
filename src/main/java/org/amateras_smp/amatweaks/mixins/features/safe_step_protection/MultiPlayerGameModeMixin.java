@@ -6,6 +6,7 @@ package org.amateras_smp.amatweaks.mixins.features.safe_step_protection;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,7 @@ public class MultiPlayerGameModeMixin {
         if (FeatureToggle.TWEAK_SAFE_STEP_PROTECTION.getBooleanValue() && !SafeStepProtection.isPositionAllowedByBreakingRestriction(pos)) {
             String preRed = GuiBase.TXT_RED;
             String rst = GuiBase.TXT_RST;
-            String message = preRed + "breaking restricted by tweakSafeStepProtection" + rst;
+            String message = preRed + StringUtils.translate("ama_tweaks.message.breaking_restricted_safe_step") + rst;
             InfoUtils.printActionbarMessage(message);
 
             cir.setReturnValue(false);

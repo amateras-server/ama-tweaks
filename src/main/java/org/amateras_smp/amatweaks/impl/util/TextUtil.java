@@ -21,6 +21,14 @@ public class TextUtil {
         //#endif
     }
 
+    public static Component withFormatTranslatable(String key, ChatFormatting formatting) {
+        //#if MC >= 11900
+        return Component.translatable(key).withStyle(formatting);
+        //#else
+        //$$ return new TranslatableComponent(key).withStyle(formatting);
+        //#endif
+    }
+
     public static MutableComponent createEmpty() {
         //#if MC >= 11900
         return Component.literal("");
