@@ -12,6 +12,7 @@ package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
@@ -61,7 +62,7 @@ public class PreventPlacementOnPortalSides {
             ) {
                 String preRed = GuiBase.TXT_RED;
                 String rst = GuiBase.TXT_RST;
-                String message = preRed + "placement restricted by tweakPreventPlacementOnPortalSides" + rst;
+                String message = preRed + StringUtils.translate("ama_tweaks.message.placement_restricted_portal_sides") + rst;
                 InfoUtils.printActionbarMessage(message);
                 return true;
             }

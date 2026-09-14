@@ -6,6 +6,7 @@ package org.amateras_smp.amatweaks.mixins.features.prevent_breaking_portal;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +37,7 @@ public class MultiPlayerGameModeMixin {
         if (!PreventBreakingAdjacentPortal.restriction(pos)) return;
         String preRed = GuiBase.TXT_RED;
         String rst = GuiBase.TXT_RST;
-        String message = preRed + "breaking restricted by tweakPreventBreakingAdjacentToPortal" + rst;
+        String message = preRed + StringUtils.translate("ama_tweaks.message.breaking_restricted_portal") + rst;
         InfoUtils.printActionbarMessage(message);
 
         cir.setReturnValue(false);

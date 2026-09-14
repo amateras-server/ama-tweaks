@@ -20,6 +20,7 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
+import fi.dy.masa.malilib.util.StringUtils;
 import org.amateras_smp.amatweaks.impl.addon.litematica.PickRedirect;
 import org.amateras_smp.amatweaks.impl.addon.tweakermore.SelectiveAutoPick;
 import org.amateras_smp.amatweaks.impl.addon.tweakeroo.SelectiveToolSwitch;
@@ -166,7 +167,7 @@ public class Callbacks {
             this.config.toggleBooleanValue();
 
             boolean enabled = this.config.getBooleanValue();
-            String strStatus = enabled ? "ON" : "OFF";
+            String strStatus = enabled ? StringUtils.translate("ama_tweaks.message.on") : StringUtils.translate("ama_tweaks.message.off");
             String preGreen = GuiBase.TXT_GREEN;
             String preRed = GuiBase.TXT_RED;
             String rst = GuiBase.TXT_RST;

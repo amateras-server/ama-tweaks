@@ -6,6 +6,7 @@ package org.amateras_smp.amatweaks.impl.features;
 
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -65,7 +66,7 @@ public class ItemPickupFilter {
 
         InventoryUtil.dropSlot(gameMode, containerId, rawSlotId, player);
 
-        String message = GuiBase.TXT_YELLOW +  "[" + Reference.kModName + "] " + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + GuiBase.TXT_GRAY + ": " + GuiBase.TXT_RST + "Dropped " + itemStr;
+        String message = GuiBase.TXT_YELLOW +  "[" + Reference.kModName + "] " + FeatureToggle.TWEAK_ITEM_PICKUP_FILTER.getPrettyName() + GuiBase.TXT_GRAY + ": " + GuiBase.TXT_RST + StringUtils.translate("ama_tweaks.message.dropped") + itemStr;
         InfoUtils.printActionbarMessage(message);
     }
 }
